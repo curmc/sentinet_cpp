@@ -1,0 +1,36 @@
+/**
+ * @author      : theo (theo@$HOSTNAME)
+ * @file        : template
+ * @created     : Friday Aug 23, 2019 16:03:28 MDT
+ */
+
+#ifndef {{%MESSAGE_NAME%}}_HPP
+#define {{%MESSAGE_NAME%}}_HPP
+
+// C++ Includes
+#include <iostream>
+#include <memory>
+#include <string>
+
+// Local includes
+#include "proto/{{%namespace%}}/{{%message%}}"
+
+class {{%message%}}
+{
+  public:
+    {{%message%}} ();
+    virtual ~{{%message%}} ();
+
+
+
+class template
+{
+    public:
+        template ();
+        virtual ~template ();
+    private:
+        /* private data */
+};
+
+#endif /* end of include guard TEMPLATE_HPP */
+
