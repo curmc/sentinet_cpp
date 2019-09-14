@@ -1,7 +1,7 @@
 /**
  * @author      : theo (theo@varnsen)
  * @file        : FilterInterface
- * @brief 
+ * @brief
  *
  *
  *
@@ -14,17 +14,16 @@
 #define FILTERINTERFACE_HPP
 
 // C++ Includes
+#include <string>
 
 // Local Includes
 
-
 class FilterInterface {
-  public:
-    FilterInterface();
-    ~FilterInterface();
+public:
+  FilterInterface();
+  ~FilterInterface();
 
-    virtual std::string convert(const std::string& incomming_message) = 0;
-}
+  virtual std::string convert(const std::string &incomming_message) = 0;
+};
 
 #endif /* end of include guard FILTERINTERFACE_HPP */
-

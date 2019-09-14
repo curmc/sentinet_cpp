@@ -16,8 +16,7 @@
 
 #include <stdarg.h>
 #include <stdio.h>
-
-#include "string_ops.h"
+#include <string.h>
 
 #define LOG_VERSION "0.1.0"
 

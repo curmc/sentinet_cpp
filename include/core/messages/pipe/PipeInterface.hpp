@@ -1,7 +1,7 @@
 /**
  * @author      : theo (theo@varnsen)
  * @file        : MessagePipeInterface
- * @brief 
+ * @brief
  *
  *
  *
@@ -14,20 +14,28 @@
 #define PIPEINTERFACE_HPP
 
 // C++ Includes
+#include <string>
+#include <memory>
 
 // Local Includes
 #include "core/messages/pipe/FilterInterface.hpp"
 
 class PipeInterface {
-  public:
-    PipeInterface() {}
-    virtual ~PipeInterface() = default;
-  
-  public:
-    virtual bool create_pub_sub_endpoint(const std::string& id, const std::string& frontend, const std::string& backend) = 0;
-    virtual bool create_req_rep_endpoint(const std::string& id, const std::string& frontend, const std::string& backend) = 0;
-    virtual bool set_filter(const std::string& id, const FilterInterface& filter) = 0;
-}
+public:
+  PipeInterface() {}
+  virtual ~PipeInterface() = default;
+
+public:
+  virtual bool create_pub_sub_endpoint(const std::string &id,
+                                       const std::string &frontend,
+                                       const std::string &backend) = 0;
+
+  virtual bool create_req_rep_endpoint(const std::string &id,
+                                       const std::string &frontend,
+                                       const std::string &backend) = 0;
+
+  virtual bool set_filter(const std::string &id,
+                          std::unique_ptr<FilterInterface> filter) = 0;
+};
 
 #endif /* end of include guard PIPEINTERFACE_HPP */
-

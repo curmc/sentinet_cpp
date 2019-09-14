@@ -11,6 +11,7 @@
 // C++ includes
 #include <future>
 #include <thread>
+#include <unordered_map>
 
 // Local includes
 #include "core/utils/logging.hpp"
