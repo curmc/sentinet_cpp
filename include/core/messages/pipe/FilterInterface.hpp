@@ -23,7 +23,12 @@ public:
   FilterInterface();
   ~FilterInterface();
 
-  virtual std::string convert(const std::string &incomming_message) = 0;
+  /**
+   * @brief mutable string alteratiopn
+   *
+   * @param incomming_message a muttable string
+   */
+  virtual void convert(std::string &incomming_message) = 0;
 };
 
 #endif /* end of include guard FILTERINTERFACE_HPP */

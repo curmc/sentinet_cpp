@@ -12,7 +12,7 @@ int main() {
 
   publish_params a;
   a.broker_frontend = "tcp://localhost:5570";
-  a.topic = "Topic";
+  a.topic = "topic";
   a.get_data = [&value](void) -> std::string {
     std::cout << "Sending: " << value << std::endl;
     return value;
@@ -24,7 +24,7 @@ int main() {
     std::cout << "Recieved " << val << std::endl;
   };
   b.socket_backend = "tcp://localhost:5571";
-  b.topic = "Topic";
+  b.topic = "topic";
 
   auto cc = std::make_unique<ZMQControlClient>();
 

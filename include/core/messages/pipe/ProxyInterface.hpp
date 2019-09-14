@@ -13,8 +13,17 @@
 #include <future>
 #include <map>
 
+#define CLEAN_STOP 0
+#define KILL       1
+#define START      2
+#define PAUSE      3
+
 // Local Includes
 #include "core/utils/logging.hpp"
+#include "core/messages/pipe/FilterInterface.hpp"
+
+// C++ includes
+#include <list>
 
 class ProxyInterface
 {
@@ -32,7 +41,14 @@ class ProxyInterface
          *
          * @return Status of exit
          */
-        bool start(const std::chrono::microseconds t = std::chrono::microseconds(0));
+        void start(const std::chrono::microseconds t = std::chrono::microseconds(0));
+
+        /**
+         * @brief Pause the thread temporarily, I might at an implimentation specific version too
+         *
+         * @return Status
+         */
+        bool pause();
 
         /**
          * @brief Clean stop
@@ -69,12 +85,7 @@ class ProxyInterface
          */
         bool register_signal(const int32_t signal_val, std::function<int(void)>);
 
-    private:
-        enum signals {
-          CLEAN_STOP = 0,
-          KILL = 1,
-          START = 2,
-        };
+    protected:
 
         /**
          * @brief Executed every clock tick
@@ -104,12 +115,17 @@ class ProxyInterface
          */
         virtual std::string __get_type__() = 0;
 
+        const std::string frontend;
+        const std::string backend;
+        std::mutex locker;
+        std::list<std::unique_ptr<FilterInterface>> filters;
+
+      private:
         std::map<int, std::function<int(void)>> signal_table;
         const std::string id;
         std::future<void> exit_signal;
-        const std::string frontend;
-        const std::string backend;
-
+        std::atomic_bool running;
+        std::atomic_bool paused;
 };
 
 #endif /* end of include guard PROXYINTERFACE_HPP */

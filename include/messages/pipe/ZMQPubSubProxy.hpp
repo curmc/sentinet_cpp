@@ -1,6 +1,6 @@
 /**
  * @author      : theo (theo@varnsen)
- * @file        : ZMQServerProxy
+ * @file        : ZMQPubSubProxy
  * @brief 
  *
  *
@@ -9,9 +9,9 @@
  * @bugs No Known Bugs
  */
 
-#ifndef ZMQSERVERPROXY_HPP
+#ifndef ZMQPUBSUBPROXY_HPP
 
-#define ZMQSERVERPROXY_HPP
+#define ZMQPUBSUBPROXY_HPP
 
 // C++ Includes
 
@@ -19,10 +19,10 @@
 #include "core/messages/pipe/ProxyInterface.hpp"
 #include "control/zhelpers.hpp"
 
-class ZMQServerProxy : public ProxyInterface {
+class ZMQPubSubProxy : public ProxyInterface {
   public:
-    ZMQServerProxy(const std::string&, std::future<void>, const std::string&, const std::string&, int context);
-    ~ZMQServerProxy();
+    ZMQPubSubProxy(const std::string&, std::future<void>, const std::string&, const std::string&, int context = 1);
+    ~ZMQPubSubProxy();
 
   protected:
     bool __spin__() override;
@@ -34,7 +34,8 @@ class ZMQServerProxy : public ProxyInterface {
     std::unique_ptr<::zmq::socket_t> frontend_sock;
     std::unique_ptr<::zmq::socket_t> backend_sock;
     ::zmq::context_t context;
-    ::zmq::pollitem_t items[2];
+    ::zmq::pollitem_t item;
 };
 
-#endif /* end of include guard ZMQSERVERPROXY_HPP */
+
+#endif /* end of include guard ZMQPUBSUBPROXY_HPP */

@@ -27,8 +27,9 @@ class SimpleNumberFilter : public FilterInterface
 
     private:
         std::string message_str;
-        std::unique_ptr<SimpleNumber> message;
+        std::unique_ptr<::numbers::simple_number> message;
 };
+
 
 }
 }
