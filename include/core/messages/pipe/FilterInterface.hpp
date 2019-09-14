@@ -20,8 +20,8 @@
 
 class FilterInterface {
 public:
-  FilterInterface();
-  ~FilterInterface();
+  FilterInterface(){};
+  virtual ~FilterInterface() = default;
 
   /**
    * @brief mutable string alteratiopn

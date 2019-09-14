@@ -27,7 +27,7 @@ bool ZMQPubSubProxy::__start__() {
   backend_sock = std::make_unique<::zmq::socket_t>(context, ZMQ_PUB);
 
   frontend_sock->bind(frontend);
-  frontend_sock->setsockopt(ZMQ_SUBSCRIBE, "", 0);
+  frontend_sock->setsockopt(ZMQ_SUBSCRIBE, "topic", 0);
   backend_sock->bind(backend);
 
   item = {static_cast<void*>(*frontend_sock.get()), 0, ZMQ_POLLIN, 0};
@@ -37,19 +37,25 @@ bool ZMQPubSubProxy::__start__() {
 bool ZMQPubSubProxy::__spin__() {
   if(!frontend_sock || !backend_sock)
     return true;
-  ::zmq::message_t message;
-  int more;
 
   ::zmq::poll(&item, 1, 100);
 
   if(item.revents & ZMQ_POLLIN) {
-    while(1) {
-      frontend_sock->recv(&message);
-      size_t more_size = sizeof(more);
-      frontend_sock->getsockopt(ZMQ_RCVMORE, &more, &more_size);
-      backend_sock->send(message, more ? ZMQ_SNDMORE : 0);
-      if(!more)
-        break;
+    std::string topic = s_recv(*frontend_sock);
+    std::cout<<topic<<std::endl;
+    std::string req = s_recv(*frontend_sock);
+    std::cout<<req<<std::endl;
+    if(!adding_filter){
+      for(auto i = 0U; i < filters.size(); ++i)
+        filters[i]->convert(req);
+      std::cout<<topic<<std::endl;
+      std::cout<<req<<std::endl;
+      s_sendmore(*backend_sock, topic);
+      s_send(*backend_sock, req);
+    }
+    else {
+      s_sendmore(*backend_sock, topic);
+      s_send(*backend_sock, req);
     }
   }
   return true;

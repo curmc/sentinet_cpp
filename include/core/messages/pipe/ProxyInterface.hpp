@@ -12,6 +12,7 @@
 #include <string>
 #include <future>
 #include <map>
+#include <vector>
 
 #define CLEAN_STOP 0
 #define KILL       1
@@ -21,9 +22,6 @@
 // Local Includes
 #include "core/utils/logging.hpp"
 #include "core/messages/pipe/FilterInterface.hpp"
-
-// C++ includes
-#include <list>
 
 class ProxyInterface
 {
@@ -85,6 +83,8 @@ class ProxyInterface
          */
         bool register_signal(const int32_t signal_val, std::function<int(void)>);
 
+        bool add_filter(std::unique_ptr<FilterInterface> filter);
+
     protected:
 
         /**
@@ -118,7 +118,8 @@ class ProxyInterface
         const std::string frontend;
         const std::string backend;
         std::mutex locker;
-        std::list<std::unique_ptr<FilterInterface>> filters;
+        std::vector<std::unique_ptr<FilterInterface>> filters;
+        std::atomic_bool adding_filter;
 
       private:
         std::map<int, std::function<int(void)>> signal_table;

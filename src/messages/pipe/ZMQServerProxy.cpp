@@ -31,6 +31,7 @@ bool ZMQServerProxy::__start__() {
 
   items[0] = {static_cast<void*>(*frontend_sock.get()), 0, ZMQ_POLLIN, 0};
   items[1] = {static_cast<void*>(*backend_sock.get()), 0, ZMQ_POLLIN, 0};
+  return true;
 }
 
 bool ZMQServerProxy::__spin__() {
@@ -42,24 +43,20 @@ bool ZMQServerProxy::__spin__() {
   ::zmq::poll(&items[0], 2, 100);
 
   if(items[0].revents & ZMQ_POLLIN) {
-    while(1) {
-      frontend_sock->recv(&message);
-      size_t more_size = sizeof(more);
-      frontend_sock->getsockopt(ZMQ_RCVMORE, &more, &more_size);
-      backend_sock->send(message, more ? ZMQ_SNDMORE : 0);
-      if(!more)
-        break;
+    std::string req = s_recv(*frontend_sock);
+    if(!adding_filter) {
+      for(auto i = 0U; i < filters.size(); ++i) {
+        filters[i]->convert(req);
+      }
+      s_send(*backend_sock, req);
+    } else {
+      s_send(*backend_sock, req);
     }
   }
   if(items[1].revents & ZMQ_POLLIN) {
-    while(1) {
-      backend_sock->recv(&message);
-      size_t more_size = sizeof(more);
-      backend_sock->getsockopt(ZMQ_RCVMORE, &more, &more_size);
-      frontend_sock->send(message, more ? ZMQ_SNDMORE : 0);
-      if(!more)
-        break;
-    }
+    std::string req = s_recv(*backend_sock);
+    // Don't convert back - should be pure
+    s_send(*frontend_sock, req);
   }
   return true;
 }

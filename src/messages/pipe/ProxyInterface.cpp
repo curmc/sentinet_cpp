@@ -42,6 +42,7 @@ ProxyInterface::ProxyInterface(const std::string& id_, std::future<void> futureO
       this->pause();
       return PAUSE;
     });
+    adding_filter = false;
 }
 
 ProxyInterface::~ProxyInterface()
@@ -152,4 +153,11 @@ bool ProxyInterface::register_signal(const int32_t signal_val, std::function<int
     return false;
   }
   return true;
+}
+
+bool ProxyInterface::add_filter(std::unique_ptr<FilterInterface> filter) {
+  adding_filter = true;
+  filters.push_back(std::move(filter));
+  adding_filter = false;
+  return true; // TODO
 }
