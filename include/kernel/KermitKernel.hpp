@@ -17,6 +17,7 @@
 #include <memory>
 #include <chrono>
 
+
 namespace Kermit {
 
 constexpr int local_port = 5555;
@@ -24,23 +25,30 @@ constexpr int local_port = 5555;
 class KermitKernel : public ZMQControlClient {
 public:
   KermitKernel() = delete;
-  KermitKernel(const std::string &drive_topic, const bool verbose = true);
+  KermitKernel(const std::string &drive_topic, 
+               const std::string& publish_channel, 
+               const std::string& serve_channel, 
+               const bool verbose = true);
 
   virtual ~KermitKernel();
 
-  void set_drive_topic(const std::string &topic);
-
   void set_serial(const std::string &port, const int &baud);
 
-  bool loop(const std::chrono::microseconds serial_period);
-
-private:
-  bool initialize_control_client(
-      const std::string &address = "tcp://localhost:5555");
-
-  void recieve_drive_message(const std::string &drive_message);
+  bool start(const std::chrono::microseconds serial_period);
 
   void print_state();
+
+  // Control Client stuff
+private:
+  bool initialize_control_client();
+
+  // The subscription to cmd_vel topic
+  void drive_message_subscribe_callback(std::string& message);
+
+  // The main server callback
+  std::string command_channel_server_callback(std::string& message);
+
+private:
   bool send_data();
 
   typedef struct KermitOutputs {
@@ -58,26 +66,13 @@ private:
     }
     bool verbose;
 
-    char buffer[6];
-
+    std::string drive_topic;
+    std::string publish_channel;
+    std::string serve_channel;
+    char* buffer;
   } KermitOutputs;
 
-  typedef struct KermitMessageProperties {
-    KermitMessageProperties() {
-      gun_message_handler = std::make_unique<Gun>();
-      drive_train_message_handler = std::make_unique<DriveTrain>();
-    }
-    std::unique_ptr<Gun> gun_message_handler;
-    std::unique_ptr<DriveTrain> drive_train_message_handler;
-
-    std::string buffer;
-
-    std::string drive_topic;
-    std::string gun_topic;
-  } KermitMessageProperties;
-
   KermitOutputs kermit;
-  KermitMessageProperties message;
 };
 } // namespace Kermit
 #endif /* end of include guard KERMITKERNEL_HPP */

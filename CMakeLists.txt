@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(cpp)
 
 # models is a protoc library
-# add_subdirectory(third_party)
+include("${PROJECT_SOURCE_DIR}/.cmake/cpp.cmake")
 
 # Find the necessary libraries
 find_library(PTHREAD_LIB pthread)

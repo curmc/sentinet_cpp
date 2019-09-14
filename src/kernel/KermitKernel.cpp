@@ -8,16 +8,22 @@
 
 namespace Kermit {
 
-KermitKernel::KermitKernel(const std::string &drive_topic, const bool verbose)
-    : kermit(), message() {
-  set_drive_topic(drive_topic);
+KermitKernel::KermitKernel(const std::string &drive_topic, 
+                           const std::string& publish_channel,
+                           const std::string& serve_channel,
+                           const bool verbose) : kermit() 
+{
+  kermit.publish_channel = publish_channel;
+  kermit.serve_channel = serve_channel;
+  kermit.drive_topic = drive_topic;
   kermit.verbose = verbose;
+  // Haven't used that new word in a while now
+  kermit.buffer = new char[5];
 }
 
-KermitKernel::~KermitKernel() { kermit.xbee->close(); }
-
-void KermitKernel::set_drive_topic(const std::string &topic) {
-  message.drive_topic = std::string(topic);
+KermitKernel::~KermitKernel() { 
+  kermit.xbee->close(); 
+  delete [] kermit.buffer;
 }
 
 void KermitKernel::set_serial(const std::string &port, const int &baud) {
@@ -30,13 +36,15 @@ void KermitKernel::print_state() {
   std::cout << " Angular = " << kermit.drive.ang << std::endl;
 }
 
-bool KermitKernel::loop(const std::chrono::microseconds serial_period) {
-  initialize_control_client("tcp://localhost:5555");
-  for (int i = 0; i < 20; i++) {
-    if (kermit.verbose)
+bool KermitKernel::start(const std::chrono::microseconds serial_period) {
+  initialize_control_client();
+  for(int i = 0; i < 10; ++i) {
+    if(kermit.verbose) {
       print_state();
+    }
     send_data();
     usleep(serial_period.count());
+    std::cout<<"here"<<std::endl;
   }
   return true;
 }
@@ -55,16 +63,35 @@ bool KermitKernel::send_data() {
   return kermit.xbee->write(kermit.buffer); // string?
 }
 
-void KermitKernel::recieve_drive_message(const std::string &drive_message) {
-  message.drive_train_message_handler->parse_from_string(drive_message);
-  kermit.drive.lin = message.drive_train_message_handler->get_linear();
-  kermit.drive.ang = message.drive_train_message_handler->get_angular();
+void KermitKernel::drive_message_subscribe_callback(std::string& message) {
+  return;  //TODO
 }
 
-bool KermitKernel::initialize_control_client(const std::string &address) {
-  auto fp = std::bind(&KermitKernel::recieve_drive_message, this,
+std::string KermitKernel::command_channel_server_callback(std::string& message) {
+  return "Not implemented " + message;
+}
+
+
+bool KermitKernel::initialize_control_client() {
+  auto fp = std::bind(&KermitKernel::drive_message_subscribe_callback, this,
                       std::placeholders::_1);
-  subscribe(address, message.drive_topic, fp);
+
+  auto server = std::bind(&KermitKernel::command_channel_server_callback, this,
+                      std::placeholders::_1);
+
+
+  subscribe_params temp_sb;
+  serve_params temp_sr;
+
+  temp_sb.callback = fp;
+  temp_sb.socket_backend = kermit.publish_channel;
+  temp_sb.topic = kermit.drive_topic;
+  
+  temp_sr.callback = server;
+  temp_sr.address = kermit.serve_channel;
+
+  spin(temp_sr);
+  spin(temp_sb);
   return true;
 }
 } // namespace Kermit

@@ -107,6 +107,7 @@ bool ProxyInterface::pause() {
   }
   paused = false;
   LOG_INFO("Un pausing proxy interface");
+  return true;
 }
 
 bool ProxyInterface::kill() {
