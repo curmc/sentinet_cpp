@@ -7,6 +7,8 @@
 // #include "control/zhelpers.hpp"
 #include "messages/pipe/ZMQPubSubProxy.hpp"
 #include "messages/pipe/ZMQServerProxy.hpp"
+#include "messages/pipe/SimpleFilter.hpp"
+#include "messages/pipe/SimpleFilter2.hpp"
 #include <future>
 #include <thread>
 
@@ -14,7 +16,10 @@ int main() {
   std::promise<void> exit_thing;
   std::promise<void> exit_thing_2;
 
-  ZMQPubSubProxy a("hello", std::move(exit_thing.get_future()), "tcp://*:5553", "tcp://*:5555", 1);
+  ZMQPubSubProxy a("hello", std::move(exit_thing.get_future()), "tcp://*:5570", "tcp://*:5571", 1);
+
+  a.add_filter(std::make_unique<SimpleFilter>());
+  a.add_filter(std::make_unique<SimpleFilter2>());
 
   std::thread v1(&ZMQPubSubProxy::start, &a, std::chrono::microseconds(10));
 
