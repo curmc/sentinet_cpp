@@ -181,22 +181,3 @@ int main() {
 
 }
 ```
-
-
-## File Templates
-After setting up with
-```bash
-$ make setup
-```
-If you use bash (not zsh), you can now execute generate. examples
-
-```bash
-$ generate hello.cpp
-$ generate main.hpp
-$ generate main.h
-```
-
-This just creates a nice template file
-
-
-
