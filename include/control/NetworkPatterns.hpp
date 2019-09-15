@@ -201,6 +201,11 @@ public:
     properties.period = period;
   }
 
+  inline void set_server(const scpp::string& address)
+  {
+    properties.server = address;
+  }
+
   inline void enter_thread() { requester_thread(properties); }
 };
 

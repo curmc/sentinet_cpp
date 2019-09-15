@@ -49,8 +49,7 @@ namespace net {
 class ZMQControlClient : public ::scpp::core::ControlClientInterface
 {
 public:
-  ZMQControlClient(int context_ = 1,
-                   const scpp::string& yaml_system_file = "empty");
+  ZMQControlClient(int context_ = 1);
   ~ZMQControlClient() {}
 
   bool start(int i = 0) override;

@@ -209,7 +209,7 @@ public:
    *
    * @return a number - 1 for now, but could be helpful for status etc.
    */
-  virtual int flag(int flag = 0) { return 1; }
+  virtual int flag(int flag = 0) { return flag; }
 
   /**
    * Core API
@@ -230,7 +230,7 @@ public:
    */
   virtual bool initialize_publisher(const std::string& broker_frontend)
   {
-    return true;
+    return broker_frontend == "default";
   }
 
   /**

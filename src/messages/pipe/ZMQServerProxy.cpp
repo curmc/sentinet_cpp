@@ -48,7 +48,6 @@ ZMQServerProxy::__spin__()
   if (!frontend_sock || !backend_sock)
     return true;
   ::zmq::message_t message;
-  int more;
 
   ::zmq::poll(&items[0], 2, 100);
 

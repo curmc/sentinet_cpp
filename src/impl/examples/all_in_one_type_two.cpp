@@ -5,6 +5,9 @@
  */
 
 #include "control/ZMQControlClient.hpp"
+#include "core/utils/logging.hpp"
+
+std::mutex t;
 
 int
 main()

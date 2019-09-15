@@ -16,10 +16,11 @@ ProxyInterface::ProxyInterface(const std::string& id_,
                                std::future<void> futureObj,
                                const std::string& frontend_,
                                const std::string& backend_)
-  : id(id_)
-  , exit_signal(std::move(futureObj))
-  , frontend(frontend_)
+  : frontend(frontend_)
   , backend(backend_)
+  , id(id_)
+  , exit_signal(std::move(futureObj))
+
 {
   running = true;
 
@@ -63,9 +64,6 @@ ProxyInterface::start(const std::chrono::microseconds t)
 
   // Get the starting time
   auto start = std::chrono::steady_clock::now();
-
-  // A global status value that we will return
-  auto status = true;
 
   // If zero period, the steady clock call is one extra operation that we don't
   // need

@@ -3,7 +3,7 @@
 
 namespace scpp {
 namespace net {
-ZMQControlClient::ZMQControlClient(int context_, const std::string& yaml_file)
+ZMQControlClient::ZMQControlClient(int context_)
   : context(context_)
 {
   // By default, no pub or client
@@ -151,6 +151,7 @@ ZMQControlClient::request(
   req_context->set_data_request(get_data_to_request);
   req_context->set_callback(action_to_recieved_data);
   req_context->set_period(period);
+  req_context->set_server(destination);
 
   // Our main thread
   val.thread = std::make_unique<std::thread>(
