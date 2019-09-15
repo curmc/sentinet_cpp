@@ -10,7 +10,8 @@ int main() {
 
   std::string value("Well hello there");
 
-  publish_params a;
+  scpp::publish_params a;
+
   a.broker_frontend = "tcp://localhost:5570";
   a.topic = "topic";
   a.get_data = [&value](void) -> std::string {
@@ -19,14 +20,14 @@ int main() {
   };
   a.period = std::chrono::seconds(1);
 
-  subscribe_params b;
+  scpp::subscribe_params b;
   b.callback = [](std::string &val) -> void {
     std::cout << "Recieved " << val << std::endl;
   };
   b.socket_backend = "tcp://localhost:5571";
   b.topic = "topic";
 
-  auto cc = std::make_unique<ZMQControlClient>();
+  auto cc = std::make_unique<scpp::net::ZMQControlClient>();
 
   cc->spin(b);
   cc->spin(a);

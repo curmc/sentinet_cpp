@@ -18,6 +18,9 @@
 #include "control/zhelpers.hpp"
 #include "core/utils/logging.hpp"
 
+namespace scpp {
+namespace net {
+
 class Publisher_Context {
 
 private:
@@ -183,4 +186,6 @@ public:
   inline void enter_thread() { requester_thread(properties); }
 };
 
+}
+}
 #endif /* end of include guard NETWORKPATTERNS_HPP */

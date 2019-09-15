@@ -7,6 +7,8 @@
 // Local Includes
 #include "control/NetworkPatterns.hpp"
 
+namespace scpp {
+namespace net {
 /**
  * These are the thread functions, what each socket will do
  *
@@ -159,4 +161,6 @@ void Server_Context::server_thread(thread_properties &properties) {
 
   LOG_INFO("Server thread at address %s has ended",
            properties.sock_addr.c_str());
+}
+}
 }

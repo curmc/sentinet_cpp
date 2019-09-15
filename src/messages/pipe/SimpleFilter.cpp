@@ -6,6 +6,10 @@
 
 #include "messages/pipe/SimpleFilter.hpp"
 
+namespace scpp {
+namespace filters {
 void SimpleFilter::convert(std::string& message) {
   message = "[Passed through simple filter 1 ] " + message;
+}
+}
 }

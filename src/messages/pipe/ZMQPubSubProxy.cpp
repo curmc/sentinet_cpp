@@ -6,6 +6,9 @@
 
 #include "messages/pipe/ZMQPubSubProxy.hpp"
 
+namespace scpp {
+namespace proxies {
+
 ZMQPubSubProxy::ZMQPubSubProxy(const std::string& id_, std::future<void> futureObj, const std::string& frontend_, const std::string& backend_, int context_)
   : ProxyInterface(id_, std::move(futureObj), frontend_, backend_), 
     context(context_)
@@ -66,5 +69,7 @@ bool ZMQPubSubProxy::__stop__() {
 }
 
 std::string ZMQPubSubProxy::__get_type__() {
-  return "ZMQ XPUB-XSUB Proxy";
+  return "ZMQ PUB-SUB Proxy";
+}
+}
 }

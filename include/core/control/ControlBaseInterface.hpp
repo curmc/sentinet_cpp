@@ -8,6 +8,9 @@
 
 #define CONTROLBASEINTERFACE_HPP
 
+namespace scpp {
+namespace core {
+
 class ControlBaseInterface {
 public:
   ControlBaseInterface();
@@ -16,5 +19,6 @@ public:
 private:
   /* private data */
 };
-
+}
+}
 #endif /* end of include guard CONTROLBASEINTERFACE_HPP */

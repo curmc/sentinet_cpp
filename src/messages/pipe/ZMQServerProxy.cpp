@@ -6,6 +6,8 @@
 
 #include "messages/pipe/ZMQServerProxy.hpp"
 
+namespace scpp {
+namespace proxies {
 ZMQServerProxy::ZMQServerProxy(const std::string& id_, std::future<void> futureObj, const std::string& frontend_, const std::string& backend_, int context_)
   : ProxyInterface(id_, std::move(futureObj), frontend_, backend_), 
     context(context_)
@@ -67,4 +69,6 @@ bool ZMQServerProxy::__stop__() {
 
 std::string ZMQServerProxy::__get_type__() {
   return "ZMQ ROUTER DEALER Proxy";
+}
+}
 }

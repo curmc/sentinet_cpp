@@ -47,7 +47,10 @@ constexpr auto DEFAULT_ZMQ_CONTROL_NAME = "ZMQController";
 } // namespace defaults
 } // namespace utils
 
-class ZMQControlClient : public ControlClientInterface {
+namespace scpp {
+namespace net {
+
+class ZMQControlClient : public ::scpp::core::ControlClientInterface {
 public:
   ZMQControlClient(int context_ = 1,
                    const std::string &yaml_system_file = "empty");
@@ -213,4 +216,6 @@ private:
 
 // Initialize static socket thread space with default constructor
 
+}
+}
 #endif /* end of include guard ZMQCONTROLCLIENT_HPP */

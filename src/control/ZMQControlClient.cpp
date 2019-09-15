@@ -1,6 +1,8 @@
 
 #include "control/ZMQControlClient.hpp"
 
+namespace scpp {
+namespace net {
 ZMQControlClient::ZMQControlClient(int context_, const std::string &yaml_file)
     : context(context_) {
   // By default, no pub or client
@@ -227,4 +229,6 @@ ZMQControlClient::concurrent_request(const std::string &server,
   s_send(*socket, message);
   std::string response = s_recv(*socket);
   return response;
+}
+}
 }

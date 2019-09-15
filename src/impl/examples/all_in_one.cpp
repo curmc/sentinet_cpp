@@ -3,7 +3,7 @@
 
 int main() {
 
-  auto a = std::make_unique<ZMQControlClient>();
+  auto a = std::make_unique<scpp::net::ZMQControlClient>();
 
   std::string value_to_publish("Hi there");
 

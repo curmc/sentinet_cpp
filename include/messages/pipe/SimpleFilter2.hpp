@@ -13,7 +13,10 @@
 // Local Includes
 #include "core/messages/pipe/FilterInterface.hpp"
 
-class SimpleFilter2 : public FilterInterface 
+namespace scpp {
+namespace filters {
+
+class SimpleFilter2 : public ::scpp::core::FilterInterface 
 {
     public:
       SimpleFilter2 () {};
@@ -21,6 +24,8 @@ class SimpleFilter2 : public FilterInterface
 
       void convert(std::string& incomming_message) override;
 };
+}
+}
 
 #endif /* end of include guard SIMPLEFILTER2_HPP */
 

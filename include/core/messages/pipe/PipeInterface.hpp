@@ -22,6 +22,9 @@
 #include "core/messages/pipe/FilterInterface.hpp"
 #include "core/messages/pipe/ProxyInterface.hpp"
 
+namespace scpp {
+namespace core {
+
 class PipeInterface {
 public:
   PipeInterface();
@@ -62,5 +65,6 @@ private:
 
   PipeInterfaceProperties proxies;
 };
-
+}
+}
 #endif /* end of include guard PIPEINTERFACE_HPP */

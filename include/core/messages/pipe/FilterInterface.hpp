@@ -18,6 +18,9 @@
 
 // Local Includes
 
+namespace scpp {
+namespace core {
+
 class FilterInterface {
 public:
   FilterInterface(){};
@@ -31,4 +34,6 @@ public:
   virtual void convert(std::string &incomming_message) = 0;
 };
 
+}
+}
 #endif /* end of include guard FILTERINTERFACE_HPP */

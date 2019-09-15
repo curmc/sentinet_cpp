@@ -22,7 +22,9 @@
 // Local Includes
 #include "core/messages/pipe/PipeInterface.hpp"
 
-class ZMQPipe : public PipeInterface {
+namespace scpp {
+namespace net {
+class ZMQPipe : public ::scpp::core::PipeInterface {
 public:
   ZMQPipe() {}
   ~ZMQPipe() {}
@@ -37,7 +39,7 @@ public:
                                const std::string &backend) override;
 
   bool set_filter(const std::string &id,
-                  std::unique_ptr<FilterInterface> filter) override;
+                  std::unique_ptr<::scpp::core::FilterInterface> filter) override;
 
   /**
    * @brief Does a two way signal handler, ideally the child process
@@ -51,7 +53,7 @@ public:
   void kill(const std::string &id);
 
 private:
-  typedef std::function<bool(std::unique_ptr<FilterInterface>)> filter_setter;
+  typedef std::function<bool(std::unique_ptr<::scpp::core::FilterInterface>)> filter_setter;
   typedef std::function<bool(const int32_t)> signal_setter;
 
   struct process_function_table {
@@ -67,4 +69,6 @@ private:
   };
 };
 
+}
+}
 #endif /* end of include guard ZMQMESSAGEPIPE_HPP */

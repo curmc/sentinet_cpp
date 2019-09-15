@@ -6,8 +6,8 @@
 
 #include "kernel/KermitKernel.hpp"
 
-namespace Kermit {
-
+namespace scpp {
+namespace curmt {
 KermitKernel::KermitKernel(const std::string &drive_topic, 
                            const std::string& publish_channel,
                            const std::string& serve_channel,
@@ -94,4 +94,5 @@ bool KermitKernel::initialize_control_client() {
   spin(temp_sb);
   return true;
 }
-} // namespace Kermit
+}  
+}

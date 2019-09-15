@@ -16,12 +16,12 @@ int main() {
   std::promise<void> exit_thing;
   std::promise<void> exit_thing_2;
 
-  ZMQPubSubProxy a("hello", std::move(exit_thing.get_future()), "tcp://*:5570", "tcp://*:5571", 1);
+  scpp::proxies::ZMQPubSubProxy a("hello", std::move(exit_thing.get_future()), "tcp://*:5570", "tcp://*:5571", 1);
 
-  a.add_filter(std::make_unique<SimpleFilter>());
-  a.add_filter(std::make_unique<SimpleFilter2>());
+  a.add_filter(std::make_unique<scpp::filters::SimpleFilter>());
+  a.add_filter(std::make_unique<scpp::filters::SimpleFilter2>());
 
-  std::thread v1(&ZMQPubSubProxy::start, &a, std::chrono::microseconds(10));
+  std::thread v1(&scpp::proxies::ZMQPubSubProxy::start, &a, std::chrono::microseconds(10));
 
   sleep(20);
   std::cout<<"killing"<<std::endl;

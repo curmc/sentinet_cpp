@@ -23,6 +23,8 @@
 #include "core/utils/logging.hpp"
 #include "core/messages/pipe/FilterInterface.hpp"
 
+namespace scpp {
+namespace core {
 class ProxyInterface
 {
     public:
@@ -128,6 +130,7 @@ class ProxyInterface
         std::atomic_bool running;
         std::atomic_bool paused;
 };
-
+}
+}
 #endif /* end of include guard PROXYINTERFACE_HPP */
 

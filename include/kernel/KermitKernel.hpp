@@ -18,11 +18,11 @@
 #include <chrono>
 
 
-namespace Kermit {
 
-constexpr int local_port = 5555;
+namespace scpp {
+namespace curmt {
 
-class KermitKernel : public ZMQControlClient {
+class KermitKernel : public ::scpp::net::ZMQControlClient {
 public:
   KermitKernel() = delete;
   KermitKernel(const std::string &drive_topic, 
@@ -74,5 +74,6 @@ private:
 
   KermitOutputs kermit;
 };
-} // namespace Kermit
+}
+}
 #endif /* end of include guard KERMITKERNEL_HPP */

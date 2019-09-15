@@ -7,6 +7,8 @@
 #include "core/messages/pipe/ProxyInterface.hpp"
 #include <iostream>
 
+namespace scpp {
+namespace core {
 // Quick note, exit_signal has a constructor:
 // future(future &&other) which takes an rvalue that ensures exit_signal has a non_shareable state
 // Instead, we set the value to exit_signal
@@ -161,4 +163,6 @@ bool ProxyInterface::add_filter(std::unique_ptr<FilterInterface> filter) {
   filters.push_back(std::move(filter));
   adding_filter = false;
   return true; // TODO
+}
+}
 }

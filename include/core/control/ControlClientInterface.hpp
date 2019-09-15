@@ -34,11 +34,7 @@
 // Local Includes
 #include "core/utils/logging.hpp"
 
-struct publish_params;
-struct serve_params;
-struct request_params;
-struct subscribe_params;
-
+namespace scpp {
 typedef struct serve_params {
   serve_params() {
     address = "null";
@@ -55,6 +51,7 @@ typedef struct serve_params {
   std::string address;
   std::function<std::string(std::string &)> callback;
 } serve_params;
+
 
 /**
  * @brief Pass the parameters as a struct, nicer format
@@ -138,6 +135,7 @@ typedef struct request_params {
   std::chrono::microseconds period;
 } request_params;
 
+namespace core {
 /**
  * @brief Control Client interface is the communication client in the Control
  * Base application
@@ -253,12 +251,12 @@ public:
                        std::function<std::string(void)> get_data_to_publish,
                        const std::chrono::microseconds period) = 0;
 
-  inline bool publish(publish_params &params) {
+  inline bool publish(::scpp::publish_params &params) {
     return publish(params.broker_frontend, params.topic, params.get_data,
                    params.period);
   }
 
-  inline bool spin(publish_params &params) { return publish(params); }
+  inline bool spin(::scpp::publish_params &params) { return publish(params); }
 
   virtual bool cancel_periodic_publisher(const std::string &) = 0;
 
@@ -292,12 +290,12 @@ public:
                        std::function<void(std::string &)> callback,
                        const std::chrono::microseconds period) = 0;
 
-  inline bool request(request_params &params) {
+  inline bool request(::scpp::request_params &params) {
     return request(params.destination, params.id, params.get_data_to_request,
                    params.callback, params.period);
   }
 
-  inline bool spin(request_params &params) { return request(params); }
+  inline bool spin(::scpp::request_params &params) { return request(params); }
 
   /**
    * @brief Cancel a periodic_requester
@@ -329,11 +327,11 @@ public:
                          const std::string topic,
                          std::function<void(std::string &)> callback) = 0;
 
-  inline bool subscribe(subscribe_params &params) {
+  inline bool subscribe(::scpp::subscribe_params &params) {
     return subscribe(params.socket_backend, params.topic, params.callback);
   }
 
-  inline bool spin(subscribe_params &params) { return subscribe(params); }
+  inline bool spin(::scpp::subscribe_params &params) { return subscribe(params); }
 
   virtual bool cancel_subscription(const std::string &topic) = 0;
 
@@ -352,13 +350,15 @@ public:
   virtual bool serve(const std::string address,
                      std::function<std::string(std::string &)> callback) = 0;
 
-  inline bool serve(serve_params &params) {
+  inline bool serve(::scpp::serve_params &params) {
     return serve(params.address, params.callback);
   }
 
-  inline bool spin(serve_params &params) { return serve(params); }
+  inline bool spin(::scpp::serve_params &params) { return serve(params); }
 
   virtual bool terminate_server(const std::string &address) = 0;
 };
 
+}
+}
 #endif /* end of include guard CONTROLINTERFACE_HPP */

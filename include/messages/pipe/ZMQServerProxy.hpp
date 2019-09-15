@@ -19,7 +19,10 @@
 #include "core/messages/pipe/ProxyInterface.hpp"
 #include "control/zhelpers.hpp"
 
-class ZMQServerProxy : public ProxyInterface {
+namespace scpp {
+namespace proxies {
+
+class ZMQServerProxy : public ::scpp::core::ProxyInterface {
   public:
     ZMQServerProxy(const std::string&, std::future<void>, const std::string&, const std::string&, int context);
     ~ZMQServerProxy();
@@ -37,4 +40,6 @@ class ZMQServerProxy : public ProxyInterface {
     ::zmq::pollitem_t items[2];
 };
 
+}
+}
 #endif /* end of include guard ZMQSERVERPROXY_HPP */
