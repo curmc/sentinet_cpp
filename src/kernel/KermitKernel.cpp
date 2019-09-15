@@ -22,13 +22,13 @@ KermitKernel::KermitKernel(const std::string &drive_topic,
 }
 
 KermitKernel::~KermitKernel() { 
-  kermit.xbee->close(); 
+  // kermit.xbee->close();
   delete [] kermit.buffer;
 }
 
 void KermitKernel::set_serial(const std::string &port, const int &baud) {
   kermit.xbee = std::make_unique<SerialPort>(port, baud);
-  kermit.xbee->open();
+  // kermit.xbee->open();
 }
 
 void KermitKernel::print_state() {
@@ -42,9 +42,8 @@ bool KermitKernel::start(const std::chrono::microseconds serial_period) {
     if(kermit.verbose) {
       print_state();
     }
-    send_data();
+    // send_data();
     usleep(serial_period.count());
-    std::cout<<"here"<<std::endl;
   }
   return true;
 }
@@ -64,6 +63,7 @@ bool KermitKernel::send_data() {
 }
 
 void KermitKernel::drive_message_subscribe_callback(std::string& message) {
+  LOG_INFO("I recieved %s", message.c_str());
   return;  //TODO
 }
 
