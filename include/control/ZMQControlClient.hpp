@@ -40,22 +40,23 @@ constexpr auto SERVER_UDP_PREFIX = "udp://*";
 constexpr auto LOCAL_HOST_UDP_PREFIX = "udp://127.0.0.1";
 constexpr auto LOCAL_HOST_TCP_PREFIX = "tcp://127.0.0.1";
 constexpr auto DEFAULT_ZMQ_CONTROL_NAME = "ZMQController";
-}  // namespace defaults
-}  // namespace utils
+} // namespace defaults
+} // namespace utils
 
 namespace scpp {
 namespace net {
 
-class ZMQControlClient : public ::scpp::core::ControlClientInterface {
- public:
+class ZMQControlClient : public ::scpp::core::ControlClientInterface
+{
+public:
   ZMQControlClient(int context_ = 1,
-                   const scpp::string &yaml_system_file = "empty");
+                   const scpp::string& yaml_system_file = "empty");
   ~ZMQControlClient() {}
 
   bool start(int i = 0) override;
   bool quit(int i = 0) override;
 
- public:
+public:
   /**
    * @brief In order to publish or request concurrently, you MUST first
    * initialize publisher or client by default, client and publisher don't
@@ -66,7 +67,7 @@ class ZMQControlClient : public ::scpp::core::ControlClientInterface {
    *
    * @return status
    */
-  bool initialize_publisher(const scpp::string &address) override;
+  bool initialize_publisher(const scpp::string& address) override;
 
   /**
    * @brief Refer to initialize_publisher
@@ -78,72 +79,79 @@ class ZMQControlClient : public ::scpp::core::ControlClientInterface {
   /**
    * API Guide - implimentation - inherited methods from ControlClientInterface
    */
- public:
+public:
   ///////////////////////////// PUBLISH /////////////////////////////////
   // Publishes on <this thread>
-  bool publish(const scpp::string &topic, const scpp::string &message) override;
+  bool publish(const scpp::string& topic, const scpp::string& message) override;
 
   // Does not execute above fnc - creates a new periodic publisher thread
-  bool publish(const scpp::string sock_addr, const scpp::string topic,
+  bool publish(const scpp::string sock_addr,
+               const scpp::string topic,
                scpp::function<scpp::string(void)> get_data_to_publish,
                scpp::time::microseconds period) override;
 
-  bool cancel_periodic_publisher(const scpp::string &) override;
+  bool cancel_periodic_publisher(const scpp::string&) override;
 
   ///////////////////////////// REQUEST /////////////////////////////////
   scpp::string request(const scpp::string destination,
                        const scpp::string message) override;
 
   // Does not execute above fnc
-  bool request(const scpp::string destination, const scpp::string id,
+  bool request(const scpp::string destination,
+               const scpp::string id,
                scpp::function<scpp::string(void)> get_data_to_request,
-               const scpp::function<void(scpp::string &)> callback,
+               const scpp::function<void(scpp::string&)> callback,
                const scpp::time::microseconds period) override;
 
-  bool cancel_periodic_request(const scpp::string &) override;
+  bool cancel_periodic_request(const scpp::string&) override;
 
   ///////////////////////////// SUBSCRIBE /////////////////////////////////
-  bool subscribe(const scpp::string sock_addr, const scpp::string topic,
-                 scpp::function<void(scpp::string &)> callback) override;
+  bool subscribe(const scpp::string sock_addr,
+                 const scpp::string topic,
+                 scpp::function<void(scpp::string&)> callback) override;
 
-  bool cancel_subscription(const scpp::string &topic) override;
+  bool cancel_subscription(const scpp::string& topic) override;
 
   ///////////////////////////// SERVE /////////////////////////////////
   bool serve(const scpp::string address,
-             scpp::function<scpp::string(scpp::string &)> callback) override;
+             scpp::function<scpp::string(scpp::string&)> callback) override;
 
-  bool terminate_server(const scpp::string &address) override;
+  bool terminate_server(const scpp::string& address) override;
 
   // Thread functions
- private:
+private:
   static void periodic_publish_thread(
-      scpp::unique_ptr<Publisher_Context> pub_context) {
+    scpp::unique_ptr<Publisher_Context> pub_context)
+  {
     pub_context->enter_thread();
   }
   static void periodic_request_thread(
-      scpp::unique_ptr<Requester_Context> req_context) {
+    scpp::unique_ptr<Requester_Context> req_context)
+  {
     req_context->enter_thread();
   }
   static void subscription_thread(
-      scpp::unique_ptr<Subscriber_Context> sub_context) {
+    scpp::unique_ptr<Subscriber_Context> sub_context)
+  {
     sub_context->enter_thread();
   }
-  static void server_thread(scpp::unique_ptr<Server_Context> serv_thread) {
+  static void server_thread(scpp::unique_ptr<Server_Context> serv_thread)
+  {
     serv_thread->enter_thread();
   }
 
- private:
+private:
   // Assuming socket is already bound to an address
   static void concurrent_publish(scpp::unique_ptr<::zmq::socket_t> socket,
-                                 const scpp::string &topic,
-                                 const scpp::string &message);
+                                 const scpp::string& topic,
+                                 const scpp::string& message);
 
-  scpp::string concurrent_request(const scpp::string &server,
+  scpp::string concurrent_request(const scpp::string& server,
                                   scpp::unique_ptr<::zmq::socket_t> socket,
-                                  const scpp::string &message);
+                                  const scpp::string& message);
 
   // Data structures
- private:
+private:
   /**
    * @brief A Place to store all socket information
    * @note sockets are not to be shared between threads but contexts should be
@@ -151,7 +159,8 @@ class ZMQControlClient : public ::scpp::core::ControlClientInterface {
    * @note This is simply a ghost that wraps X_Context. It contains all
    * the elements that this object has control to change
    */
-  typedef struct {
+  typedef struct
+  {
     // Might add more
     scpp::unique_ptr<scpp::thread> thread;
     scpp::promise<void> exit_signal;
@@ -168,7 +177,8 @@ class ZMQControlClient : public ::scpp::core::ControlClientInterface {
    * thread. So a socket_thread_space is simply the aspects that this
    * object needs access to
    */
-  typedef struct socket_data_s {
+  typedef struct socket_data_s
+  {
     scpp::unordered_map<scpp::string, socket_thread_space> subscribers;
     scpp::unordered_map<scpp::string, socket_thread_space> servers;
     scpp::unordered_map<scpp::string, socket_thread_space> periodic_clients;
@@ -178,12 +188,13 @@ class ZMQControlClient : public ::scpp::core::ControlClientInterface {
   /**
    * @brief Individual data per entity
    */
-  typedef struct {
+  typedef struct
+  {
     unsigned int supported_threads;
     scpp::string control_node_name;
   } control_meta_data;
 
- private:
+private:
   // Meta information - unique
   control_meta_data meta;
 
@@ -198,11 +209,13 @@ class ZMQControlClient : public ::scpp::core::ControlClientInterface {
   scpp::unique_ptr<::zmq::socket_t> this_client;
 
   // Helper Functions
- private:
+private:
   // Honestly I was just too lazy to write out std::map ......
-  template <typename T>
-  inline socket_thread_space &create_socket(int type, T &map,
-                                            const scpp::string identifier) {
+  template<typename T>
+  inline socket_thread_space& create_socket(int type,
+                                            T& map,
+                                            const scpp::string identifier)
+  {
     socket_thread_space socket_thread;
     map.emplace(identifier, scpp::move(socket_thread));
     map[identifier].socket = std::make_unique<::zmq::socket_t>(context, type);
@@ -212,6 +225,6 @@ class ZMQControlClient : public ::scpp::core::ControlClientInterface {
 
 // Initialize static socket thread space with default constructor
 
-}  // namespace net
-}  // namespace scpp
+} // namespace net
+} // namespace scpp
 #endif /* end of include guard ZMQCONTROLCLIENT_HPP */

@@ -21,7 +21,9 @@ namespace random {
  *
  * @return A random char
  */
-static inline unsigned char random_char() {
+static inline unsigned char
+random_char()
+{
   std::random_device rd;
   std::mt19937 gen(rd());
   std::uniform_int_distribution<> dis(0, 255);
@@ -34,7 +36,9 @@ static inline unsigned char random_char() {
  *
  * @return A random hex
  */
-static inline std::string generate_hex(const unsigned int len) {
+static inline std::string
+generate_hex(const unsigned int len)
+{
   std::stringstream ss;
   for (unsigned int i = 0; i < len; i++) {
     auto rc = random_char();
@@ -45,7 +49,7 @@ static inline std::string generate_hex(const unsigned int len) {
   }
   return ss.str();
 }
-}  // namespace random
-}  // namespace utils
+} // namespace random
+} // namespace utils
 
 #endif /* end of include guard RANDOM_HPP */

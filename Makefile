@@ -8,7 +8,7 @@ MAKE_TARGET=make -C ${BUILD_DIR}
 
 FILE_SUFFIXES=-iname *.h -o -iname *.cpp -o -iname *.hpp
 
-FORMAT_TARGET=clang-format -i -sort-includes=false -style=Google
+FORMAT_TARGET=clang-format -i -sort-includes=false -style=Mozilla
 
 CLEAN=rm -rf ${BUILD_DIR}
 

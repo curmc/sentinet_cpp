@@ -25,14 +25,16 @@ namespace functional {
  *
  * @return Some type of vector. The template syntax is wrong even
  */
-std::vector<T> generate(int itterations, void (*cb)(int), int &start = 1) {
+std::vector<T>
+generate(int itterations, void (*cb)(int), int& start = 1)
+{
   vector<int> sequence;
   for (int i = start; i < start + itterations; i++) {
     sequence.push_back((*cb)(i));
   }
   return sequence;
 }
-}  // namespace functional
-}  // namespace util
+} // namespace functional
+} // namespace util
 
 #endif /* end of include guard FUNCTIONAL_HPP */

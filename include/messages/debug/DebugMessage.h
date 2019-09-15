@@ -16,8 +16,9 @@
 #include <memory>
 #include <string>
 
-class DebugMessage {
- public:
+class DebugMessage
+{
+public:
   DebugMessage();
   virtual ~DebugMessage();
 
@@ -26,17 +27,17 @@ class DebugMessage {
   int get_id();
   std::string get_extra();
 
-  void set_name(const std::string &);
+  void set_name(const std::string&);
   void set_id(int32_t);
-  void set_extra(const std::string &extra);
+  void set_extra(const std::string& extra);
 
- public:
-  virtual bool serialize_to_string(std::string *output_string) const;
-  virtual bool parse_from_string(const std::string &value);
-  virtual bool serialize_to_ostream(std::ostream *ouput) const;
-  virtual bool parse_from_istream(std::istream *input);
+public:
+  virtual bool serialize_to_string(std::string* output_string) const;
+  virtual bool parse_from_string(const std::string& value);
+  virtual bool serialize_to_ostream(std::ostream* ouput) const;
+  virtual bool parse_from_istream(std::istream* input);
 
- private:
+private:
   std::unique_ptr<debug::DebugMessage> message;
   /* private data */
 };

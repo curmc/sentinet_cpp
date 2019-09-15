@@ -25,20 +25,22 @@
 
 static volatile sig_atomic_t signalStatus = 0;
 
-class SerialPort : public InputOutputInterface {
- public:
+class SerialPort : public InputOutputInterface
+{
+public:
   SerialPort() = delete;
-  SerialPort(const std::string &port, const int &baud,
-             const int &bytes = DEFAULT_BYTES);
+  SerialPort(const std::string& port,
+             const int& baud,
+             const int& bytes = DEFAULT_BYTES);
 
   virtual ~SerialPort();
 
-  bool set_port(const std::string &port);
-  bool set_baud(const int &baud);
+  bool set_port(const std::string& port);
+  bool set_baud(const int& baud);
 
-  bool write(const std::string &message);
-  bool write(const std::string &message, int bytes);
-  std::string read(int &num_bytes);
+  bool write(const std::string& message);
+  bool write(const std::string& message, int bytes);
+  std::string read(int& num_bytes);
 
   bool open();
   bool close();
@@ -47,19 +49,28 @@ class SerialPort : public InputOutputInterface {
   // combines the top two
   bool scan(int max_times);
 
- private:
-  static bool write_impl(const int &fd, const char *message,
-                         const int &num_bytes);
-  static bool read_impl(const int &fd, char *buffer, const int &num_bytes);
+private:
+  static bool write_impl(const int& fd,
+                         const char* message,
+                         const int& num_bytes);
+  static bool read_impl(const int& fd, char* buffer, const int& num_bytes);
 
   static void signal_handler(int sig_num);
   inline void check_signal();
 
-  enum state_t { CLOSING, CLOSED, SCANNING, OPEN };
+  enum state_t
+  {
+    CLOSING,
+    CLOSED,
+    SCANNING,
+    OPEN
+  };
 
-  typedef struct SerialProperties {
+  typedef struct SerialProperties
+  {
     SerialProperties() = delete;
-    SerialProperties(const int &num_bytes) {
+    SerialProperties(const int& num_bytes)
+    {
       buffer = new char[num_bytes + 1];
       bytes = num_bytes;
     }
@@ -69,7 +80,7 @@ class SerialPort : public InputOutputInterface {
     std::string port;
     speed_t baud;
     int bytes;
-    char *buffer;
+    char* buffer;
     termios toptions;
     termios old_options;
   } SerialProperties;

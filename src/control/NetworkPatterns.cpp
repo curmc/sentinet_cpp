@@ -17,7 +17,9 @@ namespace net {
  * I guess I may be a little paranoid of race conditions
  */
 
-void Publisher_Context::periodic_publish_thread(thread_properties &properties) {
+void
+Publisher_Context::periodic_publish_thread(thread_properties& properties)
+{
   // Grab the socket
   auto socket = std::move(properties.socket);
   socket->connect(properties.sock_addr);
@@ -56,12 +58,14 @@ void Publisher_Context::periodic_publish_thread(thread_properties &properties) {
   LOG_INFO("Publisher thread has been terminated on topic %s", topic.c_str());
 }
 
-void Subscriber_Context::subscription_thread(thread_properties &properties) {
+void
+Subscriber_Context::subscription_thread(thread_properties& properties)
+{
   auto socket = std::move(properties.socket);
   std::cout << properties.address << " " << properties.topic << std::endl;
   socket->connect(properties.address);
-  socket->setsockopt(ZMQ_SUBSCRIBE, properties.topic.c_str(),
-                     properties.topic.length());
+  socket->setsockopt(
+    ZMQ_SUBSCRIBE, properties.topic.c_str(), properties.topic.length());
 
   auto callback = properties.callback;
 
@@ -69,8 +73,9 @@ void Subscriber_Context::subscription_thread(thread_properties &properties) {
 
   std::string preallocated_message_string;
 
-  ::zmq::pollitem_t item = {static_cast<void *>(*socket.get()), 0, ZMQ_POLLIN,
-                            0};
+  ::zmq::pollitem_t item = {
+    static_cast<void*>(*socket.get()), 0, ZMQ_POLLIN, 0
+  };
   LOG_INFO("Subscriber thread has been started on topic %s",
            properties.topic.c_str());
 
@@ -78,7 +83,7 @@ void Subscriber_Context::subscription_thread(thread_properties &properties) {
          std::future_status::timeout) {
     zmq::poll(&item, 1, 100);
     if (item.revents & ZMQ_POLLIN) {
-      preallocated_message_string = s_recv(*socket);  // topic name
+      preallocated_message_string = s_recv(*socket); // topic name
       preallocated_message_string = s_recv(*socket);
       callback(preallocated_message_string);
     }
@@ -88,7 +93,9 @@ void Subscriber_Context::subscription_thread(thread_properties &properties) {
            properties.topic.c_str());
 }
 
-void Requester_Context::requester_thread(thread_properties &properties) {
+void
+Requester_Context::requester_thread(thread_properties& properties)
+{
   // Grab the socket
   auto socket = std::move(properties.socket);
 
@@ -128,7 +135,9 @@ void Requester_Context::requester_thread(thread_properties &properties) {
   LOG_INFO("A request thread has ended");
 }
 
-void Server_Context::server_thread(thread_properties &properties) {
+void
+Server_Context::server_thread(thread_properties& properties)
+{
   // Set up the socket
   auto socket = std::move(properties.socket);
   LOG_INFO("Server started on %s", properties.sock_addr.c_str());
@@ -139,8 +148,9 @@ void Server_Context::server_thread(thread_properties &properties) {
   auto callback = properties.callback;
 
   // Create a zmq poller to check on the socket
-  ::zmq::pollitem_t item = {static_cast<void *>(*socket.get()), 0, ZMQ_POLLIN,
-                            0};
+  ::zmq::pollitem_t item = {
+    static_cast<void*>(*socket.get()), 0, ZMQ_POLLIN, 0
+  };
 
   LOG_INFO("Server thread attached to address %s has begun",
            properties.sock_addr.c_str());
@@ -161,5 +171,5 @@ void Server_Context::server_thread(thread_properties &properties) {
   LOG_INFO("Server thread at address %s has ended",
            properties.sock_addr.c_str());
 }
-}  // namespace net
-}  // namespace scpp
+} // namespace net
+} // namespace scpp

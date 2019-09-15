@@ -20,12 +20,14 @@
 namespace scpp {
 namespace curmt {
 
-class KermitKernel : public ::scpp::net::ZMQControlClient {
- public:
+class KermitKernel : public ::scpp::net::ZMQControlClient
+{
+public:
   KermitKernel() = delete;
   KermitKernel(const std::string& drive_topic,
                const std::string& publish_channel,
-               const std::string& serve_channel, const bool verbose = true);
+               const std::string& serve_channel,
+               const bool verbose = true);
 
   virtual ~KermitKernel();
 
@@ -36,7 +38,7 @@ class KermitKernel : public ::scpp::net::ZMQControlClient {
   void print_state();
 
   // Control Client stuff
- private:
+private:
   bool initialize_control_client();
 
   // The subscription to cmd_vel topic
@@ -45,20 +47,23 @@ class KermitKernel : public ::scpp::net::ZMQControlClient {
   // The main server callback
   std::string command_channel_server_callback(std::string& message);
 
- private:
+private:
   bool send_data();
 
-  typedef struct KermitOutputs {
+  typedef struct KermitOutputs
+  {
     std::unique_ptr<SerialPort> xbee;
-    typedef struct {
+    typedef struct
+    {
       int lin;
       int ang;
     } drivetrain_t;
     drivetrain_t drive;
 
-    KermitOutputs() {
+    KermitOutputs()
+    {
       xbee = nullptr;
-      drive = {0, 0};
+      drive = { 0, 0 };
     }
     bool verbose;
 
@@ -70,6 +75,6 @@ class KermitKernel : public ::scpp::net::ZMQControlClient {
 
   KermitOutputs kermit;
 };
-}  // namespace curmt
-}  // namespace scpp
+} // namespace curmt
+} // namespace scpp
 #endif /* end of include guard KERMITKERNEL_HPP */

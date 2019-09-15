@@ -8,8 +8,10 @@
 
 namespace scpp {
 namespace filters {
-void SimpleFilter::convert(std::string& message) {
+void
+SimpleFilter::convert(std::string& message)
+{
   message = "[Passed through simple filter 1 ] " + message;
 }
-}  // namespace filters
-}  // namespace scpp
+} // namespace filters
+} // namespace scpp

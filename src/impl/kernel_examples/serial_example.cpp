@@ -6,7 +6,9 @@
 
 #include "kernel/SerialPort.hpp"
 
-int main() {
+int
+main()
+{
   auto a = std::make_unique<SerialPort>("/dev/ttyUSB0", 9600);
   a->open();
   a->write("Hello");

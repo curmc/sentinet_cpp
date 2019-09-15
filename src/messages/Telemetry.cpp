@@ -6,17 +6,34 @@
 
 #include "messages/telemetry/Telemetry.hpp"
 
-Telemetry::Telemetry() { message = std::make_unique<telemetry::telemetry>(); }
+Telemetry::Telemetry()
+{
+  message = std::make_unique<telemetry::telemetry>();
+}
 
 Telemetry::~Telemetry() {}
 
-std::string Telemetry::print() const { return message->DebugString(); }
+std::string
+Telemetry::print() const
+{
+  return message->DebugString();
+}
 
-int32_t Telemetry::get_time_alive() { return message->time_alive(); }
+int32_t
+Telemetry::get_time_alive()
+{
+  return message->time_alive();
+}
 
-std::string Telemetry::get_description() { return message->description(); }
+std::string
+Telemetry::get_description()
+{
+  return message->description();
+}
 
-int32_t Telemetry::get_number_endpoints(endpoint end) {
+int32_t
+Telemetry::get_number_endpoints(endpoint end)
+{
   switch (end) {
     case PUBLISHERS:
       return message->publishers().num_endpoints();
@@ -30,7 +47,9 @@ int32_t Telemetry::get_number_endpoints(endpoint end) {
   return -1;
 }
 
-int32_t Telemetry::get_number_messages(endpoint end) {
+int32_t
+Telemetry::get_number_messages(endpoint end)
+{
   switch (end) {
     case PUBLISHERS:
       return message->publishers().num_messages();
@@ -44,22 +63,30 @@ int32_t Telemetry::get_number_messages(endpoint end) {
   return -1;
 }
 
-bool Telemetry::serialize_to_string(std::string *output_string) {
+bool
+Telemetry::serialize_to_string(std::string* output_string)
+{
   message->SerializeToString(output_string);
   return true;
 }
 
-bool Telemetry::parse_from_string(const std::string &value) {
+bool
+Telemetry::parse_from_string(const std::string& value)
+{
   message->ParseFromString(value);
   return true;
 }
 
-bool Telemetry::serialize_from_ostream(std::ostream *output) {
+bool
+Telemetry::serialize_from_ostream(std::ostream* output)
+{
   message->SerializeToOstream(output);
   return true;
 }
 
-bool Telemetry::parse_from_istream(std::istream *input) {
+bool
+Telemetry::parse_from_istream(std::istream* input)
+{
   message->ParseFromIstream(input);
   return true;
 }

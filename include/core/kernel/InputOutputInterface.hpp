@@ -17,14 +17,15 @@
  * memory is the same across all interfaces. But for now, it's just a container
  * so  that input output interfaces can be abstracted in the future
  */
-class InputOutputInterface {
- public:
+class InputOutputInterface
+{
+public:
   virtual ~InputOutputInterface() = default;
 
-  virtual bool write(const std::string &data) = 0;
-  virtual bool write(const std::string &data, int bytes) = 0;
+  virtual bool write(const std::string& data) = 0;
+  virtual bool write(const std::string& data, int bytes) = 0;
 
-  virtual std::string read(int &num_bytes) = 0;
+  virtual std::string read(int& num_bytes) = 0;
 };
 
 #endif /* end of include guard INPUTOUTPUTINTERFACE_HPP */

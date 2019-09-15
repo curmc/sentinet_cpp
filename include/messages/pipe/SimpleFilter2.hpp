@@ -16,14 +16,15 @@
 namespace scpp {
 namespace filters {
 
-class SimpleFilter2 : public ::scpp::core::FilterInterface {
- public:
+class SimpleFilter2 : public ::scpp::core::FilterInterface
+{
+public:
   SimpleFilter2(){};
   virtual ~SimpleFilter2() = default;
 
   void convert(std::string& incomming_message) override;
 };
-}  // namespace filters
-}  // namespace scpp
+} // namespace filters
+} // namespace scpp
 
 #endif /* end of include guard SIMPLEFILTER2_HPP */

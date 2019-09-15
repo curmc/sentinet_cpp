@@ -25,11 +25,14 @@
 
 namespace scpp {
 namespace core {
-class ProxyInterface {
- public:
+class ProxyInterface
+{
+public:
   ProxyInterface() = delete;
 
-  ProxyInterface(const std::string&, std::future<void>, const std::string&,
+  ProxyInterface(const std::string&,
+                 std::future<void>,
+                 const std::string&,
                  const std::string&);
 
   virtual ~ProxyInterface();
@@ -89,7 +92,7 @@ class ProxyInterface {
 
   bool add_filter(std::unique_ptr<FilterInterface> filter);
 
- protected:
+protected:
   /**
    * @brief Executed every clock tick
    *
@@ -124,13 +127,13 @@ class ProxyInterface {
   std::vector<std::unique_ptr<FilterInterface>> filters;
   std::atomic_bool adding_filter;
 
- private:
+private:
   std::map<int, std::function<int(void)>> signal_table;
   const std::string id;
   std::future<void> exit_signal;
   std::atomic_bool running;
   std::atomic_bool paused;
 };
-}  // namespace core
-}  // namespace scpp
+} // namespace core
+} // namespace scpp
 #endif /* end of include guard PROXYINTERFACE_HPP */

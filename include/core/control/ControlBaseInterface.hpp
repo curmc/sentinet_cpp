@@ -11,14 +11,15 @@
 namespace scpp {
 namespace core {
 
-class ControlBaseInterface {
- public:
+class ControlBaseInterface
+{
+public:
   ControlBaseInterface();
   virtual ~ControlBaseInterface();
 
- private:
+private:
   /* private data */
 };
-}  // namespace core
-}  // namespace scpp
+} // namespace core
+} // namespace scpp
 #endif /* end of include guard CONTROLBASEINTERFACE_HPP */

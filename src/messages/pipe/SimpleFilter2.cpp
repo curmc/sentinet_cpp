@@ -9,9 +9,11 @@
 namespace scpp {
 namespace filters {
 
-void SimpleFilter2::convert(std::string& message) {
+void
+SimpleFilter2::convert(std::string& message)
+{
   message = "[Passed through filter 2] " + message;
 }
 
-}  // namespace filters
-}  // namespace scpp
+} // namespace filters
+} // namespace scpp

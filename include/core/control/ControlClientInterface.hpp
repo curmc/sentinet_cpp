@@ -35,46 +35,56 @@
 #include "core/utils/logging.hpp"
 
 namespace scpp {
-typedef struct serve_params {
-  serve_params() {
+typedef struct serve_params
+{
+  serve_params()
+  {
     address = "null";
-    callback = [](std::string &val) -> std::string { return val; };
+    callback = [](std::string& val) -> std::string { return val; };
   }
 
-  serve_params(const std::string &address_,
-               std::function<std::string(std::string &)> callback_)
-      : address(address_), callback(callback_) {}
+  serve_params(const std::string& address_,
+               std::function<std::string(std::string&)> callback_)
+    : address(address_)
+    , callback(callback_)
+  {}
 
-  serve_params(const serve_params &params)
-      : address(params.address), callback(params.callback) {}
+  serve_params(const serve_params& params)
+    : address(params.address)
+    , callback(params.callback)
+  {}
 
   std::string address;
-  std::function<std::string(std::string &)> callback;
+  std::function<std::string(std::string&)> callback;
 } serve_params;
 
 /**
  * @brief Pass the parameters as a struct, nicer format
  */
-typedef struct publish_params {
-  publish_params() {
+typedef struct publish_params
+{
+  publish_params()
+  {
     broker_frontend = "null";
     topic = "";
     get_data = [](void) -> std::string { return "No Publisher Data"; };
     period = std::chrono::microseconds(100);
   }
 
-  publish_params(const std::string &broker, const std::string &topic_) {
+  publish_params(const std::string& broker, const std::string& topic_)
+  {
     broker_frontend = broker;
     topic = topic_;
     get_data = [](void) -> std::string { return "No Publisher Data"; };
     period = std::chrono::microseconds(100);
   }
 
-  publish_params(const publish_params &pub)
-      : broker_frontend(pub.broker_frontend),
-        topic(pub.topic),
-        get_data(pub.get_data),
-        period(pub.period) {}
+  publish_params(const publish_params& pub)
+    : broker_frontend(pub.broker_frontend)
+    , topic(pub.topic)
+    , get_data(pub.get_data)
+    , period(pub.period)
+  {}
 
   std::string broker_frontend;
   std::string topic;
@@ -82,59 +92,71 @@ typedef struct publish_params {
   std::chrono::microseconds period;
 } publish_params;
 
-typedef struct subscribe_params {
-  subscribe_params() {
+typedef struct subscribe_params
+{
+  subscribe_params()
+  {
     socket_backend = "null";
     topic = "";
-    callback = [this](std::string &val) -> void {
+    callback = [this](std::string& val) -> void {
       LOG_DEBUG("Recieved %s on topic %s", val.c_str(), topic.c_str());
     };
   }
-  subscribe_params(const std::string &sock_backend_, const std::string &topic_)
-      : socket_backend(sock_backend_), topic(topic_) {
-    callback = [this](std::string &val) -> void {
+  subscribe_params(const std::string& sock_backend_, const std::string& topic_)
+    : socket_backend(sock_backend_)
+    , topic(topic_)
+  {
+    callback = [this](std::string& val) -> void {
       LOG_DEBUG("Recieved %s on topic %s", val.c_str(), topic.c_str());
     };
   }
-  subscribe_params(const subscribe_params &params)
-      : socket_backend(params.socket_backend),
-        topic(params.topic),
-        callback(params.callback) {}
+  subscribe_params(const subscribe_params& params)
+    : socket_backend(params.socket_backend)
+    , topic(params.topic)
+    , callback(params.callback)
+  {}
   std::string socket_backend;
   std::string topic;
-  std::function<void(std::string &)> callback;
+  std::function<void(std::string&)> callback;
 } subscribe_params;
 
-typedef struct request_params {
-  request_params() {
+typedef struct request_params
+{
+  request_params()
+  {
     id = "REQUESTER";
     destination = "null";
     get_data_to_request = [](void) -> std::string { return "null"; };
-    callback = [this](std::string &ret) -> void {
+    callback = [this](std::string& ret) -> void {
       LOG_DEBUG("Requester %s recieved: %s", id.c_str(), ret.c_str());
     };
     period = std::chrono::microseconds(100);
   }
 
-  request_params(const std::string &id_, const std::string &destination_,
+  request_params(const std::string& id_,
+                 const std::string& destination_,
                  const std::chrono::microseconds period_)
-      : id(id_), destination(destination_), period(period_) {
+    : id(id_)
+    , destination(destination_)
+    , period(period_)
+  {
     get_data_to_request = [](void) -> std::string { return "null"; };
-    callback = [this](std::string &ret) -> void {
+    callback = [this](std::string& ret) -> void {
       LOG_DEBUG("Requester %s recieved: %s", id.c_str(), ret.c_str());
     };
   }
 
-  request_params(const request_params &params)
-      : id(params.id),
-        destination(params.destination),
-        get_data_to_request(params.get_data_to_request),
-        callback(params.callback) {}
+  request_params(const request_params& params)
+    : id(params.id)
+    , destination(params.destination)
+    , get_data_to_request(params.get_data_to_request)
+    , callback(params.callback)
+  {}
 
   std::string id;
   std::string destination;
   std::function<std::string(void)> get_data_to_request;
-  std::function<void(std::string &)> callback;
+  std::function<void(std::string&)> callback;
   std::chrono::microseconds period;
 } request_params;
 
@@ -152,8 +174,9 @@ namespace core {
  * from. If anything, this is a template for how to publish onto a certain
  * control client.
  */
-class ControlClientInterface {
- public:
+class ControlClientInterface
+{
+public:
   virtual ~ControlClientInterface() = default;
 
   /**
@@ -205,7 +228,8 @@ class ControlClientInterface {
    *
    * @return  Status
    */
-  virtual bool initialize_publisher(const std::string &broker_frontend) {
+  virtual bool initialize_publisher(const std::string& broker_frontend)
+  {
     return true;
   }
 
@@ -230,8 +254,8 @@ class ControlClientInterface {
    *
    * @return             Status of the publish
    */
-  virtual bool publish(const std::string &topic,
-                       const std::string &message) = 0;
+  virtual bool publish(const std::string& topic,
+                       const std::string& message) = 0;
 
   // Set a periodic publish / request. i.e. developer attatches a callback to
   // the function to periodically occur
@@ -254,14 +278,15 @@ class ControlClientInterface {
                        std::function<std::string(void)> get_data_to_publish,
                        const std::chrono::microseconds period) = 0;
 
-  inline bool publish(::scpp::publish_params &params) {
-    return publish(params.broker_frontend, params.topic, params.get_data,
-                   params.period);
+  inline bool publish(::scpp::publish_params& params)
+  {
+    return publish(
+      params.broker_frontend, params.topic, params.get_data, params.period);
   }
 
-  inline bool spin(::scpp::publish_params &params) { return publish(params); }
+  inline bool spin(::scpp::publish_params& params) { return publish(params); }
 
-  virtual bool cancel_periodic_publisher(const std::string &) = 0;
+  virtual bool cancel_periodic_publisher(const std::string&) = 0;
 
   ////////////////////////// Request Methods /////////////////////////////
   /**
@@ -288,17 +313,22 @@ class ControlClientInterface {
    * @return                          [Status of request, returns 1 is ends
    * badly]
    */
-  virtual bool request(const std::string destination, const std::string id,
+  virtual bool request(const std::string destination,
+                       const std::string id,
                        std::function<std::string(void)> get_data_to_request,
-                       std::function<void(std::string &)> callback,
+                       std::function<void(std::string&)> callback,
                        const std::chrono::microseconds period) = 0;
 
-  inline bool request(::scpp::request_params &params) {
-    return request(params.destination, params.id, params.get_data_to_request,
-                   params.callback, params.period);
+  inline bool request(::scpp::request_params& params)
+  {
+    return request(params.destination,
+                   params.id,
+                   params.get_data_to_request,
+                   params.callback,
+                   params.period);
   }
 
-  inline bool spin(::scpp::request_params &params) { return request(params); }
+  inline bool spin(::scpp::request_params& params) { return request(params); }
 
   /**
    * @brief Cancel a periodic_requester
@@ -307,7 +337,7 @@ class ControlClientInterface {
    *
    * @return The
    */
-  virtual bool cancel_periodic_request(const std::string &) = 0;
+  virtual bool cancel_periodic_request(const std::string&) = 0;
 
   ////////////////////////// Subscribe Methods /////////////////////////////
   /**
@@ -328,17 +358,19 @@ class ControlClientInterface {
    */
   virtual bool subscribe(const std::string frontend_broker,
                          const std::string topic,
-                         std::function<void(std::string &)> callback) = 0;
+                         std::function<void(std::string&)> callback) = 0;
 
-  inline bool subscribe(::scpp::subscribe_params &params) {
+  inline bool subscribe(::scpp::subscribe_params& params)
+  {
     return subscribe(params.socket_backend, params.topic, params.callback);
   }
 
-  inline bool spin(::scpp::subscribe_params &params) {
+  inline bool spin(::scpp::subscribe_params& params)
+  {
     return subscribe(params);
   }
 
-  virtual bool cancel_subscription(const std::string &topic) = 0;
+  virtual bool cancel_subscription(const std::string& topic) = 0;
 
   ////////////////////////// Serve Methods /////////////////////////////
   /**
@@ -353,17 +385,18 @@ class ControlClientInterface {
    * @return         [Staus if the server dies]
    */
   virtual bool serve(const std::string address,
-                     std::function<std::string(std::string &)> callback) = 0;
+                     std::function<std::string(std::string&)> callback) = 0;
 
-  inline bool serve(::scpp::serve_params &params) {
+  inline bool serve(::scpp::serve_params& params)
+  {
     return serve(params.address, params.callback);
   }
 
-  inline bool spin(::scpp::serve_params &params) { return serve(params); }
+  inline bool spin(::scpp::serve_params& params) { return serve(params); }
 
-  virtual bool terminate_server(const std::string &address) = 0;
+  virtual bool terminate_server(const std::string& address) = 0;
 };
 
-}  // namespace core
-}  // namespace scpp
+} // namespace core
+} // namespace scpp
 #endif /* end of include guard CONTROLINTERFACE_HPP */

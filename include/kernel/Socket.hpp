@@ -17,8 +17,9 @@
 #include <string>
 #include <memory>
 
-class Socket {
- public:
+class Socket
+{
+public:
   Socket();
   virtual ~Socket();
 
@@ -30,9 +31,9 @@ class Socket {
   // https://www.gnu.org/software/libc/manual/html_node/Listening.html#Listening
   bool listen(int queue_size);
   // https://www.gnu.org/software/libc/manual/html_node/Connecting.html#Connecting
-  bool connect(const std::string &address);
+  bool connect(const std::string& address);
 
- private:
+private:
   /**
    * Options include:
    * SOCK_STREAM -> TCP
@@ -40,7 +41,7 @@ class Socket {
    * SOCK_RAW -> Raw (no need usually)
    * https://www.gnu.org/software/libc/manual/html_node/Communication-Styles.html#Communication-Styles
    */
-  bool set_sock_type(const int &sock_type);
+  bool set_sock_type(const int& sock_type);
 
   /**
    * Options include:
@@ -56,25 +57,27 @@ class Socket {
    * AF_UNSPEC -> no address format
    * https://www.gnu.org/software/libc/manual/html_node/Address-Formats.html#Address-Formats
    */
-  bool set_sock_domain(const int &sock_domain);
+  bool set_sock_domain(const int& sock_domain);
 
   /**
    * https://www.gnu.org/software/libc/manual/html_node/Socket-Addresses.html#Socket-Addresses
    * https://www.gnu.org/software/libc/manual/html_node/Setting-Address.html#Setting-Address
    */
-  bool set_sock_address(const std::string &addres);
-  bool set_sock_address(const sockaddr &addr);  // copy a socket address
+  bool set_sock_address(const std::string& addres);
+  bool set_sock_address(const sockaddr& addr); // copy a socket address
   bool set_sock_port(int port);
 
- private:
-  typedef struct SocketMeta {
+private:
+  typedef struct SocketMeta
+  {
     int domain;
     int type;
     int protocol;
     int port;
   } SocketMeta;
 
-  typedef struct SocketProperties {
+  typedef struct SocketProperties
+  {
     SocketProperties() = delete;
     int sockfd;
     sockaddr address;

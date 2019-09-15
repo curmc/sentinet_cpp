@@ -24,23 +24,24 @@
 
 namespace scpp {
 namespace net {
-class ZMQPipe : public ::scpp::core::PipeInterface {
- public:
+class ZMQPipe : public ::scpp::core::PipeInterface
+{
+public:
   ZMQPipe() {}
   ~ZMQPipe() {}
 
- public:
-  bool create_pub_sub_endpoint(const std::string &id,
-                               const std::string &frontend,
-                               const std::string &backend) override;
+public:
+  bool create_pub_sub_endpoint(const std::string& id,
+                               const std::string& frontend,
+                               const std::string& backend) override;
 
-  bool create_req_rep_endpoint(const std::string &id,
-                               const std::string &frontend,
-                               const std::string &backend) override;
+  bool create_req_rep_endpoint(const std::string& id,
+                               const std::string& frontend,
+                               const std::string& backend) override;
 
   bool set_filter(
-      const std::string &id,
-      std::unique_ptr<::scpp::core::FilterInterface> filter) override;
+    const std::string& id,
+    std::unique_ptr<::scpp::core::FilterInterface> filter) override;
 
   /**
    * @brief Does a two way signal handler, ideally the child process
@@ -50,27 +51,29 @@ class ZMQPipe : public ::scpp::core::PipeInterface {
    *
    * @return
    */
-  bool kill_cleanly(const std::string &id);
-  void kill(const std::string &id);
+  bool kill_cleanly(const std::string& id);
+  void kill(const std::string& id);
 
- private:
+private:
   typedef std::function<bool(std::unique_ptr<::scpp::core::FilterInterface>)>
-      filter_setter;
+    filter_setter;
   typedef std::function<bool(const int32_t)> signal_setter;
 
-  struct process_function_table {
+  struct process_function_table
+  {
     int32_t pid;
     filter_setter set_filter;
     signal_setter set_signal;
   };
 
-  struct management {
+  struct management
+  {
     // table of message pipes
     std::map<const std::string, process_function_table> process_table;
-    void send_signal(const std::string &id, int32_t signal_val);
+    void send_signal(const std::string& id, int32_t signal_val);
   };
 };
 
-}  // namespace net
-}  // namespace scpp
+} // namespace net
+} // namespace scpp
 #endif /* end of include guard ZMQMESSAGEPIPE_HPP */

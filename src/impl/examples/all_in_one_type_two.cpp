@@ -6,7 +6,9 @@
 
 #include "control/ZMQControlClient.hpp"
 
-int main() {
+int
+main()
+{
   std::string value("Well hello there");
 
   scpp::publish_params a;
@@ -20,7 +22,7 @@ int main() {
   a.period = std::chrono::seconds(1);
 
   scpp::subscribe_params b;
-  b.callback = [](std::string &val) -> void {
+  b.callback = [](std::string& val) -> void {
     std::cout << "Recieved " << val << std::endl;
   };
   b.socket_backend = "tcp://localhost:5571";

@@ -21,8 +21,9 @@
 namespace scpp {
 namespace core {
 
-class FilterInterface {
- public:
+class FilterInterface
+{
+public:
   FilterInterface(){};
   virtual ~FilterInterface() = default;
 
@@ -31,9 +32,9 @@ class FilterInterface {
    *
    * @param incomming_message a muttable string
    */
-  virtual void convert(std::string &incomming_message) = 0;
+  virtual void convert(std::string& incomming_message) = 0;
 };
 
-}  // namespace core
-}  // namespace scpp
+} // namespace core
+} // namespace scpp
 #endif /* end of include guard FILTERINTERFACE_HPP */

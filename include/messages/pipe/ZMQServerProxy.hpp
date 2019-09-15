@@ -22,25 +22,29 @@
 namespace scpp {
 namespace proxies {
 
-class ZMQServerProxy : public ::scpp::core::ProxyInterface {
- public:
-  ZMQServerProxy(const std::string&, std::future<void>, const std::string&,
-                 const std::string&, int context);
+class ZMQServerProxy : public ::scpp::core::ProxyInterface
+{
+public:
+  ZMQServerProxy(const std::string&,
+                 std::future<void>,
+                 const std::string&,
+                 const std::string&,
+                 int context);
   ~ZMQServerProxy();
 
- protected:
+protected:
   bool __spin__() override;
   bool __start__() override;
   bool __stop__() override;
   std::string __get_type__() override;
 
- private:
+private:
   std::unique_ptr<::zmq::socket_t> frontend_sock;
   std::unique_ptr<::zmq::socket_t> backend_sock;
   ::zmq::context_t context;
   ::zmq::pollitem_t items[2];
 };
 
-}  // namespace proxies
-}  // namespace scpp
+} // namespace proxies
+} // namespace scpp
 #endif /* end of include guard ZMQSERVERPROXY_HPP */
