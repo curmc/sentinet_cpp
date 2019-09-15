@@ -22,7 +22,7 @@ namespace scpp {
 namespace core {
 
 class FilterInterface {
-public:
+ public:
   FilterInterface(){};
   virtual ~FilterInterface() = default;
 
@@ -34,6 +34,6 @@ public:
   virtual void convert(std::string &incomming_message) = 0;
 };
 
-}
-}
+}  // namespace core
+}  // namespace scpp
 #endif /* end of include guard FILTERINTERFACE_HPP */

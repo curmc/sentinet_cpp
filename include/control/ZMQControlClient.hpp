@@ -16,7 +16,6 @@
 #include "control/zhelpers.hpp"
 #include "control/NetworkPatterns.hpp"
 
-
 /**
  * @brief A ZMQControl Client is an implementation of the Control Client
  * Interface. CCI by default is not multithreaded, nor is it as complex as
@@ -41,14 +40,14 @@ constexpr auto SERVER_UDP_PREFIX = "udp://*";
 constexpr auto LOCAL_HOST_UDP_PREFIX = "udp://127.0.0.1";
 constexpr auto LOCAL_HOST_TCP_PREFIX = "tcp://127.0.0.1";
 constexpr auto DEFAULT_ZMQ_CONTROL_NAME = "ZMQController";
-} // namespace defaults
-} // namespace utils
+}  // namespace defaults
+}  // namespace utils
 
 namespace scpp {
 namespace net {
 
 class ZMQControlClient : public ::scpp::core::ControlClientInterface {
-public:
+ public:
   ZMQControlClient(int context_ = 1,
                    const scpp::string &yaml_system_file = "empty");
   ~ZMQControlClient() {}
@@ -56,7 +55,7 @@ public:
   bool start(int i = 0) override;
   bool quit(int i = 0) override;
 
-public:
+ public:
   /**
    * @brief In order to publish or request concurrently, you MUST first
    * initialize publisher or client by default, client and publisher don't
@@ -79,7 +78,7 @@ public:
   /**
    * API Guide - implimentation - inherited methods from ControlClientInterface
    */
-public:
+ public:
   ///////////////////////////// PUBLISH /////////////////////////////////
   // Publishes on <this thread>
   bool publish(const scpp::string &topic, const scpp::string &message) override;
@@ -93,7 +92,7 @@ public:
 
   ///////////////////////////// REQUEST /////////////////////////////////
   scpp::string request(const scpp::string destination,
-                      const scpp::string message) override;
+                       const scpp::string message) override;
 
   // Does not execute above fnc
   bool request(const scpp::string destination, const scpp::string id,
@@ -116,35 +115,35 @@ public:
   bool terminate_server(const scpp::string &address) override;
 
   // Thread functions
-private:
-  static void
-  periodic_publish_thread(scpp::unique_ptr<Publisher_Context> pub_context) {
+ private:
+  static void periodic_publish_thread(
+      scpp::unique_ptr<Publisher_Context> pub_context) {
     pub_context->enter_thread();
   }
-  static void
-  periodic_request_thread(scpp::unique_ptr<Requester_Context> req_context) {
+  static void periodic_request_thread(
+      scpp::unique_ptr<Requester_Context> req_context) {
     req_context->enter_thread();
   }
-  static void
-  subscription_thread(scpp::unique_ptr<Subscriber_Context> sub_context) {
+  static void subscription_thread(
+      scpp::unique_ptr<Subscriber_Context> sub_context) {
     sub_context->enter_thread();
   }
   static void server_thread(scpp::unique_ptr<Server_Context> serv_thread) {
     serv_thread->enter_thread();
   }
 
-private:
+ private:
   // Assuming socket is already bound to an address
   static void concurrent_publish(scpp::unique_ptr<::zmq::socket_t> socket,
                                  const scpp::string &topic,
                                  const scpp::string &message);
 
   scpp::string concurrent_request(const scpp::string &server,
-                                 scpp::unique_ptr<::zmq::socket_t> socket,
-                                 const scpp::string &message);
+                                  scpp::unique_ptr<::zmq::socket_t> socket,
+                                  const scpp::string &message);
 
   // Data structures
-private:
+ private:
   /**
    * @brief A Place to store all socket information
    * @note sockets are not to be shared between threads but contexts should be
@@ -184,7 +183,7 @@ private:
     scpp::string control_node_name;
   } control_meta_data;
 
-private:
+ private:
   // Meta information - unique
   control_meta_data meta;
 
@@ -199,7 +198,7 @@ private:
   scpp::unique_ptr<::zmq::socket_t> this_client;
 
   // Helper Functions
-private:
+ private:
   // Honestly I was just too lazy to write out std::map ......
   template <typename T>
   inline socket_thread_space &create_socket(int type, T &map,
@@ -213,6 +212,6 @@ private:
 
 // Initialize static socket thread space with default constructor
 
-}
-}
+}  // namespace net
+}  // namespace scpp
 #endif /* end of include guard ZMQCONTROLCLIENT_HPP */

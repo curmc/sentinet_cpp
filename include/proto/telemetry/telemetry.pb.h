@@ -29,8 +29,8 @@
 #include <google/protobuf/metadata.h>
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/message.h>
-#include <google/protobuf/repeated_field.h> // IWYU pragma: export
-#include <google/protobuf/extension_set.h>  // IWYU pragma: export
+#include <google/protobuf/repeated_field.h>  // IWYU pragma: export
+#include <google/protobuf/extension_set.h>   // IWYU pragma: export
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
@@ -38,7 +38,7 @@
 PROTOBUF_NAMESPACE_OPEN
 namespace internal {
 class AnyMetadata;
-} // namespace internal
+}  // namespace internal
 PROTOBUF_NAMESPACE_CLOSE
 
 // Internal implementation detail -- do not use these members.
@@ -65,11 +65,11 @@ class telemetry_endpoint;
 class telemetry_endpointDefaultTypeInternal;
 extern telemetry_endpointDefaultTypeInternal
     _telemetry_endpoint_default_instance_;
-} // namespace telemetry
+}  // namespace telemetry
 PROTOBUF_NAMESPACE_OPEN
 template <>
-::telemetry::telemetry *
-Arena::CreateMaybeMessage<::telemetry::telemetry>(Arena *);
+::telemetry::telemetry *Arena::CreateMaybeMessage<::telemetry::telemetry>(
+    Arena *);
 template <>
 ::telemetry::telemetry_endpoint *
 Arena::CreateMaybeMessage<::telemetry::telemetry_endpoint>(Arena *);
@@ -83,7 +83,7 @@ class telemetry_endpoint
           Message /* @@protoc_insertion_point(class_definition:telemetry.telemetry.endpoint)
                    */
 {
-public:
+ public:
   telemetry_endpoint();
   virtual ~telemetry_endpoint();
 
@@ -99,16 +99,15 @@ public:
   }
   inline telemetry_endpoint &operator=(telemetry_endpoint &&from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from)
-        InternalSwap(&from);
+      if (this != &from) InternalSwap(&from);
     } else {
       CopyFrom(from);
     }
     return *this;
   }
 
-  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &
-  unknown_fields() const {
+  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &unknown_fields()
+      const {
     return _internal_metadata_.unknown_fields();
   }
   inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet *mutable_unknown_fields() {
@@ -126,7 +125,7 @@ public:
   }
   static const telemetry_endpoint &default_instance();
 
-  static void InitAsDefaultInstance(); // FOR INTERNAL USE ONLY
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
   static inline const telemetry_endpoint *internal_default_instance() {
     return reinterpret_cast<const telemetry_endpoint *>(
         &_telemetry_endpoint_default_instance_);
@@ -135,8 +134,7 @@ public:
 
   friend void swap(telemetry_endpoint &a, telemetry_endpoint &b) { a.Swap(&b); }
   inline void Swap(telemetry_endpoint *other) {
-    if (other == this)
-      return;
+    if (other == this) return;
     InternalSwap(other);
   }
 
@@ -158,20 +156,20 @@ public:
 
   size_t ByteSizeLong() const final;
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-  const char *
-  _InternalParse(const char *ptr,
-                 ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
+  const char *_InternalParse(
+      const char *ptr,
+      ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
 #else
   bool MergePartialFromCodedStream(
       ::PROTOBUF_NAMESPACE_ID::io::CodedInputStream *input) final;
-#endif // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+#endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
   void SerializeWithCachedSizes(
       ::PROTOBUF_NAMESPACE_ID::io::CodedOutputStream *output) const final;
   ::PROTOBUF_NAMESPACE_ID::uint8 *InternalSerializeWithCachedSizesToArray(
       ::PROTOBUF_NAMESPACE_ID::uint8 *target) const final;
   int GetCachedSize() const final { return _cached_size_.Get(); }
 
-private:
+ private:
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
@@ -181,16 +179,16 @@ private:
     return "telemetry.telemetry.endpoint";
   }
 
-private:
+ private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena *GetArenaNoVirtual() const {
     return nullptr;
   }
   inline void *MaybeArenaPtr() const { return nullptr; }
 
-public:
+ public:
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
 
-private:
+ private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
     ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
         &::descriptor_table_proto_2ftelemetry_2ftelemetry_2eproto);
@@ -198,7 +196,7 @@ private:
         .file_level_metadata[kIndexInFileMessages];
   }
 
-public:
+ public:
   // nested types ----------------------------------------------------
 
   // accessors -------------------------------------------------------
@@ -220,7 +218,7 @@ public:
   void set_num_messages(::PROTOBUF_NAMESPACE_ID::int32 value);
 
   // @@protoc_insertion_point(class_scope:telemetry.telemetry.endpoint)
-private:
+ private:
   class _Internal;
 
   // helper for ByteSizeLong()
@@ -241,7 +239,7 @@ class telemetry
           Message /* @@protoc_insertion_point(class_definition:telemetry.telemetry)
                    */
 {
-public:
+ public:
   telemetry();
   virtual ~telemetry();
 
@@ -256,16 +254,15 @@ public:
   }
   inline telemetry &operator=(telemetry &&from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from)
-        InternalSwap(&from);
+      if (this != &from) InternalSwap(&from);
     } else {
       CopyFrom(from);
     }
     return *this;
   }
 
-  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &
-  unknown_fields() const {
+  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &unknown_fields()
+      const {
     return _internal_metadata_.unknown_fields();
   }
   inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet *mutable_unknown_fields() {
@@ -283,7 +280,7 @@ public:
   }
   static const telemetry &default_instance();
 
-  static void InitAsDefaultInstance(); // FOR INTERNAL USE ONLY
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
   static inline const telemetry *internal_default_instance() {
     return reinterpret_cast<const telemetry *>(&_telemetry_default_instance_);
   }
@@ -291,8 +288,7 @@ public:
 
   friend void swap(telemetry &a, telemetry &b) { a.Swap(&b); }
   inline void Swap(telemetry *other) {
-    if (other == this)
-      return;
+    if (other == this) return;
     InternalSwap(other);
   }
 
@@ -314,20 +310,20 @@ public:
 
   size_t ByteSizeLong() const final;
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-  const char *
-  _InternalParse(const char *ptr,
-                 ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
+  const char *_InternalParse(
+      const char *ptr,
+      ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
 #else
   bool MergePartialFromCodedStream(
       ::PROTOBUF_NAMESPACE_ID::io::CodedInputStream *input) final;
-#endif // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+#endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
   void SerializeWithCachedSizes(
       ::PROTOBUF_NAMESPACE_ID::io::CodedOutputStream *output) const final;
   ::PROTOBUF_NAMESPACE_ID::uint8 *InternalSerializeWithCachedSizesToArray(
       ::PROTOBUF_NAMESPACE_ID::uint8 *target) const final;
   int GetCachedSize() const final { return _cached_size_.Get(); }
 
-private:
+ private:
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
@@ -337,16 +333,16 @@ private:
     return "telemetry.telemetry";
   }
 
-private:
+ private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena *GetArenaNoVirtual() const {
     return nullptr;
   }
   inline void *MaybeArenaPtr() const { return nullptr; }
 
-public:
+ public:
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
 
-private:
+ private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
     ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
         &::descriptor_table_proto_2ftelemetry_2ftelemetry_2eproto);
@@ -354,7 +350,7 @@ private:
         .file_level_metadata[kIndexInFileMessages];
   }
 
-public:
+ public:
   // nested types ----------------------------------------------------
 
   typedef telemetry_endpoint endpoint;
@@ -420,7 +416,7 @@ public:
   void set_time_alive(::PROTOBUF_NAMESPACE_ID::int64 value);
 
   // @@protoc_insertion_point(class_scope:telemetry.telemetry)
-private:
+ private:
   class _Internal;
 
   // helper for ByteSizeLong()
@@ -445,7 +441,7 @@ private:
 #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#endif // __GNUC__
+#endif  // __GNUC__
 // telemetry_endpoint
 
 // required int32 num_endpoints = 1;
@@ -456,13 +452,13 @@ inline void telemetry_endpoint::clear_num_endpoints() {
   num_endpoints_ = 0;
   _has_bits_[0] &= ~0x00000001u;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32
-telemetry_endpoint::num_endpoints() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 telemetry_endpoint::num_endpoints()
+    const {
   // @@protoc_insertion_point(field_get:telemetry.telemetry.endpoint.num_endpoints)
   return num_endpoints_;
 }
-inline void
-telemetry_endpoint::set_num_endpoints(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void telemetry_endpoint::set_num_endpoints(
+    ::PROTOBUF_NAMESPACE_ID::int32 value) {
   _has_bits_[0] |= 0x00000001u;
   num_endpoints_ = value;
   // @@protoc_insertion_point(field_set:telemetry.telemetry.endpoint.num_endpoints)
@@ -480,8 +476,8 @@ inline ::PROTOBUF_NAMESPACE_ID::int32 telemetry_endpoint::num_messages() const {
   // @@protoc_insertion_point(field_get:telemetry.telemetry.endpoint.num_messages)
   return num_messages_;
 }
-inline void
-telemetry_endpoint::set_num_messages(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void telemetry_endpoint::set_num_messages(
+    ::PROTOBUF_NAMESPACE_ID::int32 value) {
   _has_bits_[0] |= 0x00000002u;
   num_messages_ = value;
   // @@protoc_insertion_point(field_set:telemetry.telemetry.endpoint.num_messages)
@@ -582,8 +578,7 @@ inline bool telemetry::has_publishers() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void telemetry::clear_publishers() {
-  if (publishers_ != nullptr)
-    publishers_->Clear();
+  if (publishers_ != nullptr) publishers_->Clear();
   _has_bits_[0] &= ~0x00000002u;
 }
 inline const ::telemetry::telemetry_endpoint &telemetry::publishers() const {
@@ -636,8 +631,7 @@ inline bool telemetry::has_subscribers() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void telemetry::clear_subscribers() {
-  if (subscribers_ != nullptr)
-    subscribers_->Clear();
+  if (subscribers_ != nullptr) subscribers_->Clear();
   _has_bits_[0] &= ~0x00000004u;
 }
 inline const ::telemetry::telemetry_endpoint &telemetry::subscribers() const {
@@ -690,8 +684,7 @@ inline bool telemetry::has_clients() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void telemetry::clear_clients() {
-  if (clients_ != nullptr)
-    clients_->Clear();
+  if (clients_ != nullptr) clients_->Clear();
   _has_bits_[0] &= ~0x00000008u;
 }
 inline const ::telemetry::telemetry_endpoint &telemetry::clients() const {
@@ -719,8 +712,8 @@ inline ::telemetry::telemetry_endpoint *telemetry::mutable_clients() {
   // @@protoc_insertion_point(field_mutable:telemetry.telemetry.clients)
   return clients_;
 }
-inline void
-telemetry::set_allocated_clients(::telemetry::telemetry_endpoint *clients) {
+inline void telemetry::set_allocated_clients(
+    ::telemetry::telemetry_endpoint *clients) {
   ::PROTOBUF_NAMESPACE_ID::Arena *message_arena = GetArenaNoVirtual();
   if (message_arena == nullptr) {
     delete clients_;
@@ -744,8 +737,7 @@ inline bool telemetry::has_servers() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void telemetry::clear_servers() {
-  if (servers_ != nullptr)
-    servers_->Clear();
+  if (servers_ != nullptr) servers_->Clear();
   _has_bits_[0] &= ~0x00000010u;
 }
 inline const ::telemetry::telemetry_endpoint &telemetry::servers() const {
@@ -773,8 +765,8 @@ inline ::telemetry::telemetry_endpoint *telemetry::mutable_servers() {
   // @@protoc_insertion_point(field_mutable:telemetry.telemetry.servers)
   return servers_;
 }
-inline void
-telemetry::set_allocated_servers(::telemetry::telemetry_endpoint *servers) {
+inline void telemetry::set_allocated_servers(
+    ::telemetry::telemetry_endpoint *servers) {
   ::PROTOBUF_NAMESPACE_ID::Arena *message_arena = GetArenaNoVirtual();
   if (message_arena == nullptr) {
     delete servers_;
@@ -795,14 +787,14 @@ telemetry::set_allocated_servers(::telemetry::telemetry_endpoint *servers) {
 
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
-#endif // __GNUC__
+#endif  // __GNUC__
 // -------------------------------------------------------------------
 
 // @@protoc_insertion_point(namespace_scope)
 
-} // namespace telemetry
+}  // namespace telemetry
 
 // @@protoc_insertion_point(global_scope)
 
 #include <google/protobuf/port_undef.inc>
-#endif // GOOGLE_PROTOBUF_INCLUDED_GOOGLE_PROTOBUF_INCLUDED_proto_2ftelemetry_2ftelemetry_2eproto
+#endif  // GOOGLE_PROTOBUF_INCLUDED_GOOGLE_PROTOBUF_INCLUDED_proto_2ftelemetry_2ftelemetry_2eproto

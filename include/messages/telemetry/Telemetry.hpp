@@ -17,7 +17,7 @@
 #include "proto/telemetry/telemetry.pb.h"
 
 class Telemetry {
-public:
+ public:
   Telemetry();
   virtual ~Telemetry();
 
@@ -31,13 +31,13 @@ public:
   int32_t get_number_endpoints(endpoint end);
   int32_t get_number_messages(endpoint end);
 
-public:
+ public:
   virtual bool serialize_to_string(std::string *output_string);
   virtual bool parse_from_string(const std::string &value);
   virtual bool serialize_from_ostream(std::ostream *output);
   virtual bool parse_from_istream(std::istream *input);
 
-private:
+ private:
   std::unique_ptr<telemetry::telemetry> message;
 };
 

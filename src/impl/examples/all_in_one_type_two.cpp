@@ -7,7 +7,6 @@
 #include "control/ZMQControlClient.hpp"
 
 int main() {
-
   std::string value("Well hello there");
 
   scpp::publish_params a;

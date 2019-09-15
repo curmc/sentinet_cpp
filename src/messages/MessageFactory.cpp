@@ -10,8 +10,8 @@ MessageFactory::MessageFactory() {}
 
 MessageFactory::~MessageFactory() {}
 
-std::unique_ptr<DriveTrain>
-MessageFactory::create_drive_train(const int32_t &lin, const int32_t &ang) {
+std::unique_ptr<DriveTrain> MessageFactory::create_drive_train(
+    const int32_t &lin, const int32_t &ang) {
   auto a = std::make_unique<DriveTrain>();
   a->set_linear(lin);
   a->set_angular(ang);

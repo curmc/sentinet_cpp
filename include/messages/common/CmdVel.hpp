@@ -17,7 +17,7 @@
 #include "proto/common/cmd_vel.pb.h"
 
 class DriveTrain {
-public:
+ public:
   DriveTrain();
   virtual ~DriveTrain();
 
@@ -28,20 +28,20 @@ public:
   void set_angular(const int32_t &ang);
   void set_linear(const int32_t &lin);
 
-public:
+ public:
   virtual bool serialize_to_string(std::string *output_string) const;
   virtual bool parse_from_string(const std::string &value);
   virtual bool serialize_to_ostream(std::ostream *output) const;
   virtual bool parse_from_istream(std::istream *input);
 
-private:
+ private:
   std::unique_ptr<movement::drive_train> message;
 
   /* private data */
 };
 
 class Camera {
-public:
+ public:
   Camera();
   virtual ~Camera();
 
@@ -50,20 +50,20 @@ public:
 
   void set_angular(const int32_t &ang);
 
-public:
+ public:
   virtual bool serialize_to_string(std::string *output_string) const;
   virtual bool parse_from_string(const std::string &value);
   virtual bool serialize_to_ostream(std::ostream *output) const;
   virtual bool parse_from_istream(std::istream *input);
 
-private:
+ private:
   std::unique_ptr<movement::camera> message;
 
   /* private data */
 };
 
 class Gun {
-public:
+ public:
   Gun();
   virtual ~Gun();
 
@@ -75,13 +75,13 @@ public:
   void set_left_mag(const int32_t &ang);
   void set_right_mag(const int32_t &ang);
 
-public:
+ public:
   virtual bool serialize_to_string(std::string *output_string) const;
   virtual bool parse_from_string(const std::string &value);
   virtual bool serialize_to_ostream(std::ostream *output) const;
   virtual bool parse_from_istream(std::istream *input);
 
-private:
+ private:
   std::unique_ptr<movement::gun> message;
 
   /* private data */

@@ -17,7 +17,7 @@
 #include <string>
 
 class DebugMessage {
-public:
+ public:
   DebugMessage();
   virtual ~DebugMessage();
 
@@ -30,13 +30,13 @@ public:
   void set_id(int32_t);
   void set_extra(const std::string &extra);
 
-public:
+ public:
   virtual bool serialize_to_string(std::string *output_string) const;
   virtual bool parse_from_string(const std::string &value);
   virtual bool serialize_to_ostream(std::ostream *ouput) const;
   virtual bool parse_from_istream(std::istream *input);
 
-private:
+ private:
   std::unique_ptr<debug::DebugMessage> message;
   /* private data */
 };

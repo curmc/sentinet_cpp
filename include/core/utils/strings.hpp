@@ -58,8 +58,7 @@ static inline std::vector<std::string> parse(const std::string &value,
   auto size = value.size();
   while (pos < size) {
     std::string temp;
-    while (pos < size && value[pos] != delim)
-      temp += value[pos++];
+    while (pos < size && value[pos] != delim) temp += value[pos++];
     pos++;
     values.push_back(temp);
   }
@@ -75,7 +74,10 @@ static inline std::vector<std::string> parse(const std::string &value,
  * hello*,0world*,07
  */
 // Helper for join
-template <typename T> static inline T join(T value) { return value; }
+template <typename T>
+static inline T join(T value) {
+  return value;
+}
 
 // Join a list of strings / ints / whatever (streamable) no deliminator
 template <typename T, typename... ArgsT>
@@ -86,7 +88,8 @@ static inline std::string join(T value, ArgsT... strings) {
 }
 
 // Helper for join_d
-template <typename T, typename D> static inline T join_d(D delim, T value) {
+template <typename T, typename D>
+static inline T join_d(D delim, T value) {
   return value;
 }
 // Join a list of strings / ints / whatever (streamable) with a deliminator
@@ -97,6 +100,6 @@ static inline std::string join_d(Delim delim, T value, ArgsT... strings) {
   return ss.str();
 }
 
-} // namespace strings
-} // namespace utils
+}  // namespace strings
+}  // namespace utils
 #endif

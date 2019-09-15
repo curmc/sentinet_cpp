@@ -26,7 +26,7 @@
 static volatile sig_atomic_t signalStatus = 0;
 
 class SerialPort : public InputOutputInterface {
-public:
+ public:
   SerialPort() = delete;
   SerialPort(const std::string &port, const int &baud,
              const int &bytes = DEFAULT_BYTES);
@@ -47,7 +47,7 @@ public:
   // combines the top two
   bool scan(int max_times);
 
-private:
+ private:
   static bool write_impl(const int &fd, const char *message,
                          const int &num_bytes);
   static bool read_impl(const int &fd, char *buffer, const int &num_bytes);

@@ -29,8 +29,8 @@
 #include <google/protobuf/metadata.h>
 #include <google/protobuf/generated_message_reflection.h>
 #include <google/protobuf/message.h>
-#include <google/protobuf/repeated_field.h> // IWYU pragma: export
-#include <google/protobuf/extension_set.h>  // IWYU pragma: export
+#include <google/protobuf/repeated_field.h>  // IWYU pragma: export
+#include <google/protobuf/extension_set.h>   // IWYU pragma: export
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
@@ -38,7 +38,7 @@
 PROTOBUF_NAMESPACE_OPEN
 namespace internal {
 class AnyMetadata;
-} // namespace internal
+}  // namespace internal
 PROTOBUF_NAMESPACE_CLOSE
 
 // Internal implementation detail -- do not use these members.
@@ -67,14 +67,15 @@ extern drive_trainDefaultTypeInternal _drive_train_default_instance_;
 class gun;
 class gunDefaultTypeInternal;
 extern gunDefaultTypeInternal _gun_default_instance_;
-} // namespace movement
+}  // namespace movement
 PROTOBUF_NAMESPACE_OPEN
 template <>
 ::movement::camera *Arena::CreateMaybeMessage<::movement::camera>(Arena *);
 template <>
-::movement::drive_train *
-Arena::CreateMaybeMessage<::movement::drive_train>(Arena *);
-template <>::movement::gun *Arena::CreateMaybeMessage<::movement::gun>(Arena *);
+::movement::drive_train *Arena::CreateMaybeMessage<::movement::drive_train>(
+    Arena *);
+template <>
+::movement::gun *Arena::CreateMaybeMessage<::movement::gun>(Arena *);
 PROTOBUF_NAMESPACE_CLOSE
 namespace movement {
 
@@ -85,7 +86,7 @@ class drive_train
           Message /* @@protoc_insertion_point(class_definition:movement.drive_train)
                    */
 {
-public:
+ public:
   drive_train();
   virtual ~drive_train();
 
@@ -100,16 +101,15 @@ public:
   }
   inline drive_train &operator=(drive_train &&from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from)
-        InternalSwap(&from);
+      if (this != &from) InternalSwap(&from);
     } else {
       CopyFrom(from);
     }
     return *this;
   }
 
-  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &
-  unknown_fields() const {
+  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &unknown_fields()
+      const {
     return _internal_metadata_.unknown_fields();
   }
   inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet *mutable_unknown_fields() {
@@ -127,7 +127,7 @@ public:
   }
   static const drive_train &default_instance();
 
-  static void InitAsDefaultInstance(); // FOR INTERNAL USE ONLY
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
   static inline const drive_train *internal_default_instance() {
     return reinterpret_cast<const drive_train *>(
         &_drive_train_default_instance_);
@@ -136,8 +136,7 @@ public:
 
   friend void swap(drive_train &a, drive_train &b) { a.Swap(&b); }
   inline void Swap(drive_train *other) {
-    if (other == this)
-      return;
+    if (other == this) return;
     InternalSwap(other);
   }
 
@@ -159,20 +158,20 @@ public:
 
   size_t ByteSizeLong() const final;
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-  const char *
-  _InternalParse(const char *ptr,
-                 ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
+  const char *_InternalParse(
+      const char *ptr,
+      ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
 #else
   bool MergePartialFromCodedStream(
       ::PROTOBUF_NAMESPACE_ID::io::CodedInputStream *input) final;
-#endif // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+#endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
   void SerializeWithCachedSizes(
       ::PROTOBUF_NAMESPACE_ID::io::CodedOutputStream *output) const final;
   ::PROTOBUF_NAMESPACE_ID::uint8 *InternalSerializeWithCachedSizesToArray(
       ::PROTOBUF_NAMESPACE_ID::uint8 *target) const final;
   int GetCachedSize() const final { return _cached_size_.Get(); }
 
-private:
+ private:
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
@@ -182,16 +181,16 @@ private:
     return "movement.drive_train";
   }
 
-private:
+ private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena *GetArenaNoVirtual() const {
     return nullptr;
   }
   inline void *MaybeArenaPtr() const { return nullptr; }
 
-public:
+ public:
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
 
-private:
+ private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
     ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
         &::descriptor_table_proto_2fcommon_2fcmd_5fvel_2eproto);
@@ -199,7 +198,7 @@ private:
         .file_level_metadata[kIndexInFileMessages];
   }
 
-public:
+ public:
   // nested types ----------------------------------------------------
 
   // accessors -------------------------------------------------------
@@ -221,7 +220,7 @@ public:
   void set_angular_vel(::PROTOBUF_NAMESPACE_ID::int32 value);
 
   // @@protoc_insertion_point(class_scope:movement.drive_train)
-private:
+ private:
   class _Internal;
 
   // helper for ByteSizeLong()
@@ -242,7 +241,7 @@ class camera
           Message /* @@protoc_insertion_point(class_definition:movement.camera)
                    */
 {
-public:
+ public:
   camera();
   virtual ~camera();
 
@@ -255,16 +254,15 @@ public:
   }
   inline camera &operator=(camera &&from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from)
-        InternalSwap(&from);
+      if (this != &from) InternalSwap(&from);
     } else {
       CopyFrom(from);
     }
     return *this;
   }
 
-  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &
-  unknown_fields() const {
+  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &unknown_fields()
+      const {
     return _internal_metadata_.unknown_fields();
   }
   inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet *mutable_unknown_fields() {
@@ -282,7 +280,7 @@ public:
   }
   static const camera &default_instance();
 
-  static void InitAsDefaultInstance(); // FOR INTERNAL USE ONLY
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
   static inline const camera *internal_default_instance() {
     return reinterpret_cast<const camera *>(&_camera_default_instance_);
   }
@@ -290,8 +288,7 @@ public:
 
   friend void swap(camera &a, camera &b) { a.Swap(&b); }
   inline void Swap(camera *other) {
-    if (other == this)
-      return;
+    if (other == this) return;
     InternalSwap(other);
   }
 
@@ -313,20 +310,20 @@ public:
 
   size_t ByteSizeLong() const final;
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-  const char *
-  _InternalParse(const char *ptr,
-                 ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
+  const char *_InternalParse(
+      const char *ptr,
+      ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
 #else
   bool MergePartialFromCodedStream(
       ::PROTOBUF_NAMESPACE_ID::io::CodedInputStream *input) final;
-#endif // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+#endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
   void SerializeWithCachedSizes(
       ::PROTOBUF_NAMESPACE_ID::io::CodedOutputStream *output) const final;
   ::PROTOBUF_NAMESPACE_ID::uint8 *InternalSerializeWithCachedSizesToArray(
       ::PROTOBUF_NAMESPACE_ID::uint8 *target) const final;
   int GetCachedSize() const final { return _cached_size_.Get(); }
 
-private:
+ private:
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
@@ -336,16 +333,16 @@ private:
     return "movement.camera";
   }
 
-private:
+ private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena *GetArenaNoVirtual() const {
     return nullptr;
   }
   inline void *MaybeArenaPtr() const { return nullptr; }
 
-public:
+ public:
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
 
-private:
+ private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
     ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
         &::descriptor_table_proto_2fcommon_2fcmd_5fvel_2eproto);
@@ -353,7 +350,7 @@ private:
         .file_level_metadata[kIndexInFileMessages];
   }
 
-public:
+ public:
   // nested types ----------------------------------------------------
 
   // accessors -------------------------------------------------------
@@ -368,7 +365,7 @@ public:
   void set_angular_vel(::PROTOBUF_NAMESPACE_ID::int32 value);
 
   // @@protoc_insertion_point(class_scope:movement.camera)
-private:
+ private:
   class _Internal;
 
   ::PROTOBUF_NAMESPACE_ID::internal::InternalMetadataWithArena
@@ -385,7 +382,7 @@ class gun
           Message /* @@protoc_insertion_point(class_definition:movement.gun)
                    */
 {
-public:
+ public:
   gun();
   virtual ~gun();
 
@@ -398,16 +395,15 @@ public:
   }
   inline gun &operator=(gun &&from) noexcept {
     if (GetArenaNoVirtual() == from.GetArenaNoVirtual()) {
-      if (this != &from)
-        InternalSwap(&from);
+      if (this != &from) InternalSwap(&from);
     } else {
       CopyFrom(from);
     }
     return *this;
   }
 
-  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &
-  unknown_fields() const {
+  inline const ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet &unknown_fields()
+      const {
     return _internal_metadata_.unknown_fields();
   }
   inline ::PROTOBUF_NAMESPACE_ID::UnknownFieldSet *mutable_unknown_fields() {
@@ -425,7 +421,7 @@ public:
   }
   static const gun &default_instance();
 
-  static void InitAsDefaultInstance(); // FOR INTERNAL USE ONLY
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
   static inline const gun *internal_default_instance() {
     return reinterpret_cast<const gun *>(&_gun_default_instance_);
   }
@@ -433,8 +429,7 @@ public:
 
   friend void swap(gun &a, gun &b) { a.Swap(&b); }
   inline void Swap(gun *other) {
-    if (other == this)
-      return;
+    if (other == this) return;
     InternalSwap(other);
   }
 
@@ -454,20 +449,20 @@ public:
 
   size_t ByteSizeLong() const final;
 #if GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
-  const char *
-  _InternalParse(const char *ptr,
-                 ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
+  const char *_InternalParse(
+      const char *ptr,
+      ::PROTOBUF_NAMESPACE_ID::internal::ParseContext *ctx) final;
 #else
   bool MergePartialFromCodedStream(
       ::PROTOBUF_NAMESPACE_ID::io::CodedInputStream *input) final;
-#endif // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
+#endif  // GOOGLE_PROTOBUF_ENABLE_EXPERIMENTAL_PARSER
   void SerializeWithCachedSizes(
       ::PROTOBUF_NAMESPACE_ID::io::CodedOutputStream *output) const final;
   ::PROTOBUF_NAMESPACE_ID::uint8 *InternalSerializeWithCachedSizesToArray(
       ::PROTOBUF_NAMESPACE_ID::uint8 *target) const final;
   int GetCachedSize() const final { return _cached_size_.Get(); }
 
-private:
+ private:
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
@@ -477,16 +472,16 @@ private:
     return "movement.gun";
   }
 
-private:
+ private:
   inline ::PROTOBUF_NAMESPACE_ID::Arena *GetArenaNoVirtual() const {
     return nullptr;
   }
   inline void *MaybeArenaPtr() const { return nullptr; }
 
-public:
+ public:
   ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
 
-private:
+ private:
   static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
     ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(
         &::descriptor_table_proto_2fcommon_2fcmd_5fvel_2eproto);
@@ -494,7 +489,7 @@ private:
         .file_level_metadata[kIndexInFileMessages];
   }
 
-public:
+ public:
   // nested types ----------------------------------------------------
 
   // accessors -------------------------------------------------------
@@ -516,7 +511,7 @@ public:
   void set_right_mag(::PROTOBUF_NAMESPACE_ID::int32 value);
 
   // @@protoc_insertion_point(class_scope:movement.gun)
-private:
+ private:
   class _Internal;
 
   // helper for ByteSizeLong()
@@ -537,7 +532,7 @@ private:
 #ifdef __GNUC__
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
-#endif // __GNUC__
+#endif  // __GNUC__
 // drive_train
 
 // required int32 linear_vel = 1;
@@ -640,16 +635,16 @@ inline void gun::set_right_mag(::PROTOBUF_NAMESPACE_ID::int32 value) {
 
 #ifdef __GNUC__
 #pragma GCC diagnostic pop
-#endif // __GNUC__
+#endif  // __GNUC__
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
 
 // @@protoc_insertion_point(namespace_scope)
 
-} // namespace movement
+}  // namespace movement
 
 // @@protoc_insertion_point(global_scope)
 
 #include <google/protobuf/port_undef.inc>
-#endif // GOOGLE_PROTOBUF_INCLUDED_GOOGLE_PROTOBUF_INCLUDED_proto_2fcommon_2fcmd_5fvel_2eproto
+#endif  // GOOGLE_PROTOBUF_INCLUDED_GOOGLE_PROTOBUF_INCLUDED_proto_2fcommon_2fcmd_5fvel_2eproto

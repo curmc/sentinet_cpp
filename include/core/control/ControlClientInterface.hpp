@@ -52,7 +52,6 @@ typedef struct serve_params {
   std::function<std::string(std::string &)> callback;
 } serve_params;
 
-
 /**
  * @brief Pass the parameters as a struct, nicer format
  */
@@ -72,8 +71,10 @@ typedef struct publish_params {
   }
 
   publish_params(const publish_params &pub)
-      : broker_frontend(pub.broker_frontend), topic(pub.topic),
-        get_data(pub.get_data), period(pub.period) {}
+      : broker_frontend(pub.broker_frontend),
+        topic(pub.topic),
+        get_data(pub.get_data),
+        period(pub.period) {}
 
   std::string broker_frontend;
   std::string topic;
@@ -96,7 +97,8 @@ typedef struct subscribe_params {
     };
   }
   subscribe_params(const subscribe_params &params)
-      : socket_backend(params.socket_backend), topic(params.topic),
+      : socket_backend(params.socket_backend),
+        topic(params.topic),
         callback(params.callback) {}
   std::string socket_backend;
   std::string topic;
@@ -124,7 +126,8 @@ typedef struct request_params {
   }
 
   request_params(const request_params &params)
-      : id(params.id), destination(params.destination),
+      : id(params.id),
+        destination(params.destination),
         get_data_to_request(params.get_data_to_request),
         callback(params.callback) {}
 
@@ -150,7 +153,7 @@ namespace core {
  * control client.
  */
 class ControlClientInterface {
-public:
+ public:
   virtual ~ControlClientInterface() = default;
 
   /**
@@ -331,7 +334,9 @@ public:
     return subscribe(params.socket_backend, params.topic, params.callback);
   }
 
-  inline bool spin(::scpp::subscribe_params &params) { return subscribe(params); }
+  inline bool spin(::scpp::subscribe_params &params) {
+    return subscribe(params);
+  }
 
   virtual bool cancel_subscription(const std::string &topic) = 0;
 
@@ -359,6 +364,6 @@ public:
   virtual bool terminate_server(const std::string &address) = 0;
 };
 
-}
-}
+}  // namespace core
+}  // namespace scpp
 #endif /* end of include guard CONTROLINTERFACE_HPP */

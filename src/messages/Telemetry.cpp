@@ -18,28 +18,28 @@ std::string Telemetry::get_description() { return message->description(); }
 
 int32_t Telemetry::get_number_endpoints(endpoint end) {
   switch (end) {
-  case PUBLISHERS:
-    return message->publishers().num_endpoints();
-  case SUBSCRIBERS:
-    return message->subscribers().num_endpoints();
-  case CLIENTS:
-    return message->clients().num_endpoints();
-  case SERVERS:
-    return message->servers().num_endpoints();
+    case PUBLISHERS:
+      return message->publishers().num_endpoints();
+    case SUBSCRIBERS:
+      return message->subscribers().num_endpoints();
+    case CLIENTS:
+      return message->clients().num_endpoints();
+    case SERVERS:
+      return message->servers().num_endpoints();
   }
   return -1;
 }
 
 int32_t Telemetry::get_number_messages(endpoint end) {
   switch (end) {
-  case PUBLISHERS:
-    return message->publishers().num_messages();
-  case SUBSCRIBERS:
-    return message->subscribers().num_messages();
-  case CLIENTS:
-    return message->clients().num_messages();
-  case SERVERS:
-    return message->servers().num_messages();
+    case PUBLISHERS:
+      return message->publishers().num_messages();
+    case SUBSCRIBERS:
+      return message->subscribers().num_messages();
+    case CLIENTS:
+      return message->clients().num_messages();
+    case SERVERS:
+      return message->servers().num_messages();
   }
   return -1;
 }

@@ -20,24 +20,22 @@ bool ZMQControlClient::start(int) { return true; }
 
 bool ZMQControlClient::quit(int) {
   // TODO - make this look prettier
-  std::cout<<"here"<<std::endl;
-  for (auto const &i : thread_space.subscribers)
-    cancel_subscription(i.first);
-  for (auto const &i : thread_space.servers)
-    terminate_server(i.first);
+  std::cout << "here" << std::endl;
+  for (auto const &i : thread_space.subscribers) cancel_subscription(i.first);
+  for (auto const &i : thread_space.servers) terminate_server(i.first);
   for (auto const &i : thread_space.periodic_publishers)
     cancel_periodic_publisher(i.first);
   for (auto const &i : thread_space.periodic_clients)
     cancel_periodic_request(i.first);
-  std::cout<<"there"<<std::endl;
+  std::cout << "there" << std::endl;
   return true;
 }
 
 bool ZMQControlClient::initialize_publisher(const std::string &address) {
   using namespace ::utils;
   this_publisher = std::make_unique<::zmq::socket_t>(context, ZMQ_PUB);
-  this_publisher->connect(address); // TODO - Add guards that protect from false
-                                    // endpoints. A ping protocol persay
+  this_publisher->connect(address);  // TODO - Add guards that protect from
+                                     // false endpoints. A ping protocol persay
   return true;
 }
 
@@ -53,14 +51,13 @@ bool ZMQControlClient::publish(const std::string &topic,
     return false;
   }
   concurrent_publish(std::move(this_publisher), topic, message);
-  return true; // TODO change this
+  return true;  // TODO change this
 }
 
 bool ZMQControlClient::publish(
     const std::string sock_addr, const std::string topic,
     std::function<std::string(void)> get_data_to_publish,
     std::chrono::microseconds period) {
-
   // If already exists do nothing
   auto &&found = thread_space.periodic_publishers.find(topic);
   if (found != thread_space.periodic_publishers.end()) {
@@ -111,7 +108,6 @@ bool ZMQControlClient::request(
     std::function<std::string(void)> get_data_to_request,
     std::function<void(std::string &)> action_to_recieved_data,
     const std::chrono::microseconds period) {
-
   // See if element is allready in map
   auto &&found = thread_space.periodic_clients.find(id);
   if (found != thread_space.periodic_clients.end()) {
@@ -149,7 +145,6 @@ bool ZMQControlClient::cancel_periodic_request(const std::string &reference) {
 bool ZMQControlClient::subscribe(const std::string sock_addr,
                                  const std::string topic,
                                  std::function<void(std::string &)> callback) {
-
   auto &&found = thread_space.subscribers.find(topic);
 
   if (found != thread_space.subscribers.end()) {
@@ -185,7 +180,6 @@ bool ZMQControlClient::cancel_subscription(const std::string &reference) {
 bool ZMQControlClient::serve(
     const std::string address,
     std::function<std::string(std::string &)> callback) {
-
   auto &&found = thread_space.servers.find(address);
   if (found != thread_space.servers.end()) {
     std::cout << "Already have a server there bud" << std::endl;
@@ -221,14 +215,13 @@ void ZMQControlClient::concurrent_publish(
   s_send(*socket, message);
 }
 
-std::string
-ZMQControlClient::concurrent_request(const std::string &server,
-                                     std::unique_ptr<::zmq::socket_t> socket,
-                                     const std::string &message) {
-  socket->connect(server); // TODO Better way of doing this?
+std::string ZMQControlClient::concurrent_request(
+    const std::string &server, std::unique_ptr<::zmq::socket_t> socket,
+    const std::string &message) {
+  socket->connect(server);  // TODO Better way of doing this?
   s_send(*socket, message);
   std::string response = s_recv(*socket);
   return response;
 }
-}
-}
+}  // namespace net
+}  // namespace scpp

@@ -1,7 +1,7 @@
 /**
  * @author      : theo (theo@varnsen)
  * @file        : MessageInterface
- * @brief 
+ * @brief
  *
  *
  *
@@ -17,8 +17,4 @@
 
 // Local Includes
 
-
-
-
 #endif /* end of include guard MESSAGEINTERFACE_HPP */
-

@@ -3,7 +3,7 @@
 
 //  Include a bunch of headers that we will need in the examples
 
-#include <zmq.hpp> // https://github.com/zeromq/cppzmq
+#include <zmq.hpp>  // https://github.com/zeromq/cppzmq
 
 #include <iostream>
 #include <iomanip>
@@ -12,7 +12,7 @@
 
 #include <time.h>
 #include <assert.h>
-#include <stdlib.h> // random()  RAND_MAX
+#include <stdlib.h>  // random()  RAND_MAX
 #include <stdio.h>
 #include <stdarg.h>
 #include <signal.h>
@@ -49,10 +49,8 @@ inline int c99_vsnprintf(char *outBuf, size_t size, const char *format,
                          va_list ap) {
   int count = -1;
 
-  if (size != 0)
-    count = _vsnprintf_s(outBuf, size, _TRUNCATE, format, ap);
-  if (count == -1)
-    count = _vscprintf(format, ap);
+  if (size != 0) count = _vsnprintf_s(outBuf, size, _TRUNCATE, format, ap);
+  if (count == -1) count = _vscprintf(format, ap);
 
   return count;
 }
@@ -119,8 +117,7 @@ static void s_dump(zmq::socket_t &socket) {
     unsigned char byte;
     for (char_nbr = 0; char_nbr < size; char_nbr++) {
       byte = data[char_nbr];
-      if (byte < 32 || byte > 127)
-        is_text = false;
+      if (byte < 32 || byte > 127) is_text = false;
     }
     std::cout << "[" << std::setfill('0') << std::setw(3) << size << "]";
     for (char_nbr = 0; char_nbr < size; char_nbr++) {
@@ -132,11 +129,10 @@ static void s_dump(zmq::socket_t &socket) {
     }
     std::cout << std::endl;
 
-    int more = 0; //  Multipart detection
+    int more = 0;  //  Multipart detection
     size_t more_size = sizeof(more);
     socket.getsockopt(ZMQ_RCVMORE, &more, &more_size);
-    if (!more)
-      break; //  Last message part
+    if (!more) break;  //  Last message part
   }
 }
 
@@ -193,7 +189,7 @@ static int64_t s_clock(void) {
   unsigned __int64 largeInt = fileTime.dwHighDateTime;
   largeInt <<= 32;
   largeInt |= fileTime.dwLowDateTime;
-  largeInt /= 10000; // FILETIME is in units of 100 nanoseconds
+  largeInt /= 10000;  // FILETIME is in units of 100 nanoseconds
   return (int64_t)largeInt;
 #else
   struct timeval tv;

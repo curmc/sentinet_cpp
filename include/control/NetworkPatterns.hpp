@@ -17,8 +17,7 @@ namespace scpp {
 namespace net {
 
 class Publisher_Context {
-
-private:
+ private:
   typedef struct thread_properties {
     scpp::string sock_addr;
     scpp::future<void> exit_signal;
@@ -32,7 +31,7 @@ private:
 
   thread_properties properties;
 
-public:
+ public:
   Publisher_Context() {}
   ~Publisher_Context() {}
 
@@ -50,8 +49,8 @@ public:
 
   inline void set_topic(const scpp::string &topic) { properties.topic = topic; }
 
-  inline void
-  set_data_request_callback(scpp::function<scpp::string(void)> callback) {
+  inline void set_data_request_callback(
+      scpp::function<scpp::string(void)> callback) {
     properties.data = callback;
   }
 
@@ -63,8 +62,7 @@ public:
 };
 
 class Server_Context {
-
-private:
+ private:
   typedef struct thread_properties {
     scpp::string sock_addr;
     scpp::future<void> exit_signal;
@@ -76,7 +74,7 @@ private:
 
   thread_properties properties;
 
-public:
+ public:
   Server_Context() {}
   ~Server_Context() {}
 
@@ -92,7 +90,8 @@ public:
     properties.sock_addr = address;
   }
 
-  inline void set_callback(scpp::function<scpp::string(scpp::string &)> callback) {
+  inline void set_callback(
+      scpp::function<scpp::string(scpp::string &)> callback) {
     properties.callback = callback;
   }
 
@@ -100,8 +99,7 @@ public:
 };
 
 class Subscriber_Context {
-
-private:
+ private:
   typedef struct thread_properties {
     scpp::string topic;
     scpp::string address;
@@ -114,7 +112,7 @@ private:
 
   thread_properties properties;
 
-public:
+ public:
   Subscriber_Context() {}
   ~Subscriber_Context() {}
 
@@ -140,7 +138,7 @@ public:
 };
 
 class Requester_Context {
-private:
+ private:
   typedef struct thread_properties {
     scpp::future<void> exit_signal;
     scpp::unique_ptr<::zmq::socket_t> socket;
@@ -154,7 +152,7 @@ private:
 
   thread_properties properties;
 
-public:
+ public:
   Requester_Context() {}
   ~Requester_Context() {}
 
@@ -181,6 +179,6 @@ public:
   inline void enter_thread() { requester_thread(properties); }
 };
 
-}
-}
+}  // namespace net
+}  // namespace scpp
 #endif /* end of include guard NETWORKPATTERNS_HPP */

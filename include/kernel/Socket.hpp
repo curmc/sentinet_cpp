@@ -18,7 +18,7 @@
 #include <memory>
 
 class Socket {
-public:
+ public:
   Socket();
   virtual ~Socket();
 
@@ -32,7 +32,7 @@ public:
   // https://www.gnu.org/software/libc/manual/html_node/Connecting.html#Connecting
   bool connect(const std::string &address);
 
-private:
+ private:
   /**
    * Options include:
    * SOCK_STREAM -> TCP
@@ -63,10 +63,10 @@ private:
    * https://www.gnu.org/software/libc/manual/html_node/Setting-Address.html#Setting-Address
    */
   bool set_sock_address(const std::string &addres);
-  bool set_sock_address(const sockaddr &addr); // copy a socket address
+  bool set_sock_address(const sockaddr &addr);  // copy a socket address
   bool set_sock_port(int port);
 
-private:
+ private:
   typedef struct SocketMeta {
     int domain;
     int type;

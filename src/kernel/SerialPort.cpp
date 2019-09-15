@@ -10,22 +10,17 @@
 SerialPort::SerialPort(const std::string &port, const int &baud,
                        const int &bytes)
     : close_signals({SIGQUIT, SIGKILL, SIGINT}), properties(bytes) {
-
   // Setters
-  if (!set_port(port))
-    properties.port = "";
-  if (!set_baud(baud))
-    properties.baud = 0;
+  if (!set_port(port)) properties.port = "";
+  if (!set_baud(baud)) properties.baud = 0;
 
   // Open signal handler
-  for (auto i : close_signals)
-    signal(i, SerialPort::signal_handler);
+  for (auto i : close_signals) signal(i, SerialPort::signal_handler);
 }
 
 SerialPort::~SerialPort() {
-  if (properties.buffer)
-    delete[] properties.buffer;
-  close(); // close handles the fact that we might have closed already
+  if (properties.buffer) delete[] properties.buffer;
+  close();  // close handles the fact that we might have closed already
 }
 
 bool SerialPort::set_port(const std::string &port) {
@@ -35,24 +30,24 @@ bool SerialPort::set_port(const std::string &port) {
 
 bool SerialPort::set_baud(const int &baud) {
   switch (baud) {
-  case 4800:
-    properties.baud = B4800;
-    return true;
-  case 9600:
-    properties.baud = B9600;
-    return true;
-  case 19200:
-    properties.baud = B19200;
-    return true;
-  case 38400:
-    properties.baud = B38400;
-    return true;
-  case 57600:
-    properties.baud = B57600;
-    return true;
-  case 115200:
-    properties.baud = B115200;
-    return true;
+    case 4800:
+      properties.baud = B4800;
+      return true;
+    case 9600:
+      properties.baud = B9600;
+      return true;
+    case 19200:
+      properties.baud = B19200;
+      return true;
+    case 38400:
+      properties.baud = B38400;
+      return true;
+    case 57600:
+      properties.baud = B57600;
+      return true;
+    case 115200:
+      properties.baud = B115200;
+      return true;
   }
   properties.baud = 0;
   return false;
@@ -65,13 +60,11 @@ bool SerialPort::write(const std::string &message) {
 }
 
 bool SerialPort::write(const std::string &message, int bytes) {
-  if (!write_impl(properties.fd, message.c_str(), bytes))
-    return false;
+  if (!write_impl(properties.fd, message.c_str(), bytes)) return false;
   return true;
 }
 
 std::string SerialPort::read(int &num_bytes) {
-
   /**
    * Putting this here because ideally, a programmer is going to account
    * for buffer size. This is the optimal solution and all the automated
@@ -79,8 +72,7 @@ std::string SerialPort::read(int &num_bytes) {
    * properties.bytes
    */
   if (num_bytes < properties.bytes) {
-    if (!read_impl(properties.fd, properties.buffer, num_bytes))
-      return "ERROR";
+    if (!read_impl(properties.fd, properties.buffer, num_bytes)) return "ERROR";
     properties.buffer[num_bytes] = '\0';
     return std::string(properties.buffer);
   }
@@ -112,21 +104,16 @@ std::string SerialPort::read(int &num_bytes) {
 }
 
 bool SerialPort::open() {
-
   // I know this is redundant especially if we reconnect, but this isn't a
   // streaming process
-  if (access(properties.port.c_str(), F_OK) == -1)
-    return false;
+  if (access(properties.port.c_str(), F_OK) == -1) return false;
   properties.fd = ::open(properties.port.c_str(), O_RDWR | O_NOCTTY);
 
-  if (properties.fd == -1)
-    return false;
+  if (properties.fd == -1) return false;
 
-  if (tcgetattr(properties.fd, &properties.toptions) < 0)
-    return false;
+  if (tcgetattr(properties.fd, &properties.toptions) < 0) return false;
 
-  if (properties.baud == 0)
-    return false;
+  if (properties.baud == 0) return false;
 
   // Make a copy to revert to origional
   properties.old_options = properties.toptions;
@@ -143,8 +130,7 @@ bool SerialPort::open() {
   properties.toptions.c_cc[VMIN] = 0;
   properties.toptions.c_cc[VTIME] = 20;
 
-  if (tcsetattr(properties.fd, TCSANOW, &properties.toptions) < 0)
-    return false;
+  if (tcsetattr(properties.fd, TCSANOW, &properties.toptions) < 0) return false;
   properties.state = OPEN;
 
   check_signal();
@@ -154,8 +140,7 @@ bool SerialPort::open() {
 
 bool SerialPort::close() {
   // if already close
-  if (properties.state == CLOSED)
-    return true;
+  if (properties.state == CLOSED) return true;
 
   // A small gap here, but necessary
   properties.state = CLOSING;
@@ -164,8 +149,7 @@ bool SerialPort::close() {
   if (tcsetattr(properties.fd, TCSANOW, &properties.old_options) < 0)
     std::cout << "Error returning origional options" << std::endl;
 
-  if (::close(properties.fd) < 0)
-    return false;
+  if (::close(properties.fd) < 0) return false;
 
   // fd should be cleanly closed
   properties.state = CLOSED;
@@ -175,13 +159,11 @@ bool SerialPort::close() {
 bool SerialPort::scan(int max_times) {
   properties.state = SCANNING;
   for (int i = 0; i < max_times; i++) {
-
     // First, handle any signals
     check_signal();
 
     // Check if port is an available file
-    if (access(properties.port.c_str(), F_OK) != -1)
-      return open();
+    if (access(properties.port.c_str(), F_OK) != -1) return open();
 
     // I don't want to be spamming scan a lot.
     usleep(20000);
@@ -207,8 +189,7 @@ void SerialPort::signal_handler(int sig_num) { signalStatus = sig_num; }
 
 inline void SerialPort::check_signal() {
   if (signalStatus != 0) {
-    if (properties.state == SCANNING || properties.state == OPEN)
-      close();
+    if (properties.state == SCANNING || properties.state == OPEN) close();
     exit(signalStatus);
   }
   // do nothing

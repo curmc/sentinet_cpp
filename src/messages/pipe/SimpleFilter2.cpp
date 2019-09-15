@@ -13,5 +13,5 @@ void SimpleFilter2::convert(std::string& message) {
   message = "[Passed through filter 2] " + message;
 }
 
-}
-}
+}  // namespace filters
+}  // namespace scpp

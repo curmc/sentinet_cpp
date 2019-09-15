@@ -26,11 +26,11 @@ namespace scpp {
 namespace core {
 
 class PipeInterface {
-public:
+ public:
   PipeInterface();
   virtual ~PipeInterface() = default;
 
-public:
+ public:
   virtual bool create_pub_sub_endpoint(const std::string &id,
                                        const std::string &frontend,
                                        const std::string &backend,
@@ -43,21 +43,21 @@ public:
 
   virtual bool stop(const std::string &id);
 
-  virtual bool kill(const std::string& id);
+  virtual bool kill(const std::string &id);
 
-  virtual int signal(const std::string& id, const int32_t signal_val);
+  virtual int signal(const std::string &id, const int32_t signal_val);
 
-  virtual bool register_signal(const std::string& id, const int32_t signal_val, std::function<int(void)>);
+  virtual bool register_signal(const std::string &id, const int32_t signal_val,
+                               std::function<int(void)>);
 
   virtual bool set_filter(const std::string &id,
                           std::unique_ptr<FilterInterface> filter);
 
-private:
+ private:
   typedef struct proxy_s {
-    std::promise<void> exit_signal; 
+    std::promise<void> exit_signal;
     std::unique_ptr<ProxyInterface> proxy;
   } proxy_t;
-
 
   typedef struct {
     std::unordered_map<std::string, proxy_t> proxies;
@@ -65,6 +65,6 @@ private:
 
   PipeInterfaceProperties proxies;
 };
-}
-}
+}  // namespace core
+}  // namespace scpp
 #endif /* end of include guard PIPEINTERFACE_HPP */

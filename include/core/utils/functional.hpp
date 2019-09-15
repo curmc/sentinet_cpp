@@ -32,7 +32,7 @@ std::vector<T> generate(int itterations, void (*cb)(int), int &start = 1) {
   }
   return sequence;
 }
-} // namespace functional
-} // namespace util
+}  // namespace functional
+}  // namespace util
 
 #endif /* end of include guard FUNCTIONAL_HPP */

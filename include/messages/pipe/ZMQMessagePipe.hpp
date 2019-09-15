@@ -25,11 +25,11 @@
 namespace scpp {
 namespace net {
 class ZMQPipe : public ::scpp::core::PipeInterface {
-public:
+ public:
   ZMQPipe() {}
   ~ZMQPipe() {}
 
-public:
+ public:
   bool create_pub_sub_endpoint(const std::string &id,
                                const std::string &frontend,
                                const std::string &backend) override;
@@ -38,8 +38,9 @@ public:
                                const std::string &frontend,
                                const std::string &backend) override;
 
-  bool set_filter(const std::string &id,
-                  std::unique_ptr<::scpp::core::FilterInterface> filter) override;
+  bool set_filter(
+      const std::string &id,
+      std::unique_ptr<::scpp::core::FilterInterface> filter) override;
 
   /**
    * @brief Does a two way signal handler, ideally the child process
@@ -52,8 +53,9 @@ public:
   bool kill_cleanly(const std::string &id);
   void kill(const std::string &id);
 
-private:
-  typedef std::function<bool(std::unique_ptr<::scpp::core::FilterInterface>)> filter_setter;
+ private:
+  typedef std::function<bool(std::unique_ptr<::scpp::core::FilterInterface>)>
+      filter_setter;
   typedef std::function<bool(const int32_t)> signal_setter;
 
   struct process_function_table {
@@ -69,6 +71,6 @@ private:
   };
 };
 
-}
-}
+}  // namespace net
+}  // namespace scpp
 #endif /* end of include guard ZMQMESSAGEPIPE_HPP */

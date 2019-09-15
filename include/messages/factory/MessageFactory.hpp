@@ -12,7 +12,7 @@
 #include "messages/debug/DebugMessage.h"
 
 class MessageFactory {
-public:
+ public:
   MessageFactory();
   virtual ~MessageFactory();
 

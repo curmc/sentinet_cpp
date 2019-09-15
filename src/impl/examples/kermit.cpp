@@ -10,7 +10,8 @@
 #define DEBUG
 
 int main() {
-  auto a = std::make_unique<scpp::curmt::KermitKernel>("drive", "tcp://localhost:5555", "tcp://localhost:5556");
+  auto a = std::make_unique<scpp::curmt::KermitKernel>(
+      "drive", "tcp://localhost:5555", "tcp://localhost:5556");
 
   //  auto b = std::make_unique<RandomPublisher>();
   //  b->loop();

@@ -18,7 +18,7 @@
  * so  that input output interfaces can be abstracted in the future
  */
 class InputOutputInterface {
-public:
+ public:
   virtual ~InputOutputInterface() = default;
 
   virtual bool write(const std::string &data) = 0;

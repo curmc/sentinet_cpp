@@ -45,7 +45,7 @@ static inline std::string generate_hex(const unsigned int len) {
   }
   return ss.str();
 }
-} // namespace random
-} // namespace utils
+}  // namespace random
+}  // namespace utils
 
 #endif /* end of include guard RANDOM_HPP */

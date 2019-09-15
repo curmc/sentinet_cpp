@@ -57,9 +57,8 @@ void Publisher_Context::periodic_publish_thread(thread_properties &properties) {
 }
 
 void Subscriber_Context::subscription_thread(thread_properties &properties) {
-
   auto socket = std::move(properties.socket);
-  std::cout<<properties.address<<" "<<properties.topic<<std::endl;
+  std::cout << properties.address << " " << properties.topic << std::endl;
   socket->connect(properties.address);
   socket->setsockopt(ZMQ_SUBSCRIBE, properties.topic.c_str(),
                      properties.topic.length());
@@ -79,7 +78,7 @@ void Subscriber_Context::subscription_thread(thread_properties &properties) {
          std::future_status::timeout) {
     zmq::poll(&item, 1, 100);
     if (item.revents & ZMQ_POLLIN) {
-      preallocated_message_string = s_recv(*socket); // topic name
+      preallocated_message_string = s_recv(*socket);  // topic name
       preallocated_message_string = s_recv(*socket);
       callback(preallocated_message_string);
     }
@@ -162,5 +161,5 @@ void Server_Context::server_thread(thread_properties &properties) {
   LOG_INFO("Server thread at address %s has ended",
            properties.sock_addr.c_str());
 }
-}
-}
+}  // namespace net
+}  // namespace scpp
