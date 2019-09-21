@@ -13,12 +13,12 @@ menu () {
 printf "
   Builder options
 
-  ./build.sh  all                     # builds everything from a clean build
-  ./build.sh  messages                # updates message libraries (pulls from sentinet_message_pkg
-  ./build.sh  install_ubuntu_deps     # installs ubuntu dependencies
-  ./build.sh  format                  # formats code
-  ./build.sh  clean                   # cleans build
-  ./build.sh  basic                   # just builds libraries
+  ./compile.sh  all                     # builds everything from a clean build
+  ./compile.sh  messages                # updates message libraries (pulls from sentinet_message_pkg
+  ./compile.sh  install_ubuntu_deps     # installs ubuntu dependencies
+  ./compile.sh  format                  # formats code
+  ./compile.sh  clean                   # cleans build
+  ./compile.sh  basic                   # just builds libraries
   "
   echo ""
 }
@@ -29,6 +29,7 @@ scan_option () {
     case "$1" in
     all)
       make all
+      printf "\n\n>>>  Binary files in ./build/bin\n\n>>>  Library files in ./build/lib\n\n"
       shift
       ;;
     messages)
@@ -48,7 +49,7 @@ scan_option () {
       shift
       ;;
     basic)
-      make
+      make basic
       shift
       ;;
     *)

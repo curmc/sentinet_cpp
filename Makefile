@@ -16,7 +16,9 @@ CLEAN_ALL=rm -rf ${BUILD_DIR}
 
 UBUNDUT_DEPS=cmake curl libcurl4-gnutls-dev autoconf automake libtool g++ unzip libzmq3-dev xargs
 
-all :: cmake compile
+all :: exe compile
+
+basic :: cmake compile
 
 cmake:
 	@${CMAKE_TARGET} ${CMAKE_OPTIONS}
