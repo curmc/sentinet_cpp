@@ -18,6 +18,7 @@ main()
 
   a.broker_frontend = "tcp://localhost:5570";
   a.topic = "topic";
+
   a.get_data = [&value](void) -> std::string {
     std::cout << "Sending: " << value << std::endl;
     return value;

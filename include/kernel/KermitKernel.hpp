@@ -11,7 +11,6 @@
 // Local includes
 #include "kernel/SerialPort.hpp"
 #include "control/ZMQControlClient.hpp"
-#include "messages/common/CmdVel.hpp"
 
 // C++ includes
 #include <memory>

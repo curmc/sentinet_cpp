@@ -1,12 +1,14 @@
 cmake_minimum_required(VERSION 3.5)
 project(cpp)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # models is a protoc library
 include("${PROJECT_SOURCE_DIR}/.cmake/cpp.cmake")
+include("${PROJECT_SOURCE_DIR}/.cmake/deps.cmake")
 
 # Find the necessary libraries
 find_library(PTHREAD_LIB pthread)
-find_library(PROTO_LIB protobuf)
 find_library(ZMQ_LIB zmq)
 find_library(YAML_CPP yaml-cpp)
 find_library(CURL_C curl)
@@ -14,16 +16,14 @@ find_library(CURL_C curl)
 include_directories(include)
 include_directories(${wii-controller-c_INCLUDE_DIRS})
 
-# Create a static library for messages
-file(GLOB_RECURSE MSGS_SRC "${PROJECT_SOURCE_DIR}/include/proto/*.cc" "${PROJECT_SOURCE_DIR}/src/messages/*.cpp")
-set(MESSAGES_LIB messages)
-add_library(${MESSAGES_LIB} STATIC ${MSGS_SRC})
-target_link_libraries(${MESSAGES_LIB} ${PTHREAD_LIB} ${PROTO_LIB})
+file(GLOB_RECURSE MESSAGE_SRC "${PROJECT_SOURCE_DIR}/src/messages/*")
+set(MESSAGE_LIB messages)
+add_library(${MESSAGE_LIB} STATIC ${MESSAGE_SRC})
 
 file(GLOB_RECURSE CONTROL_SRC "${PROJECT_SOURCE_DIR}/src/control/*.cpp")
 set(CONTROL_LIB control)
 add_library(${CONTROL_LIB} STATIC ${CONTROL_SRC})
-target_link_libraries(${CONTROL_LIB} ${MESSAGES_LIB} ${ZMQ_LIB} ${PTHREAD_LIB})
+target_link_libraries(${CONTROL_LIB} ${MESSAGE_LIB} ${ZMQ_LIB} ${PTHREAD_LIB})
 
 file(GLOB_RECURSE KERNEL_SRC "${PROJECT_SOURCE_DIR}/src/kernel/*.cpp")
 set(KERNEL_LIB kernel)

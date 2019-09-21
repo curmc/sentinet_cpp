@@ -1,54 +1,24 @@
 
-set(WII_CONT_VERS "release")
-set(WII_CONT_SUFFIX "v1.0.0")
-set(WII_CONT_DIR "${CMAKE_SOURCE_DIR}/cpp/third_party/wii-controller-c-${WII_CONT_SUFFIX}")
+include(${CMAKE_ROOT}/Modules/ExternalProject.cmake)
+
+set(MSG_PKG_VERSION "release")
+set(MSG_PKG_SUFFIX "v1.0.0")
+set(MSG_DIR "${CMAKE_SOURCE_DIR}/third_party/msg_pkg-${MSG_PKG_SUFFIX}")
+set(MSG_PKG_INC_DIRS "${MSG_DIR}/c/include")
 
 ExternalProject_Add(
-  wii-controller-c
-  GIT_REPOSITORY "https://github.com/curmc/wii-controller-c"
-  GIT_TAG "${WII_CONT_VERS}"
+  sentinet_message_pkg 
+  GIT_REPOSITORY "https://github.com/curmc/sentinet_message_pkg"
+  GIT_TAG "${MSG_PKG_VERSION}"
 
-  UPDATE_COMMAND ""
-  PATCH_COMMAND ""
+  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${MSG_DIR}
 
-  SOURCE_DIR "${WII_CONT_DIR}"
-  CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/dependencies
-
-  TEST_COMMAND ""
-  )
-
-if(BUILD_DEPENDENCIES)
-ExternalProject_Add(
-  yaml-cpp
-  GIT_REPOSITORY "https://github.com/jbeder/yaml-cpp.git"
-  GIT_TAG "yaml-cpp-0.6.2"
-
-  UPDATE_COMMAND ""
-  PATCH_COMMAND ""
-  SOURCE_DIR "${CMAKE_SOURCE_DIR}/cpp/third_party/yaml-cpp-0.6.2"
-  CMAKE_ARGS -DBUILD_SHARED_LIBS=ON
-
-  TEST_COMMAND ""
-)
-
-set(PROTOBUF_TAR_GZ https://github.com/google/protobuf/archive/v3.4.0.tar.gz)
-ExternalProject_Add(
-  protobuf-external
-  PREFIX protobuf
-  URL ${PROTOBUF_TAR_GZ}
-  BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR}/protobuf
-  CMAKE_CACHE_ARGS
-    "-DCMAKE_BUILD_TYPE:STRING=${CMAKE_BUILD_TYPE}"
-    "-Dprotobuf_BUILD_TESTS:BOOL=OFF"
-    "-Dprotobuf_BUILD_EXAMPLES:BOOL=OFF"
-    "-Dprotobuf_WITH_ZLIB:BOOL=OFF"
-    "-DCMAKE_CXX_COMPILER:STRING=${CMAKE_CXX_COMPILER}"
-    # other project specific parameters
-  SOURCE_SUBDIR cmake
-  BUILD_ALWAYS 1
+  SOURCE_DIR "${MSG_DIR}"
+  INSTALL_DIR = "${CMAKE_BINARY_DIR}/messages"
+  BINARY_DIR "${CMAKE_BINARY_DIR}/messages"
   STEP_TARGETS build
-  INSTALL_COMMAND ""
+
+  EXCLUDE_FROM_ALL TRUE
 )
-endif()
-set(wii-controller-c_INCLUDE_DIRS "${WII_CONT_DIR}/include")
-include_directories(${wii-controller-c_INCLUDE_DIRS})
+
+include_directories(${MSG_PKG_INC_DIRS})
