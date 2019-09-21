@@ -17,7 +17,6 @@
 #include <string>
 #include <memory>
 
-
 class Socket
 {
 public:
