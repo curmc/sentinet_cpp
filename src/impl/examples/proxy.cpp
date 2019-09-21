@@ -19,7 +19,7 @@ main()
   std::promise<void> exit_thing_2;
 
   scpp::proxies::ZMQPubSubProxy a("hello",
-                                  std::move(exit_thing.get_future()),
+                                  exit_thing.get_future(),
                                   "tcp://*:5570",
                                   "tcp://*:5571",
                                   1);

@@ -31,7 +31,6 @@ find_library(ZMQ_LIB zmq)
 
 
 
-
 # Include some files
 include_directories(include)
 include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/include")
