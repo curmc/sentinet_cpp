@@ -75,4 +75,7 @@ if(BUILD_EXECUTABLE)
 
   add_executable(proxy "${PROJECT_SOURCE_DIR}/src/impl/examples/proxy.cpp")
   target_link_libraries(proxy ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
+
+  add_executable(pipe "${PROJECT_SOURCE_DIR}/src/impl/examples/pipe.cpp")
+  target_link_libraries(pipe ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
 endif()
