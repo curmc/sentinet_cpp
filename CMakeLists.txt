@@ -41,9 +41,10 @@ include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/in
 
 # MESSAGE LIBRARY - Pipes and serialization
 file(GLOB_RECURSE MESSAGE_SRC "${PROJECT_SOURCE_DIR}/src/messages/*.cpp")
-set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/src/messages.c")
+set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/src/messages.cpp")
 set(MESSAGE_LIB messages)
 add_library(${MESSAGE_LIB} STATIC ${MESSAGE_SRC})
+target_link_libraries(${MESSAGE_LIB})
 
 
 # CONTROL SOURCE - Control Client
