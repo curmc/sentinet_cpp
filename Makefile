@@ -16,7 +16,7 @@ CLEAN_ALL=rm -rf ${BUILD_DIR}
 
 UBUNDUT_DEPS=cmake curl libcurl4-gnutls-dev autoconf automake libtool g++ unzip libzmq3-dev xargs
 
-all :: update-messages exe compile 
+all :: exe compile 
 
 basic :: cmake compile
 
@@ -47,5 +47,3 @@ clean-all:
 install-deps ::
 	@sudo apt install ${UBUNDUT_DEPS}
 
-update-messages ::
-	@cd ./third_party/sentinet_message_pkg && git pull --rebase && git rebase origin/release
