@@ -24,26 +24,25 @@ ProxyInterface::ProxyInterface(const std::string& id_,
 {
   running = true;
 
-  LOG_INFO("Creating a new proxy interface");
-  LOG_INFO("Registering stop signal");
+  LOG_INFO("Creating a new proxy interface: id %s, frontend: %s, backend: %s",
+           id.c_str(),
+           frontend.c_str(),
+           backend.c_str());
   register_signal(CLEAN_STOP, [this](void) -> int {
     this->stop();
     return CLEAN_STOP;
   });
 
-  LOG_INFO("Registering kill signal");
   register_signal(KILL, [this](void) -> int {
     this->kill();
     return KILL;
   });
 
-  LOG_INFO("Registering start signal");
   register_signal(START, [this](void) -> int {
     this->start();
     return START;
   });
 
-  LOG_INFO("Registering pause signal");
   register_signal(PAUSE, [this](void) -> int {
     this->pause();
     return PAUSE;

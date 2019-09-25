@@ -34,7 +34,6 @@ public:
   virtual ~PipeInterface() = default;
 
 public:
-
   /**
    * @brief Create a publisher subscribe proxy
    */
@@ -59,7 +58,7 @@ public:
    */
   virtual bool stop(const std::string id);
 
-  /** 
+  /**
    * Hopefuly we don't use this, but kill a thing
    */
   virtual bool kill(const std::string id);
@@ -81,7 +80,6 @@ public:
    */
   virtual bool set_filter(const std::string id,
                           std::unique_ptr<FilterInterface> filter);
-
 
 private:
   typedef struct proxy_s
