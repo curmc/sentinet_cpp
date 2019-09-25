@@ -39,7 +39,8 @@ clean:
 	@${CLEAN}
 
 format ::
-	@find . ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
+	@find ./src ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
+	@find ./include ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
 
 clean-all:
 	@${CLEAN_ALL}
