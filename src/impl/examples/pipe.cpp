@@ -5,6 +5,7 @@
  */
 
 #include "core/messages/pipe/PipeInterface.hpp"
+#include "messages/pipe/SimpleFilter.hpp"
 #include <sstream>
 
 int
@@ -13,8 +14,6 @@ main()
 
   auto a = std::make_unique<scpp::core::PipeInterface>();
 
-  std::stringstream ss;
-  std::stringstream ss2;
 
   a->create_req_rep_endpoint("2", "tcp://*:5500", "tcp://*:6500");
   a->create_req_rep_endpoint("3", "tcp://*:5501", "tcp://*:6501");
@@ -37,6 +36,17 @@ main()
   a->create_pub_sub_endpoint("25", "tcp://*:5518", "tcp://*:6518");
   a->create_pub_sub_endpoint("27", "tcp://*:5519", "tcp://*:6519");
   a->create_pub_sub_endpoint("29", "tcp://*:5520", "tcp://*:6520");
+
+  a->set_filter("2", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("3", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("4", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("6", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("7", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("8", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("9", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("10", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("11", std::make_unique<scpp::filters::SimpleFilter>());
+  a->set_filter("13", std::make_unique<scpp::filters::SimpleFilter>());
 
   sleep(10);
 

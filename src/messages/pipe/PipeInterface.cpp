@@ -153,7 +153,7 @@ PipeInterface::set_filter(const std::string id,
   auto found = proxies.proxies.find(id);
 
   if (found != proxies.proxies.end()) {
-    LOG_ERROR("Invalid proxy stop request on proxy %c", id.c_str());
+    LOG_ERROR("Invalid proxy filter change request on proxy %c", id.c_str());
     return false;
   }
 
