@@ -33,7 +33,7 @@ find_library(ZMQ_LIB zmq)
 
 # Include some files
 include_directories(include)
-include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/include")
+include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/include")
 
 
 
@@ -41,7 +41,8 @@ include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/in
 
 # MESSAGE LIBRARY - Pipes and serialization
 file(GLOB_RECURSE MESSAGE_SRC "${PROJECT_SOURCE_DIR}/src/messages/*.cpp")
-set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/src/messages.c")
+set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/src/messages.cpp")
+set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/src/MessageFactory.cpp")
 set(MESSAGE_LIB messages)
 add_library(${MESSAGE_LIB} STATIC ${MESSAGE_SRC})
 
@@ -75,4 +76,7 @@ if(BUILD_EXECUTABLE)
 
   add_executable(proxy "${PROJECT_SOURCE_DIR}/src/impl/examples/proxy.cpp")
   target_link_libraries(proxy ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
+
+  add_executable(pipe "${PROJECT_SOURCE_DIR}/src/impl/examples/pipe.cpp")
+  target_link_libraries(pipe ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
 endif()

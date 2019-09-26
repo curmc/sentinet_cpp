@@ -16,7 +16,7 @@ CLEAN_ALL=rm -rf ${BUILD_DIR}
 
 UBUNDUT_DEPS=cmake curl libcurl4-gnutls-dev autoconf automake libtool g++ unzip libzmq3-dev xargs
 
-all :: exe compile
+all :: exe compile 
 
 basic :: cmake compile
 
@@ -39,12 +39,12 @@ clean:
 	@${CLEAN}
 
 format ::
-	@find . ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
+	@find ./src ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
+	@find ./include ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
 
 clean-all:
 	@${CLEAN_ALL}
 
 install-deps ::
 	@sudo apt install ${UBUNDUT_DEPS}
-
 
