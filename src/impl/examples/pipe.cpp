@@ -14,7 +14,6 @@ main()
 
   auto a = std::make_unique<scpp::core::PipeInterface>();
 
-
   a->create_req_rep_endpoint("2", "tcp://*:5500", "tcp://*:6500");
   a->create_req_rep_endpoint("3", "tcp://*:5501", "tcp://*:6501");
   a->create_req_rep_endpoint("4", "tcp://*:5502", "tcp://*:6502");
