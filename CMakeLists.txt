@@ -33,7 +33,7 @@ find_library(ZMQ_LIB zmq)
 
 # Include some files
 include_directories(include)
-include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/include")
+include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c")
 
 
 
@@ -41,8 +41,8 @@ include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/incl
 
 # MESSAGE LIBRARY - Pipes and serialization
 file(GLOB_RECURSE MESSAGE_SRC "${PROJECT_SOURCE_DIR}/src/messages/*.cpp")
-set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/src/messages.cpp")
-set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/src/MessageFactory.cpp")
+set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/messages.c")
+# set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/src/MessageFactory.cpp")
 set(MESSAGE_LIB messages)
 add_library(${MESSAGE_LIB} STATIC ${MESSAGE_SRC})
 
