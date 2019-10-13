@@ -41,7 +41,7 @@ git_rebase () {
     git_init && git_update
   fi
 
-  git submodule update --remote --rebase
+  git submodule update
   echo "All up to date! Should these changes be pushed to the remote? [Y/n]" && read resp3
   if [ $resp3 == "y" ]; then
     git push origin $(git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3)
