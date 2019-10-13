@@ -22,17 +22,10 @@ extern "C" {
 namespace scpp {
 namespace curmt {
 
-namespace defaults {
-const std::string publish_channel = "tcp://localhost:5555";
-const std::string subscribe_channel = "tcp://localhost:5556";
-const std::string serve_channel = "tcp://localhost:5557";
-const std::string cmd_vel_topic = "cmd_vel";
-}
-
 class KermitControlModule : public ::scpp::net::ZMQControlClient
 {
 public:
-  KermitControlModule();
+  KermitControlModule(std::string publish_channel_);
   virtual ~KermitControlModule();
 
   bool set_linear(const float linear);
@@ -46,7 +39,7 @@ public:
   bool trigger_dumping();
   bool trigger_mining();
 
-  bool start_kermit();
+  bool start_kermit(std::string topic);
   bool loop_kermit();
   bool quit_kermit();
 
@@ -64,6 +57,7 @@ private:
     char dumping : 1;
   } kermit_state;
 
+  std::string publish_channel;
   data_buffer buff;
   kermit_state state;
 };

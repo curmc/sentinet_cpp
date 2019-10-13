@@ -10,10 +10,10 @@ namespace scpp {
 namespace curmt {
 
 
-KermitControlModule::KermitControlModule()
+KermitControlModule::KermitControlModule(std::string publish_channel_)
 {
   buff = create_buffer();
-
+  publish_channel = publish_channel_;
 }
 
 KermitControlModule::~KermitControlModule()
@@ -51,12 +51,12 @@ bool KermitControlModule::trigger_dumping() {
   return state.dumping;
 }
 
-bool KermitControlModule::start_kermit() {
+bool KermitControlModule::start_kermit(std::string topic) {
   __start__();
 
   scpp::publish_params publish;
-  publish.broker_frontend = defaults::publish_channel;
-  publish.topic = defaults::cmd_vel_topic;
+  publish.broker_frontend = publish_channel;
+  publish.topic = topic;
   publish.get_data = [this] () -> std::string {
     memset(&buff, 0, sizeof(buff)); // TODO add functionality in serializeation library to fix this
     serialize_data(&buff, &state.linear, sizeof(state.linear), FLOAT);

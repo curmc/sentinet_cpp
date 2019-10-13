@@ -55,6 +55,14 @@ target_link_libraries(${KERNEL_LIB})
 
 
 if(BUILD_EXECUTABLE)
+  add_executable(kermit_kernel "${PROJECT_SOURCE_DIR}/src/impl/kermit_kernel.cpp")
+  target_link_libraries(kermit_kernel ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
+  add_executable(kermit_proxy "${PROJECT_SOURCE_DIR}/src/impl/kermit_proxy.cpp")
+  target_link_libraries(kermit_proxy ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
+  add_executable(kermit_control "${PROJECT_SOURCE_DIR}/src/impl/kermit_control.cpp")
+  target_link_libraries(kermit_control ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
+
+
   add_executable(serial_example "${PROJECT_SOURCE_DIR}/src/impl/kernel_examples/serial_example.cpp")
   target_link_libraries(serial_example ${KERNEL_LIB})
 
