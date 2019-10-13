@@ -11,6 +11,6 @@
 
 git_update () {
   git fetch
-  git submodule update --remote --rebase
+  git submodule update
 }
 
