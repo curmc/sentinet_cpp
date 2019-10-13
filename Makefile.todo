@@ -1,0 +1,32 @@
+CC = /usr/bin/gcc
+FILE_SUFFIXES = '.*\.\(c\|h\)'
+FORMAT_TARGET = clang-format -i -style=Mozilla
+
+# Source PATHS
+SRC_PATHS = c/src
+MSG_PKG_SRC = third_party/sentinet_message_pkg/c/src
+MSG_PIPE_SRC = src/messages/pipe
+MSG_SRC = src/messages
+CONTROL_SRC = src/control
+KERNEL_SRC = src/kernel
+CORE_SRC = src/core
+
+# Include PATHS
+INCLUDES = -I include -I /usr/local/include
+
+# Targets
+# First, the library targets
+
+LIB_MESSAGES = libmessages.so
+LIB_CONTROL = libcontrol.so
+LIB_KERNEL = libkernel.so
+
+# Second, the executable targets
+
+PROXY = kermit_proxy
+
+
+
+# Libraries
+MESSAGE_LIB = libmessages.so
+MESSAGE_LIB_SOURCES = $(shell find $(MESSAGE_SRC) -name '*.$(SRC_EXT)' | sort -k 1nr | cut -f2-) 

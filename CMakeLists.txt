@@ -11,15 +11,6 @@ include("${PROJECT_SOURCE_DIR}/.cmake/GitUtils.cmake")
 option(CLONE_MSGS "Clone messages into message folder" OFF)
 
 # Clones sentinet_message_pkg into smp
-if(CLONE_MSGS)
-  git_clone(
-    PROJECT_NAME  sentinet_msgs
-    GIT_URL       https://github.com/curmc/sentinet_message_pkg.git
-    GIT_BRANCH    release
-    DIRECTORY     "${PROJECT_SOURCE_DIR}/third_party"
-  )
-endif()
-
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
@@ -33,7 +24,7 @@ find_library(ZMQ_LIB zmq)
 
 # Include some files
 include_directories(include)
-include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c")
+include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/include")
 
 
 
@@ -41,7 +32,9 @@ include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c")
 
 # MESSAGE LIBRARY - Pipes and serialization
 file(GLOB_RECURSE MESSAGE_SRC "${PROJECT_SOURCE_DIR}/src/messages/*.cpp")
-set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/messages.c")
+set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/src/data_messages.c")
+set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/src/data.c")
+
 # set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/src/MessageFactory.cpp")
 set(MESSAGE_LIB messages)
 add_library(${MESSAGE_LIB} STATIC ${MESSAGE_SRC})
