@@ -7,7 +7,8 @@
 #include "kernel/KermitControlModule.hpp"
 
 // TODO
-int main() {
+int
+main()
+{
   return 1;
 }
-

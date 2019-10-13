@@ -10,10 +10,10 @@
 
 // Local includes
 #include "control/ZMQControlClient.hpp"
-extern "C" {
+extern "C"
+{
 #include "data_message.h"
 }
-
 
 // C++ includes
 #include <chrono>
@@ -44,7 +44,6 @@ public:
   bool quit_kermit();
 
 private:
-
   virtual bool __start__() = 0;
   virtual bool __quit__() = 0;
   virtual bool __update_state__() = 0;

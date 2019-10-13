@@ -28,6 +28,4 @@ const std::string cmd_vel_topic = "cmd_vel";
 }
 }
 
-
 #endif /* end of include guard DEFAULTS_HPP */
-

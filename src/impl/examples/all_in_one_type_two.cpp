@@ -9,8 +9,10 @@
 
 std::mutex t;
 
-void func(std::string& val) {
-  std::cout<< "Recieved "<<val<<std::endl;
+void
+func(std::string& val)
+{
+  std::cout << "Recieved " << val << std::endl;
 }
 
 int
@@ -19,13 +21,11 @@ main()
   std::string value("Well hello there");
 
   scpp::subscribe_params b;
-  b.callback = [] (std::string& val) -> void {
-    std::cout<<"Recieved: " <<val<<std::endl;
+  b.callback = [](std::string& val) -> void {
+    std::cout << "Recieved: " << val << std::endl;
   };
   b.topic = "drive";
   b.socket_backend = "tcp://localhost:5555";
-  
-
 
   //
   // a.broker_frontend = "tcp://localhost:5570";

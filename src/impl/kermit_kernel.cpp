@@ -7,14 +7,14 @@
 #include "kernel/KermitKernel.hpp"
 #include "kernel/Defaults.hpp"
 
-
-int 
-main() {
+int
+main()
+{
   auto a = std::make_unique<scpp::curmt::KermitKernel>(
-      scpp::curmt::defaults::cmd_vel_topic,
-      scpp::curmt::defaults::cmd_vel_front_end,
-      scpp::curmt::defaults::cmd_vel_back_end);
-    
+    scpp::curmt::defaults::cmd_vel_topic,
+    scpp::curmt::defaults::cmd_vel_front_end,
+    scpp::curmt::defaults::cmd_vel_back_end);
+
   a->set_serial("/dev/ttyACM0", 9600);
   a->start(std::chrono::seconds(1));
   sleep(100);

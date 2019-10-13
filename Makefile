@@ -28,9 +28,7 @@ exe:
 	@${MAKE_TARGET}
 
 msgs_update:
-	@rm -rf ./third_party/sentinet_message_pkg
-	@${CMAKE_TARGET} -DCLONE_MSGS=ON
-	@${MAKE_TARGET}
+	@git submodule update
 
 compile:
 	@${MAKE_TARGET}
