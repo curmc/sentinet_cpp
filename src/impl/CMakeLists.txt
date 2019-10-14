@@ -8,6 +8,8 @@ if(RMT_CORE)
   target_link_libraries(kermit_kernel kernel control messages)
   target_link_libraries(kermit_proxy kernel control messages)
   target_link_libraries(kermit_control kernel control messages)
+
+  install(TARGETS kermit_kernel kermit_proxy kermit_control RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 endif()
 
 if(EXAMPLES)
@@ -18,4 +20,6 @@ if(EXAMPLES)
   target_link_libraries(example_with_proxy kernel control messages)
   target_link_libraries(proxy kernel control messages)
   target_link_libraries(pipe kernel control messages)
+
+  install(TARGETS pipe example_with_proxy proxy RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 endif()

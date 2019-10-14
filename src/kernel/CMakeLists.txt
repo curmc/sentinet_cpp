@@ -9,3 +9,6 @@ else()
 endif()
 
 target_link_libraries(kernel pthread control messages)
+
+install(TARGETS kernel LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
+

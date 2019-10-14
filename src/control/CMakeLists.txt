@@ -9,3 +9,5 @@ else()
 endif()
 
 target_link_libraries(control messages zmq pthread)
+
+install(TARGETS control LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")

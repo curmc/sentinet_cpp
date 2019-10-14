@@ -9,3 +9,5 @@ else()
 endif()
 
 target_link_libraries(messages smessages)
+
+install(TARGETS messages LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
