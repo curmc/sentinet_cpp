@@ -1,83 +1,28 @@
 cmake_minimum_required(VERSION 3.5)
-project(cpp)
+project(Sentinet)
+
+set(CMAKE_INSTALL_PREFIX "/opt/${PROJECT_NAME}_cpp")
 
 # Used for language analysis (and clang)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# Third party sentinet message package
+set(MSG_PKG "${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg")
 
-# Include some cmake files I found on github
+# Include cpp options
 include("${PROJECT_SOURCE_DIR}/.cmake/cpp.cmake")
-include("${PROJECT_SOURCE_DIR}/.cmake/GitUtils.cmake")
 
-option(CLONE_MSGS "Clone messages into message folder" OFF)
-
-# Clones sentinet_message_pkg into smp
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
+# Output directories
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${PROJECT_NAME}/bin")
 
 # Find the necessary libraries
 find_library(PTHREAD_LIB pthread)
 find_library(ZMQ_LIB zmq)
 
-
-
 # Include some files
 include_directories(include)
-include_directories("${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/include")
+include_directories("${MSG_PKG}/c/include")
 
-
-
-# Build our main libraries
-
-# MESSAGE LIBRARY - Pipes and serialization
-file(GLOB_RECURSE MESSAGE_SRC "${PROJECT_SOURCE_DIR}/src/messages/*.cpp")
-set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/src/data_messages.c")
-set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/c/src/data.c")
-
-# set(MESSAGE_SRC "${MESSAGE_SRC};${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg/src/MessageFactory.cpp")
-set(MESSAGE_LIB messages)
-add_library(${MESSAGE_LIB} STATIC ${MESSAGE_SRC})
-
-
-# CONTROL SOURCE - Control Client
-file(GLOB_RECURSE CONTROL_SRC "${PROJECT_SOURCE_DIR}/src/control/*.cpp")
-set(CONTROL_LIB control)
-add_library(${CONTROL_LIB} STATIC ${CONTROL_SRC})
-target_link_libraries(${CONTROL_LIB} ${MESSAGE_LIB} ${ZMQ_LIB} ${PTHREAD_LIB})
-
-
-# IMPLIMENTATION SOURCE - Kermit and kernel stuff
-file(GLOB_RECURSE KERNEL_SRC "${PROJECT_SOURCE_DIR}/src/kernel/*.cpp")
-set(KERNEL_LIB kernel)
-add_library(${KERNEL_LIB} STATIC ${KERNEL_SRC})
-target_link_libraries(${KERNEL_LIB})
-
-
-if(BUILD_EXECUTABLE)
-  add_executable(kermit_kernel "${PROJECT_SOURCE_DIR}/src/impl/kermit_kernel.cpp")
-  target_link_libraries(kermit_kernel ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-  add_executable(kermit_proxy "${PROJECT_SOURCE_DIR}/src/impl/kermit_proxy.cpp")
-  target_link_libraries(kermit_proxy ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-  add_executable(kermit_control "${PROJECT_SOURCE_DIR}/src/impl/kermit_control.cpp")
-  target_link_libraries(kermit_control ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-
-
-  add_executable(serial_example "${PROJECT_SOURCE_DIR}/src/impl/kernel_examples/serial_example.cpp")
-  target_link_libraries(serial_example ${KERNEL_LIB})
-
-  add_executable(kermit "${PROJECT_SOURCE_DIR}/src/impl/examples/kermit.cpp")
-  target_link_libraries(kermit ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-
-  add_executable(all_in_one "${PROJECT_SOURCE_DIR}/src/impl/examples/all_in_one.cpp")
-  target_link_libraries(all_in_one ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-
-  add_executable(all_in_one_two "${PROJECT_SOURCE_DIR}/src/impl/examples/all_in_one_type_two.cpp")
-  target_link_libraries(all_in_one_two ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-
-  add_executable(proxy "${PROJECT_SOURCE_DIR}/src/impl/examples/proxy.cpp")
-  target_link_libraries(proxy ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-
-  add_executable(pipe "${PROJECT_SOURCE_DIR}/src/impl/examples/pipe.cpp")
-  target_link_libraries(pipe ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-endif()
+add_subdirectory(third_party)
+add_subdirectory(src)
