@@ -10,4 +10,5 @@ endif()
 
 target_link_libraries(messages smessages)
 
-install(TARGETS messages LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
+install(TARGETS messages LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
+                         ARCHIVE DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")

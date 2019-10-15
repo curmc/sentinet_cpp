@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
 source "$PWD/.scripts/scan_option.sh"
 source "$PWD/.scripts/menu.sh"
