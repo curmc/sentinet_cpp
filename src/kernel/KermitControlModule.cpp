@@ -9,7 +9,7 @@
 namespace scpp {
 namespace curmt {
 
-KermitControlModule::KermitControlModule(std::string publish_channel_)
+KermitControlModule::KermitControlModule(const std::string& publish_channel_)
 {
   buff = create_buffer();
   publish_channel = publish_channel_;
@@ -21,49 +21,7 @@ KermitControlModule::~KermitControlModule()
 }
 
 bool
-KermitControlModule::set_linear(const float linear)
-{
-  state.linear = linear;
-  return true;
-}
-
-bool
-KermitControlModule::set_angular(const float angular)
-{
-  state.angular = angular;
-  return true;
-}
-
-bool
-KermitControlModule::set_dumping(bool val)
-{
-  state.dumping = val;
-  return true;
-}
-
-bool
-KermitControlModule::set_mining(bool val)
-{
-  state.mining = val;
-  return true;
-}
-
-bool
-KermitControlModule::trigger_mining()
-{
-  state.mining = !state.mining;
-  return state.mining;
-}
-
-bool
-KermitControlModule::trigger_dumping()
-{
-  state.dumping = !state.dumping;
-  return state.dumping;
-}
-
-bool
-KermitControlModule::start_kermit(std::string topic)
+KermitControlModule::start_kermit(const std::string& topic)
 {
   __start__();
 
@@ -71,17 +29,22 @@ KermitControlModule::start_kermit(std::string topic)
   publish.broker_frontend = publish_channel;
   publish.topic = topic;
   publish.get_data = [this]() -> std::string {
-    memset(
-      &buff,
-      0,
-      sizeof(
-        buff)); // TODO add functionality in serializeation library to fix this
-    serialize_data(&buff, &state.linear, sizeof(state.linear), FLOAT);
-    serialize_data(&buff, &state.angular, sizeof(state.angular), FLOAT);
+    // TODO add functionality in serializeation library to fix this
+    memset(&buff, 0, sizeof(buff));
+
+    // In c you can take a temporary address of an rvlaue, but c++ whines
+    // Maybe a std::move would fix this, I don't think it would
+    float templin = __get_lin__();
+    float tempang = __get_ang__();
+
+    serialize_data(&buff, &templin, sizeof(float), FLOAT);
+    serialize_data(&buff, &tempang, sizeof(float), FLOAT);
     to_wire(&buff);
     return scpp::string((const char*)buff.data, (size_t)buff.byte_length);
   };
+
   publish.period = std::chrono::milliseconds(10);
+  // Start publishing
   spin(publish);
 
   return true;
