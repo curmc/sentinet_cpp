@@ -21,6 +21,8 @@ printf "
   ./compile.sh  format                  # formats code
   ./compile.sh  clean                   # cleans build
   ./compile.sh  basic                   # just builds libraries
+  ./compile.sh  install                 # install the projecet
+  ./compile.sh  uninstall               # uninstall the project
   "
   echo ""
 }

@@ -11,6 +11,7 @@
 source "$PWD/.scripts/git_init.sh"
 source "$PWD/.scripts/git_rebase.sh"
 source "$PWD/.scripts/git_update.sh"
+source "$PWD/.scripts/linker.sh"
 
 scan_option () {
   while test $# -gt 0; do
@@ -50,6 +51,16 @@ scan_option () {
       ;;
     update)
       git_rebase
+      shift
+      ;;
+    install)
+      make && sudo make install
+      link_includes
+      link_libs
+      shift
+      ;;
+    uninstall)
+      remove_all 
       shift
       ;;
     *)
