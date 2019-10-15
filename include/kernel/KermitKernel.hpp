@@ -23,6 +23,7 @@ class KermitKernel : public ::scpp::net::ZMQControlClient
 {
 public:
   KermitKernel() = delete;
+
   KermitKernel(const std::string& drive_topic,
                const std::string& publish_channel,
                const std::string& serve_channel,

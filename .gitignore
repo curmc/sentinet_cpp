@@ -9,4 +9,3 @@ build*/
 venv*/
 *compile_commands*
 */*.venv
-*third_party/*

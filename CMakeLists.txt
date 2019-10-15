@@ -1,35 +1,25 @@
 cmake_minimum_required(VERSION 3.5)
-project(cpp)
+project(sentinet)
+
+set(CMAKE_INSTALL_PREFIX "/opt/${PROJECT_NAME}_cpp")
+set(ARCHITECTURE "x86_64")
 
 # Used for language analysis (and clang)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+# Third party sentinet message package
+set(MSG_PKG "${PROJECT_SOURCE_DIR}/third_party/sentinet_message_pkg")
 
-# Include some cmake files I found on github
+# Include cpp options
 include("${PROJECT_SOURCE_DIR}/.cmake/cpp.cmake")
-include("${PROJECT_SOURCE_DIR}/.cmake/GitUtils.cmake")
 
-option(CLONE_MSGS "Clone messages into message folder" OFF)
-
-# Clones sentinet_message_pkg into smp
-if(CLONE_MSGS)
-  git_clone(
-    PROJECT_NAME  sentinet_msgs
-    GIT_URL       https://github.com/curmc/sentinet_message_pkg.git
-    GIT_BRANCH    release
-    DIRECTORY     "${PROJECT_SOURCE_DIR}/third_party"
-  )
-endif()
-
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
+# Output directories
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ARCHITECTURE}/${PROJECT_NAME}/lib")
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ARCHITECTURE}/${PROJECT_NAME}/lib")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${ARCHITECTURE}/${PROJECT_NAME}/bin")
 
 # Find the necessary libraries
 find_library(PTHREAD_LIB pthread)
 find_library(ZMQ_LIB zmq)
-
-
 
 # Include some files
 include_directories(include)
@@ -71,9 +61,9 @@ if(BUILD_EXECUTABLE)
   add_executable(all_in_one "${PROJECT_SOURCE_DIR}/src/impl/examples/all_in_one.cpp")
   target_link_libraries(all_in_one ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
 
-  add_executable(all_in_one_two "${PROJECT_SOURCE_DIR}/src/impl/examples/all_in_one_type_two.cpp")
-  target_link_libraries(all_in_one_two ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
+include_directories("${MSG_PKG}/c/include")
 
-  add_executable(proxy "${PROJECT_SOURCE_DIR}/src/impl/examples/proxy.cpp")
-  target_link_libraries(proxy ${KERNEL_LIB} ${CONTROL_LIB} ${YAML_CPP})
-endif()
+add_subdirectory(third_party)
+add_subdirectory(src)
+
+install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
