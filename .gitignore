@@ -9,3 +9,6 @@ build*/
 venv*/
 *compile_commands*
 */*.venv
+run
+proxy
+a.out
