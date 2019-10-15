@@ -1,3 +1,14 @@
+# Installation
+
+Make sure all dependencies are installed 
+
+``` bash
+$ make all
+$ sudo make install
+```
+
+
+
 # How to checkout / create / merge a branch
 
 This project is restricted on master and release. You will not be able to commit to these branches. In order to make changes to the project, create a new branch

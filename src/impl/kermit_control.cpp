@@ -4,7 +4,7 @@
  * @created     : Sunday Oct 13, 2019 14:35:38 MDT
  */
 
-#include "kernel/KermitControlModule.hpp"
+#include "scpp/kernel/KermitControlModule.hpp"
 
 // TODO
 int

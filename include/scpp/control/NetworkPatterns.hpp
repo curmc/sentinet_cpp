@@ -9,9 +9,9 @@
 #define NETWORKPATTERNS_HPP
 
 // Local includes
-#include "core/types.h"
-#include "control/zhelpers.hpp"
-#include "core/utils/logging.hpp"
+#include "scpp/core/types.h"
+#include "scpp/control/zhelpers.hpp"
+#include "scpp/core/utils/logging.hpp"
 
 namespace scpp {
 namespace net {

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
-project(sentinet)
+project(core)
 
-set(CMAKE_INSTALL_PREFIX "/opt/${PROJECT_NAME}_cpp")
+set(CMAKE_INSTALL_PREFIX "/opt/sentinet_cpp/${PROJECT_NAME}")
 set(ARCHITECTURE "x86_64")
 
 # Used for language analysis (and clang)
@@ -29,3 +29,4 @@ add_subdirectory(third_party)
 add_subdirectory(src)
 
 install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
+install(DIRECTORY ${MSG_PKG}/c/include DESTINATION ${CMAKE_INSTALL_PREFIX})

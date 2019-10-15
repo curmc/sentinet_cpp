@@ -4,7 +4,7 @@
  * @created     : Sunday Aug 25, 2019 15:26:38 MDT
  */
 
-#include "kernel/KermitKernel.hpp"
+#include "scpp/kernel/KermitKernel.hpp"
 
 namespace scpp {
 namespace curmt {

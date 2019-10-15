@@ -4,7 +4,7 @@
  * @created     : Saturday Aug 24, 2019 16:53:00 MDT
  */
 
-#include "kernel/SerialPort.hpp"
+#include "scpp/kernel/SerialPort.hpp"
 #include <iostream>
 
 SerialPort::SerialPort(const std::string& port,

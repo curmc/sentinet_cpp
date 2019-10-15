@@ -4,7 +4,7 @@
  * @created     : Friday Sep 13, 2019 16:53:20 MDT
  */
 
-#include "core/messages/pipe/ProxyInterface.hpp"
+#include "scpp/core/messages/pipe/ProxyInterface.hpp"
 #include <iostream>
 
 namespace scpp {

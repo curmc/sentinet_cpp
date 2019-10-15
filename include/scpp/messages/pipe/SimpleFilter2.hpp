@@ -11,7 +11,7 @@
 // C++ includes
 
 // Local Includes
-#include "core/messages/pipe/FilterInterface.hpp"
+#include "scpp/core/messages/pipe/FilterInterface.hpp"
 
 namespace scpp {
 namespace filters {

@@ -5,10 +5,10 @@
  */
 
 // #include "control/zhelpers.hpp"
-#include "messages/pipe/ZMQPubSubProxy.hpp"
-#include "messages/pipe/ZMQServerProxy.hpp"
-#include "messages/pipe/SimpleFilter.hpp"
-#include "messages/pipe/SimpleFilter2.hpp"
+#include "scpp/messages/pipe/ZMQPubSubProxy.hpp"
+#include "scpp/messages/pipe/ZMQServerProxy.hpp"
+#include "scpp/messages/pipe/SimpleFilter.hpp"
+#include "scpp/messages/pipe/SimpleFilter2.hpp"
 #include <future>
 #include <thread>
 

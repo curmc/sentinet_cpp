@@ -4,7 +4,7 @@
  * @created     : Friday Aug 30, 2019 15:10:01 MDT
  */
 
-#include "kernel/KermitKernel.hpp"
+#include "scpp/kernel/KermitKernel.hpp"
 //#include "control/RandomPublisher.hpp"
 
 #define DEBUG

@@ -1,5 +1,5 @@
 
-#include "control/ZMQControlClient.hpp"
+#include "scpp/control/ZMQControlClient.hpp"
 
 namespace scpp {
 namespace net {

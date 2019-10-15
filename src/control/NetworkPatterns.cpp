@@ -5,7 +5,7 @@
  */
 
 // Local Includes
-#include "control/NetworkPatterns.hpp"
+#include "scpp/control/NetworkPatterns.hpp"
 
 namespace scpp {
 namespace net {

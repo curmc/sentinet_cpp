@@ -20,8 +20,8 @@
 #define PAUSE 3
 
 // Local Includes
-#include "core/utils/logging.hpp"
-#include "core/messages/pipe/FilterInterface.hpp"
+#include "scpp/core/utils/logging.hpp"
+#include "scpp/core/messages/pipe/FilterInterface.hpp"
 
 namespace scpp {
 namespace core {

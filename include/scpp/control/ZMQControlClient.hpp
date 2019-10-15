@@ -9,12 +9,12 @@
 #define ZMQCONTROLCLIENT_HPP
 
 // Local includes
-#include "core/types.h"
-#include "core/utils/logging.hpp"
-#include "core/utils/strings.hpp"
-#include "core/control/ControlClientInterface.hpp"
-#include "control/zhelpers.hpp"
-#include "control/NetworkPatterns.hpp"
+#include "scpp/core/types.h"
+#include "scpp/core/utils/logging.hpp"
+#include "scpp/core/utils/strings.hpp"
+#include "scpp/core/control/ControlClientInterface.hpp"
+#include "scpp/control/zhelpers.hpp"
+#include "scpp/control/NetworkPatterns.hpp"
 
 /**
  * @brief A ZMQControl Client is an implementation of the Control Client

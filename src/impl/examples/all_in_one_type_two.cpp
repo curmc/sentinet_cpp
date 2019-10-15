@@ -4,8 +4,8 @@
  * @created     : Wednesday Sep 11, 2019 17:56:50 MDT
  */
 
-#include "control/ZMQControlClient.hpp"
-#include "core/utils/logging.hpp"
+#include "scpp/control/ZMQControlClient.hpp"
+#include "scpp/core/utils/logging.hpp"
 
 std::mutex t;
 

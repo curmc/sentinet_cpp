@@ -4,7 +4,7 @@
  * @created     : Friday Aug 30, 2019 14:06:53 MDT
  */
 
-#include "kernel/SerialPort.hpp"
+#include "scpp/kernel/SerialPort.hpp"
 
 int
 main()

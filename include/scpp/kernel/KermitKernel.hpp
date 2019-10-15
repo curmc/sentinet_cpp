@@ -9,8 +9,8 @@
 #define KERMITKERNEL_HPP
 
 // Local includes
-#include "kernel/SerialPort.hpp"
-#include "control/ZMQControlClient.hpp"
+#include "scpp/kernel/SerialPort.hpp"
+#include "scpp/control/ZMQControlClient.hpp"
 
 // C++ includes
 #include <memory>

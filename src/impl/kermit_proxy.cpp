@@ -4,9 +4,9 @@
  * @created     : Sunday Oct 13, 2019 14:35:45 MDT
  */
 
-#include "messages/pipe/ZMQPubSubProxy.hpp"
-#include "messages/pipe/ZMQServerProxy.hpp"
-#include "kernel/Defaults.hpp"
+#include "scpp/messages/pipe/ZMQPubSubProxy.hpp"
+#include "scpp/messages/pipe/ZMQServerProxy.hpp"
+#include "scpp/kernel/Defaults.hpp"
 
 int
 main()

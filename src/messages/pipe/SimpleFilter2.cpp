@@ -4,7 +4,7 @@
  * @created     : Saturday Sep 14, 2019 18:25:43 MDT
  */
 
-#include "messages/pipe/SimpleFilter2.hpp"
+#include "scpp/messages/pipe/SimpleFilter2.hpp"
 
 namespace scpp {
 namespace filters {

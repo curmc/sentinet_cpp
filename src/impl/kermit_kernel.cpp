@@ -4,8 +4,8 @@
  * @created     : Sunday Oct 13, 2019 14:35:33 MDT
  */
 
-#include "kernel/KermitKernel.hpp"
-#include "kernel/Defaults.hpp"
+#include "scpp/kernel/KermitKernel.hpp"
+#include "scpp/kernel/Defaults.hpp"
 
 int
 main()

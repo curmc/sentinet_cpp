@@ -4,7 +4,7 @@
  * @created     : Saturday Oct 12, 2019 23:30:12 MDT
  */
 
-#include "kernel/KermitControlModule.hpp"
+#include "scpp/kernel/KermitControlModule.hpp"
 
 namespace scpp {
 namespace curmt {

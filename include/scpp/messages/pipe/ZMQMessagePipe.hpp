@@ -20,7 +20,7 @@
 #include <map>
 
 // Local Includes
-#include "core/messages/pipe/PipeInterface.hpp"
+#include "scpp/core/messages/pipe/PipeInterface.hpp"
 
 namespace scpp {
 namespace net {

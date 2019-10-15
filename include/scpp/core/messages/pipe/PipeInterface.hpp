@@ -19,10 +19,10 @@
 #include <unordered_map>
 
 // Local Includes
-#include "core/messages/pipe/FilterInterface.hpp"
-#include "core/messages/pipe/ProxyInterface.hpp"
-#include "messages/pipe/ZMQPubSubProxy.hpp"
-#include "messages/pipe/ZMQServerProxy.hpp"
+#include "scpp/core/messages/pipe/FilterInterface.hpp"
+#include "scpp/core/messages/pipe/ProxyInterface.hpp"
+#include "scpp/messages/pipe/ZMQPubSubProxy.hpp"
+#include "scpp/messages/pipe/ZMQServerProxy.hpp"
 
 namespace scpp {
 namespace core {

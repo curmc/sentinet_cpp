@@ -16,8 +16,8 @@
 // C++ Includes
 
 // Local Includes
-#include "core/messages/pipe/ProxyInterface.hpp"
-#include "control/zhelpers.hpp"
+#include "scpp/core/messages/pipe/ProxyInterface.hpp"
+#include "scpp/control/zhelpers.hpp"
 
 namespace scpp {
 namespace proxies {

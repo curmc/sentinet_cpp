@@ -4,7 +4,7 @@
  * @created     : Saturday Sep 14, 2019 13:29:23 MDT
  */
 
-#include "messages/pipe/ZMQServerProxy.hpp"
+#include "scpp/messages/pipe/ZMQServerProxy.hpp"
 
 namespace scpp {
 namespace proxies {

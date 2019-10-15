@@ -8,7 +8,7 @@
 
 #define STDOUTKERMITOI_HPP
 
-#include "kernel/KermitOutputInterface.hpp"
+#include "scpp/kernel/KermitOutputInterface.hpp"
 
 class STDOutKermitOI : public
 {

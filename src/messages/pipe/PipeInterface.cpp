@@ -4,7 +4,7 @@
  * @created     : Saturday Sep 14, 2019 12:46:54 MDT
  */
 
-#include "core/messages/pipe/PipeInterface.hpp"
+#include "scpp/core/messages/pipe/PipeInterface.hpp"
 
 #include <memory>
 #include <future>

@@ -9,11 +9,11 @@
 #define KERMITCONTROLMODULE_HPP
 
 // Local includes
-#include "control/ZMQControlClient.hpp"
-#include "kernel/Defaults.hpp"
+#include "scpp/control/ZMQControlClient.hpp"
+#include "scpp/kernel/Defaults.hpp"
 extern "C"
 {
-#include "data_message.h"
+#include "scpp/data_message.h"
 }
 
 // C++ includes

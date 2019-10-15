@@ -4,8 +4,8 @@
  * @created     : Friday Sep 20, 2019 20:47:05 MDT
  */
 
-#include "core/messages/pipe/PipeInterface.hpp"
-#include "messages/pipe/SimpleFilter.hpp"
+#include "scpp/core/messages/pipe/PipeInterface.hpp"
+#include "scpp/messages/pipe/SimpleFilter.hpp"
 #include <sstream>
 
 int

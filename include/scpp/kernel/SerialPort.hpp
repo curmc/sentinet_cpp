@@ -9,7 +9,7 @@
 #define SERIALPORT_HPP
 
 // Local Includes
-#include "core/kernel/InputOutputInterface.hpp"
+#include "scpp/core/kernel/InputOutputInterface.hpp"
 
 // C++ includes
 #include <vector>
