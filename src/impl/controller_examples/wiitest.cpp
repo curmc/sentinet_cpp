@@ -9,7 +9,7 @@ using namespace std;
 int main(int argc, char* argv[]) 
 {
     scpp::curmt::Wiimote wii;
-    wii.start_kermit("aaaa");
+    wii.start_kermit();
     if (wii.heartbeat()) 
     {
         cout << "Beginning Polling. No exit for now so ctrl-c ;)" << endl << "B to rumble, A to stop\n";
