@@ -24,7 +24,7 @@ int main() {
         });
 
 
-  sleep(7);
+  sleep(5);
   a->quit();
   return 0;
 }
