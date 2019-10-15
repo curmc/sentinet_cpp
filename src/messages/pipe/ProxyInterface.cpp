@@ -202,7 +202,6 @@ ProxyInterface::register_signal(const int32_t signal_val,
 bool
 ProxyInterface::add_filter(std::unique_ptr<FilterInterface> filter)
 {
-  LOG_INFO("HERE");
   adding_filter = true;
   filters.push_back(std::move(filter));
   adding_filter = false;

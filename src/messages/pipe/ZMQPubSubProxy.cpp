@@ -53,14 +53,11 @@ ZMQPubSubProxy::__spin__()
 
   if (item.revents & ZMQ_POLLIN) {
     std::string topic = s_recv(*frontend_sock);
-    std::cout << topic << std::endl;
     std::string req = s_recv(*frontend_sock);
-    std::cout << req << std::endl;
     if (!adding_filter) {
       for (auto i = 0U; i < filters.size(); ++i)
         filters[i]->convert(req);
-      std::cout << topic << std::endl;
-      std::cout << req << std::endl;
+      std::cout << "Traffic: " << req << std::endl;
       s_sendmore(*backend_sock, topic);
       s_send(*backend_sock, req);
     } else {
