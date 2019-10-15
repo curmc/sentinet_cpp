@@ -1,4 +1,0 @@
-[submodule "third_party/sentinet_message_pkg"]
-	path = third_party/sentinet_message_pkg
-	url = https://github.com/curmc/sentinet_message_pkg
-	branch = release
