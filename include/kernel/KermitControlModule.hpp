@@ -10,6 +10,7 @@
 
 // Local includes
 #include "control/ZMQControlClient.hpp"
+#include "kernel/Defaults.hpp"
 extern "C"
 {
 #include "data_message.h"
@@ -19,46 +20,133 @@ extern "C"
 #include <chrono>
 #include <memory>
 
+#define KERMIT_STATE uint8_t
+
+// STATES
+#define MINING (1 << 0)
+#define DUMPING (1 << 1)
+
 namespace scpp {
 namespace curmt {
 
 class KermitControlModule : public ::scpp::net::ZMQControlClient
 {
 public:
-  KermitControlModule(std::string publish_channel_);
+  /**
+   * @brief Default constructor
+   *
+   * Uses default cmd_vel_front_end for the actual project
+   */
+  KermitControlModule()
+    : publish_channel(::scpp::curmt::defaults::cmd_vel_front_end)
+  {}
+
+  /**
+   * @brief Overrides publish_channel proxy name
+   *
+   * @param publish_channel_ The address to publish on
+   */
+  KermitControlModule(const std::string& publish_channel_);
+
+  /**
+   * @brief Destructor
+   *
+   * Needs to stop the module if not stopped already
+   */
   virtual ~KermitControlModule();
 
-  bool set_linear(const float linear);
-  bool set_angular(const float angular);
+  /**
+   * @brief Defaults start_kermit on the cmd_vel topic
+   *
+   * TODO Need to start up cmd channel
+   *
+   * @return Status
+   */
+  inline bool start_kermit()
+  {
+    return start_kermit(::scpp::curmt::defaults::cmd_vel_topic);
+  }
 
-  bool zero_motors();
+  /**
+   * @brief Start Kermit on the specified topic
+   *
+   * @param topic The name of the topic to publish cmd vel onto
+   *
+   * This function calls __start__ so that implimentation start occurs
+   *
+   * @return Status
+   */
+  bool start_kermit(const std::string& topic);
 
-  bool set_dumping(bool val);
-  bool set_mining(bool val);
-
-  bool trigger_dumping();
-  bool trigger_mining();
-
-  bool start_kermit(std::string topic);
+  /**
+   * @brief The main loop function
+   *
+   * TODO is it better for loop to be asynchronous?
+   *
+   * This function calls __update_state__ so that implimentation loop occurs
+   *
+   * @return Status
+   */
   bool loop_kermit();
+
+  /**
+   * @brief Stop kermit main
+   *
+   * This function calls __quit__ so that implimentation quit occurs
+   *
+   * @return
+   */
   bool quit_kermit();
 
 private:
-  virtual bool __start__() = 0;
-  virtual bool __quit__() = 0;
-  virtual bool __update_state__() = 0;
+  /**
+   * @brief Implimentation start
+   *
+   * @return status
+   */
+  virtual int __start__() { return 0; }
 
-  typedef struct
-  {
-    float linear;
-    float angular;
-    char mining : 1;
-    char dumping : 1;
-  } kermit_state;
+  /**
+   * @brief Implimentation quit
+   *
+   * override this if a control module needs to quit
+   *
+   * @return status
+   */
+  virtual int __quit__() { return 0; }
 
+  /**
+   * @brief Update robot state implimentation
+   *
+   * @return status
+   */
+  virtual int __update_state__() { return 0; }
+
+  /**
+   * @brief Implimentation getters
+   */
+  virtual inline float __get_lin__() { return 0; }
+  virtual inline float __get_ang__() { return 0; }
+
+  /**
+   * @brief An 8 or more bit field that gets the robot
+   * state ore'd to express state
+   *
+   * state |= MINING; // to set
+   * state & MINING; // to get
+   *
+   * @return A state
+   */
+  virtual inline KERMIT_STATE __get_state__() { return 0; }
+
+  // The channel to publish on (tcp://localhost:5555 default)
   std::string publish_channel;
+
+  // The STACK implimented buffer to serialize data into
   data_buffer buff;
-  kermit_state state;
+
+  // The STACK implimented buffer to serialize control protocols onto
+  // ping_buffer ping_buff;
 };
 
 }
