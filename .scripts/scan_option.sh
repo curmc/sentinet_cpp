@@ -54,6 +54,7 @@ scan_option () {
       shift
       ;;
     install)
+      make install-deps
       make && sudo make install
       link_includes
       link_libs

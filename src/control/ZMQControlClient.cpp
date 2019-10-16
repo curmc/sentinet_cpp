@@ -75,7 +75,7 @@ ZMQControlClient::publish(const std::string sock_addr,
                           std::chrono::microseconds period)
 {
   // If already exists do nothing
-  auto&& found = thread_space.periodic_publishers.find(topic);
+  auto&& found = thread_space.periodic_publishers.find(sock_addr);
   if (found != thread_space.periodic_publishers.end()) {
     std::cout << "Topic publisher already exists" << std::endl;
     return false;
@@ -83,7 +83,7 @@ ZMQControlClient::publish(const std::string sock_addr,
 
   // Store a new socket by key sock_addr
   // val is now a socket_thread_space
-  auto&& val = create_socket(ZMQ_PUB, thread_space.periodic_publishers, topic);
+  auto&& val = create_socket(ZMQ_PUB, thread_space.periodic_publishers, sock_addr);
 
   // Create a future promise to exit the thread
   auto futureObj = val.exit_signal.get_future();

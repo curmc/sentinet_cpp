@@ -19,6 +19,7 @@ FORMAT_TARGET=clang-format -i -sort-includes=false -style=Mozilla
 CLEAN=rm -rf ${BUILD_DIR}
 CLEAN_ALL=rm -rf ${BUILD_DIR}
 UBUNDUT_DEPS=cmake curl libcurl4-gnutls-dev autoconf automake libtool g++ unzip libzmq3-dev xargs
+ARCH_DEPS=cmake curl unzip zeromq
 
 
 .PHONY: all
@@ -62,4 +63,6 @@ format:
 
 .PHONY: install-deps
 install-deps:
-	@sudo apt install ${UBUNDUT_DEPS}
+	@echo "Installing requirements"
+	@-pacman --version > /dev/null 2>&1 && sudo pacman -S ${ARCH_DEPS}
+	@-apt --version > /dev/null 2>&1 && sudo apt install ${UBUNDUT_DEPS}
