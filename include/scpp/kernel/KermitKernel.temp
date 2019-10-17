@@ -18,7 +18,7 @@
 
 namespace scpp {
 namespace curmt {
-
+#define BUFFER_SIZE 100
 class KermitKernel : public ::scpp::net::ZMQControlClient
 {
 public:
@@ -31,9 +31,8 @@ public:
 
   virtual ~KermitKernel();
 
-  void set_serial(const std::string& port, const int& baud);
-
-  bool start(const std::chrono::microseconds serial_period);
+  bool init_comms(const std::string& address, const std::string& interface);
+  bool start(const std::chrono::microseconds ethernet_period);
 
   void print_state();
 
@@ -50,23 +49,20 @@ private:
 private:
   bool send_data();
 
-  typedef struct KermitOutputs
-  {
-    std::unique_ptr<SerialPort> xbee;
-    typedef struct
-    {
-      int lin;
-      int ang;
-    } drivetrain_t;
-    drivetrain_t drive;
-
-    KermitOutputs()
-    {
-      xbee = nullptr;
-      drive = { 0, 0 };
+  typedef struct KermitOutputs {
+    KermitOutputs() {
+      lin = 0;
+      ang = 0;
     }
-    bool verbose;
 
+    float lin;
+    float ang;
+    int sockfd;
+    struct sockaddr_in dest;
+    struct ifreq ifr;
+    uint8_t buffer[BUFFER_SIZE];
+
+    bool verbose;
     std::string drive_topic;
     std::string publish_channel;
     std::string serve_channel;

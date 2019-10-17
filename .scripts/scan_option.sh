@@ -29,14 +29,6 @@ scan_option () {
       printf "\n\n>>>  Binary files in ./build/bin\n\n>>>  Library files in ./build/lib\n\n"
       shift
       ;;
-    messages)
-      make msgs_update
-      shift
-      ;;
-    install_ubuntu_deps)
-      make install-deps
-      shift
-      ;;
     format)
       make format
       shift

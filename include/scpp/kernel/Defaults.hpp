@@ -11,6 +11,16 @@
 #include <string>
 
 namespace scpp {
+
+// Defaults for a regular user
+namespace defaults {
+std::string frontend = "tcp://localhost:5555";
+std::string backend = "tcp://localhost:5556";
+std::string server_frontend = "tcp://localhost:5557";
+std::string server_backend = "tcp://localhost:5558";
+}
+
+// Defaults for curmt
 namespace curmt {
 namespace defaults {
 std::string cmd_vel_front_end = "tcp://localhost:5555";

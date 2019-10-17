@@ -16,8 +16,6 @@ printf "
   ./compile.sh  help                    # Shows a useful git help utility
   ./compile.sh  update                  # Pulls from git remote and checks for changes
   ./compile.sh  all                     # builds everything from a clean build
-  ./compile.sh  messages                # updates message libraries (pulls from sentinet_message_pkg
-  ./compile.sh  install_ubuntu_deps     # installs ubuntu dependencies
   ./compile.sh  format                  # formats code
   ./compile.sh  clean                   # cleans build
   ./compile.sh  basic                   # just builds libraries

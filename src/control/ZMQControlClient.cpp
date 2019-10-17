@@ -83,7 +83,8 @@ ZMQControlClient::publish(const std::string sock_addr,
 
   // Store a new socket by key sock_addr
   // val is now a socket_thread_space
-  auto&& val = create_socket(ZMQ_PUB, thread_space.periodic_publishers, sock_addr);
+  auto&& val =
+    create_socket(ZMQ_PUB, thread_space.periodic_publishers, sock_addr);
 
   // Create a future promise to exit the thread
   auto futureObj = val.exit_signal.get_future();

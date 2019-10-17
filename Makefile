@@ -66,3 +66,8 @@ install-deps:
 	@echo "Installing requirements"
 	@-pacman --version > /dev/null 2>&1 && sudo pacman -S ${ARCH_DEPS}
 	@-apt --version > /dev/null 2>&1 && sudo apt install ${UBUNDUT_DEPS}
+
+.PHONY: clean-all
+clean-all: 
+	@echo "Removing build"
+	@rm -rf ${BUILD_DIR}

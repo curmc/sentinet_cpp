@@ -18,21 +18,15 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
   kermit.serve_channel = serve_channel;
   kermit.drive_topic = drive_topic;
   kermit.verbose = verbose;
-  // Haven't used that new word in a while now
-  kermit.buffer = new char[5];
 }
 
 KermitKernel::~KermitKernel()
 {
-  // kermit.xbee->close();
-  delete[] kermit.buffer;
 }
 
-void
-KermitKernel::set_serial(const std::string& port, const int& baud)
-{
-  kermit.xbee = std::make_unique<SerialPort>(port, baud);
-  // kermit.xbee->open();
+bool KermitKernel::init_comms(const std::string& address, const std::string& interface) {
+  memset(&kermit.ifr, 0, sizeof(kermit.ifr));
+  snprintf(&kermit.
 }
 
 void
