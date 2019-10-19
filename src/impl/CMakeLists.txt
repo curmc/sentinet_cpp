@@ -13,7 +13,7 @@ if(RMT_CORE)
 endif()
 
 if(EXAMPLES)
-  add_executable(example_with_proxy "${PROJECT_SOURCE_DIR}/examples/all_in_one_type_two.cpp")
+  add_executable(example_with_proxy "${PROJECT_SOURCE_DIR}/examples/all_in_one.cpp")
   add_executable(proxy "${PROJECT_SOURCE_DIR}/examples/proxy.cpp")
   add_executable(pipe "${PROJECT_SOURCE_DIR}/examples/pipe2.cpp")
 

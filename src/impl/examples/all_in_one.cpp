@@ -17,6 +17,7 @@ main()
     },
     std::chrono::seconds(1));
 
+
   a->subscribe(
     "tcp://localhost:5571", "Topic", [&](const std::string& value) -> void {
       std::cout << "recieved " << value << std::endl;

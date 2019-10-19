@@ -21,6 +21,11 @@ main()
   std::string value("Well hello there");
 
   scpp::subscribe_params b;
+
+
+  b.callback = func;
+
+
   b.callback = [](std::string& val) -> void {
     std::cout << "Recieved: " << val << std::endl;
   };
