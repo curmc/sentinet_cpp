@@ -13,15 +13,14 @@
 
 #define ARG_PARSE_HPP
 
-
 class arg_parse
 {
-  public:
-    arg_parse ();
-    virtual ~arg_parse ();
-  private:
-    /* private data */
+public:
+  arg_parse();
+  virtual ~arg_parse();
+
+private:
+  /* private data */
 };
 
 #endif /* end of include guard ARG_PARSE_HPP */
-

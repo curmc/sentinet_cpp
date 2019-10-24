@@ -19,32 +19,29 @@
 // Local includes
 #include "scpp/core/messages/pipe/FilterInterface.hpp"
 
-
-struct clean_message {
+struct clean_message
+{
   uint8_t possitionx;
   uint8_t possitiony;
   float depth;
 };
 
-struct raw_data {
+struct raw_data
+{
   // ???  Sensor values?
   int distance_sensed;
 };
 
 class TransformationFilter : public ::scpp::core::FilterInterface
 {
-  public:
-    TransformationFilter (){};
-    virtual ~TransformationFilter () = default;
+public:
+  TransformationFilter(){};
+  virtual ~TransformationFilter() = default;
 
-    void convert(std::string& incomming_message) override;
+  void convert(std::string& incomming_message) override;
 
-  private:
-    
-    clean_message transform(raw_data& data);
-
-    
+private:
+  clean_message transform(raw_data& data);
 };
 
 #endif /* end of include guard TRANSFORMATIONFILTER_HPP */
-

@@ -22,9 +22,7 @@ main()
 
   scpp::subscribe_params b;
 
-
   b.callback = func;
-
 
   b.callback = [](std::string& val) -> void {
     std::cout << "Recieved: " << val << std::endl;

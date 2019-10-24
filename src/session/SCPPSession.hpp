@@ -23,9 +23,9 @@
 class SCPPSession
 {
 public:
-  SCPPSession ();
-  virtual ~SCPPSession () = default;
-// private:
+  SCPPSession();
+  virtual ~SCPPSession() = default;
+  // private:
 
   int parse_command_line(int argc, const char** argv);
 
@@ -33,7 +33,8 @@ public:
   // int interpret_pubsub(std::vector<std::string>& argv, size_t index);
   // int start();
 
-  typedef struct {
+  typedef struct
+  {
     size_t starting_pub_port_f;
     size_t starting_pub_port_b;
     size_t starting_req_port;
@@ -52,4 +53,3 @@ public:
 };
 
 #endif /* end of include guard SCPPSESSION_HPP */
-

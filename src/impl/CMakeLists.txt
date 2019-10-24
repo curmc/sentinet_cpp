@@ -1,15 +1,15 @@
 project(impl)
 
 if(RMT_CORE)
-  # add_executable(kermit_kernel "${PROJECT_SOURCE_DIR}/kermit_kernel.cpp")
+  add_executable(kermit_kernel "${PROJECT_SOURCE_DIR}/kermit_kernel.cpp")
   # add_executable(kermit_proxy "${PROJECT_SOURCE_DIR}/kermit_proxy.cpp")
   # add_executable(kermit_control "${PROJECT_SOURCE_DIR}/kermit_control.cpp")
   #
-  # target_link_libraries(kermit_kernel kernel control messages)
+  target_link_libraries(kermit_kernel kernel control messages)
   # target_link_libraries(kermit_proxy kernel control messages)
   # target_link_libraries(kermit_control kernel control messages)
 
-  # install(TARGETS kermit_kernel kermit_proxy kermit_control RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
+  install(TARGETS kermit_kernel RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}/bin")
 endif()
 
 if(EXAMPLES)
