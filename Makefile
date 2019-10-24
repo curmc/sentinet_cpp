@@ -18,7 +18,7 @@ FILE_SUFFIXES='.*\.\(cpp\|hpp\|h\)'
 FORMAT_TARGET=clang-format -i -sort-includes=false -style=Mozilla
 CLEAN=rm -rf ${BUILD_DIR}
 CLEAN_ALL=rm -rf ${BUILD_DIR}
-UBUNDUT_DEPS=cmake curl libcurl4-gnutls-dev autoconf automake libtool g++ unzip libzmq3-dev xargs
+UBUNDUT_DEPS=cmake curl libcurl4-gnutls-dev autoconf automake libtool g++ unzip libzmq3-dev
 
 
 .PHONY: all
