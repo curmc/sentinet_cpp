@@ -1,5 +1,3 @@
-#include "messages/pipe/SimpleFilter.hpp"
-
 #include "wiimote.h"
 #include <iostream>
 #include <chrono>
@@ -10,7 +8,7 @@ int main(int argc, char* argv[])
 {
     scpp::curmt::Wiimote wii;
     wii.start_kermit();
-    if (wii.heartbeat()) 
+    if (wii.heartbeat())
     {
         cout << "Beginning Polling. No exit for now so ctrl-c ;)" << endl << "B to rumble, A to stop\n";
         wii.loop_kermit();
