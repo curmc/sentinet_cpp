@@ -104,7 +104,7 @@ private:
    *
    * @return status
    */
-  virtual int __start__() { return 0; }
+  virtual bool __start__() { return 0; }
 
   /**
    * @brief Implimentation quit
@@ -113,14 +113,14 @@ private:
    *
    * @return status
    */
-  virtual int __quit__() { return 0; }
+  virtual bool __quit__() { return 0; }
 
   /**
    * @brief Update robot state implimentation
    *
    * @return status
    */
-  virtual int __update_state__() { return 0; }
+  virtual bool __update_state__() { return 0; }
 
   /**
    * @brief Implimentation getters
