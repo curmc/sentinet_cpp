@@ -18,7 +18,7 @@ namespace defaults {
 const std::string cmd_vel_front_end = "tcp://localhost:5555";
 const std::string cmd_vel_back_end = "tcp://localhost:5556";
 const std::string serve_proxy = "tcp://localhost:5557";
-const static std::string client_proxy = "tcp://localhost:5558";
+const std::string client_proxy = "tcp://localhost:5558";
 
 const std::string local_cmd_vel_front_end = "tcp://*:5555";
 const std::string local_cmd_vel_back_end = "tcp://*:5556";

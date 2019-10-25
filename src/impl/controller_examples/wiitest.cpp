@@ -6,7 +6,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) 
 {
-    scpp::curmt::Wiimote wii;
+    scpp::curmt::Wiimote wii {scpp::curmt::default_constants, true};
     wii.start_kermit();
     if (wii.heartbeat())
     {

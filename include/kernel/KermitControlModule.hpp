@@ -20,11 +20,12 @@ extern "C"
 #include <chrono>
 #include <memory>
 
-#define KERMIT_STATE uint8_t
+#define KERMIT_STATE uint16_t
 
 // STATES
 #define MINING (1 << 0)
 #define DUMPING (1 << 1)
+#define DRIVING (1 << 2)
 
 namespace scpp {
 namespace curmt {
