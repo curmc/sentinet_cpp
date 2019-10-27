@@ -22,6 +22,11 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
   kermit.real_map_topic = real_map_topic;
   kermit.verbose = verbose;
   kermit.debug = debug;
+
+  message.cvel_buffer = create_cmd_vel();
+
+  // Temporary
+  message.data_buffer_temp = create_cmd_vel();
 }
 
 KermitKernel::~KermitKernel() {}
@@ -37,7 +42,7 @@ KermitKernel::init_comms(const std::string& drive_addr,
   kermit.data_addr = data_addr;
   kermit.real_map_addr = real_map_addr;
 
-  params.cmd_vel_p.socket_backend = cmd_addr;
+  params.cmd_vel_p.socket_backend = drive_addr;
   params.cmd_vel_p.topic = kermit.drive_topic;
   params.cmd_vel_p.callback =
     std::bind(&KermitKernel::drive_message_subscribe_callback,
@@ -65,8 +70,8 @@ KermitKernel::init_comms(const std::string& drive_addr,
 void
 KermitKernel::print_state()
 {
-  std::cout << "Linear = " << kermit.lin;
-  std::cout << " Angular = " << kermit.ang << std::endl;
+  std::cout << "Linear = " << message.cvel_buffer.lin;
+  std::cout << " Angular = " << message.cvel_buffer.ang << std::endl;
 }
 
 bool
@@ -104,16 +109,17 @@ KermitKernel::send_data()
 }
 
 void
-KermitKernel::drive_message_subscribe_callback(std::string& message)
+KermitKernel::drive_message_subscribe_callback(std::string& message_)
 {
-  LOG_INFO("cmd_vel recieved %s", message.c_str());
+  cmd_vel_from_wire(&message.cvel_buffer, message_.c_str());
+  LOG_INFO("cmd_vel recieved %s", message_.c_str());
   return; // TODO
 }
 
 std::string
-KermitKernel::cmd_message_callback(std::string& message)
+KermitKernel::cmd_message_callback(std::string& message_)
 {
-  return "Not implimented " + message;
+  return "Not implimented " + message_;
 }
 
 std::string

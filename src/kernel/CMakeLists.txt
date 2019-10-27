@@ -8,7 +8,7 @@ else()
   add_library(kernel STATIC ${KERNEL_SOURCE})
 endif()
 
-target_link_libraries(kernel pthread control messages)
+target_link_libraries(kernel pthread control messages smessages)
 
 install(TARGETS kernel LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
 

@@ -19,10 +19,10 @@ main()
   std::promise<void> exit_thing_2;
 
   scpp::proxies::ZMQPubSubProxy a(
-    "hello", exit_thing.get_future(), "tcp://*:5570", "tcp://*:5571", 1);
+    "cmd_vel", exit_thing.get_future(), "tcp://*:5570", "tcp://*:5571", 1);
 
-  a.add_filter(std::make_unique<scpp::filters::SimpleFilter>());
-  a.add_filter(std::make_unique<scpp::filters::SimpleFilter2>());
+  // a.add_filter(std::make_unique<scpp::filters::SimpleFilter>());
+  // a.add_filter(std::make_unique<scpp::filters::SimpleFilter2>());
 
   std::thread v1(
     &scpp::proxies::ZMQPubSubProxy::start, &a, std::chrono::microseconds(10));

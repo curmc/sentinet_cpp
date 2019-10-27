@@ -13,7 +13,7 @@ main()
   auto a = std::make_unique<scpp::curmt::KermitKernel>(
     "cmd_vel", "command", "data", "real_map", true, true);
 
-  a->init_comms("tcp://localhost:5555",
+  a->init_comms("tcp://localhost:5571",
                 "tcp://localhost:5556",
                 "tcp://localhost:5557",
                 "tcp://localhost:5558");

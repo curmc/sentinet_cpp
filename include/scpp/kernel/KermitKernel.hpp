@@ -11,8 +11,9 @@
 // Local includes
 #include "scpp/kernel/SerialPort.hpp"
 #include "scpp/control/ZMQControlClient.hpp"
-#include "scpp/data_message.h"
-#include "scpp/ping_message.h"
+extern "C" {
+#include "scpp/rmt_messages.h"
+}
 
 // C++ includes
 #include <memory>
@@ -105,13 +106,8 @@ private:
   {
     KermitOutputs()
     {
-      lin = 0;
-      ang = 0;
     }
 
-    // Data to send
-    float lin;
-    float ang;
     // TODO will need more data here
 
     bool verbose;
@@ -140,15 +136,8 @@ private:
 
   typedef struct KermitMessage
   {
-    // Race conditions!!!
-    data_buffer cmd_vel_reciever;
-
-    data_buffer data_sender;
-
-    data_buffer map_data;
-
-    ping_buffer command_reciever;
-    ping_buffer command_sender;
+    cmd_vel cvel_buffer;
+    cmd_vel data_buffer_temp;
 
   } KermitMessage;
 

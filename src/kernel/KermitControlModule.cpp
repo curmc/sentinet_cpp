@@ -11,7 +11,6 @@ namespace curmt {
 
 KermitControlModule::KermitControlModule(const std::string& publish_channel_)
 {
-  buff = create_buffer();
   publish_channel = publish_channel_;
 }
 
