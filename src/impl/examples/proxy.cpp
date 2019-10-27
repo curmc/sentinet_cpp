@@ -27,7 +27,7 @@ main()
   std::thread v1(
     &scpp::proxies::ZMQPubSubProxy::start, &a, std::chrono::microseconds(10));
 
-  sleep(20);
+  sleep(60);
   std::cout << "killing" << std::endl;
 
   a.signal(0);

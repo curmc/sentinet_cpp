@@ -19,7 +19,9 @@ main()
                 "tcp://localhost:5558");
 
   std::cout<<sizeof(scpp::curmt::KermitKernel)<<std::endl;
-  a->start(std::chrono::seconds(1));
+  a->start(std::chrono::microseconds(1));
+
+
 
   a->quit();
   return 0;

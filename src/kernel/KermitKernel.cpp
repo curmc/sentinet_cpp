@@ -5,6 +5,9 @@
  */
 
 #include "scpp/kernel/KermitKernel.hpp"
+#include <mutex>
+
+static std::mutex guard;
 
 namespace scpp {
 namespace curmt {
@@ -70,6 +73,7 @@ KermitKernel::init_comms(const std::string& drive_addr,
 void
 KermitKernel::print_state()
 {
+  std::lock_guard<std::mutex> lock(guard);
   std::cout << "Linear = " << message.cvel_buffer.lin;
   std::cout << " Angular = " << message.cvel_buffer.ang << std::endl;
 }
@@ -88,7 +92,7 @@ bool
 KermitKernel::start(const std::chrono::microseconds serial_period)
 {
   initialize_control_client();
-  for (int i = 0; i < 10; ++i) {
+  for (int i = 0; i < 1000000000; ++i) {
     // TODO should remove these if statements
     if (kermit.verbose) {
       print_state();
@@ -111,8 +115,8 @@ KermitKernel::send_data()
 void
 KermitKernel::drive_message_subscribe_callback(std::string& message_)
 {
+  std::lock_guard<std::mutex> lock(guard);
   cmd_vel_from_wire(&message.cvel_buffer, message_.c_str());
-  LOG_INFO("cmd_vel recieved %s", message_.c_str());
   return; // TODO
 }
 
