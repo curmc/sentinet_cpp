@@ -11,7 +11,8 @@
 // Local includes
 #include "scpp/kernel/SerialPort.hpp"
 #include "scpp/control/ZMQControlClient.hpp"
-extern "C" {
+extern "C"
+{
 #include "scpp/rmt_messages.h"
 }
 
@@ -104,9 +105,7 @@ private:
 
   typedef struct KermitOutputs
   {
-    KermitOutputs()
-    {
-    }
+    KermitOutputs() {}
 
     // TODO will need more data here
 

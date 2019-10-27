@@ -18,10 +18,8 @@ main()
                 "tcp://localhost:5557",
                 "tcp://localhost:5558");
 
-  std::cout<<sizeof(scpp::curmt::KermitKernel)<<std::endl;
+  std::cout << sizeof(scpp::curmt::KermitKernel) << std::endl;
   a->start(std::chrono::microseconds(1));
-
-
 
   a->quit();
   return 0;
