@@ -20,15 +20,28 @@ main()
 {
   std::string value("Well hello there");
 
-  scpp::subscribe_params b;
+  
+  auto a = std::make_unique<scpp::net::ZMQControlClient>(true);
+  a->initialize_client();
 
-  b.callback = func;
+  scpp::serve_params b;
 
-  b.callback = [](std::string& val) -> void {
-    std::cout << "Recieved: " << val << std::endl;
+  b.address = "tcp://localhost:5580";
+  b.callback = [&value](std::string&) -> std::string {
+    std::cout<<"Made it"<<std::endl;
+    return "hello";
   };
-  b.topic = "drive";
-  b.socket_backend = "tcp://localhost:5555";
+
+  a->spin(b);
+  sleep(2);
+
+  std::cout<<"here"<<std::endl;
+  a->request("tcp://localhost:5572", "helloooo");
+  std::cout<<"here2"<<std::endl;
+  a->request("tcp://localhost:5572", "helloooo");
+
+  sleep(2);
+
 
   //
   // a.broker_frontend = "tcp://localhost:5570";
@@ -47,14 +60,8 @@ main()
   // b.socket_backend = "tcp://localhost:5571";
   // b.topic = "topic";
   //
-  auto cc = std::make_unique<scpp::net::ZMQControlClient>();
-  //
-  cc->spin(b);
-  // cc->spin(a);
-  //
-  sleep(10);
 
-  cc->quit();
+  a->quit();
 
   return 0;
 }

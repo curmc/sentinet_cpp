@@ -4,41 +4,32 @@
  * @created     : Sunday Oct 13, 2019 14:35:45 MDT
  */
 
-#include "scpp/messages/pipe/ZMQPubSubProxy.hpp"
-#include "scpp/messages/pipe/ZMQServerProxy.hpp"
-#include "scpp/kernel/Defaults.hpp"
+#include "scpp/core/messages/pipe/PipeInterface.hpp"
+
+const std::string CMD_VEL = "tcp://*:5570";
+const std::string DATA_ADDR = "tcp://*:5556";
+const std::string COMMAND_ADDR = "tcp://*:5572";
+const std::string REAL_TIME_ADDR = "tcp://*:5573";
+
+const std::string CMD_VEL_F = "tcp://*:5571";
+const std::string DATA_ADDR_F = "tcp://*:5555";
+const std::string COMMAND_ADDR_F = "tcp://*:5580";
+const std::string REAL_TIME_ADDR_F = "tcp://*:5581";
 
 int
 main()
 {
-  std::promise<void> exit_publisher;
-  std::promise<void> exit_server;
+  auto proxies = std::make_unique<scpp::core::PipeInterface>();
 
-  scpp::proxies::ZMQPubSubProxy a(
-    scpp::curmt::defaults::cmd_vel_topic,
-    exit_publisher.get_future(),
-    scpp::curmt::defaults::local_cmd_vel_front_end,
-    scpp::curmt::defaults::local_cmd_vel_back_end,
-    1);
+  proxies->create_pub_sub_endpoint("cmd_vel", CMD_VEL, CMD_VEL_F);
+  proxies->create_pub_sub_endpoint("data", DATA_ADDR_F, DATA_ADDR);
+  proxies->create_pub_sub_endpoint("realtime", REAL_TIME_ADDR_F, REAL_TIME_ADDR);
+  proxies->create_req_rep_endpoint("command", COMMAND_ADDR, COMMAND_ADDR_F);
 
-  scpp::proxies::ZMQPubSubProxy b("server",
-                                  exit_publisher.get_future(),
-                                  scpp::curmt::defaults::local_serve_proxy,
-                                  scpp::curmt::defaults::local_client_proxy,
-                                  1);
-
-  std::thread t1(
-    &scpp::proxies::ZMQPubSubProxy::start, &a, std::chrono::milliseconds(10));
-  std::thread t2(
-    &scpp::proxies::ZMQServerProxy::start, &b, std::chrono::milliseconds(10));
 
   sleep(20);
   std::cout << "Killing " << std::endl;
 
-  a.signal(0);
-  b.signal(0);
-
-  t1.join();
-  t2.join();
+  proxies->stop();
   return 1;
 }

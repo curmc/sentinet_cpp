@@ -78,7 +78,7 @@ public:
    *
    * @return Status
    */
-  bool start(const std::chrono::microseconds ethernet_period);
+  bool start(const std::chrono::microseconds ethernet_period, const std::chrono::seconds timer);
 
   // Control Client stuff
 private:

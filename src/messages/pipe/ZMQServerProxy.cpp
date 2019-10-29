@@ -47,28 +47,36 @@ ZMQServerProxy::__spin__()
 {
   if (!frontend_sock || !backend_sock)
     return true;
-  ::zmq::message_t message;
 
-  ::zmq::poll(&items[0], 2, 100);
+  zmq::message_t message;
+  int more;
 
-  if (items[0].revents & ZMQ_POLLIN) {
-    std::string req = s_recv(*frontend_sock);
-    if (!adding_filter) {
-      for (auto i = 0U; i < filters.size(); ++i) {
-        filters[i]->convert(req);
-      }
-      s_send(*backend_sock, req);
-    } else {
-      s_send(*backend_sock, req);
+  zmq::poll(&items[0], 2, 100);
+
+  if(items[0].revents & ZMQ_POLLIN) {
+    while(1) {
+
+      size_t more_size = sizeof(more);
+      frontend_sock->recv(&message);
+      frontend_sock->getsockopt(ZMQ_RCVMORE, &more, &more_size);
+      backend_sock->send(message, more ? ZMQ_SNDMORE : 0);
+      if(!more)
+        break;
     }
   }
   if (items[1].revents & ZMQ_POLLIN) {
-    std::string req = s_recv(*backend_sock);
-    // Don't convert back - should be pure
-    s_send(*frontend_sock, req);
+    while(1) {
+      backend_sock->recv(&message);
+      size_t more_size = sizeof(more);
+      backend_sock->getsockopt(ZMQ_RCVMORE, &more, &more_size);
+      frontend_sock->send(message, more ? ZMQ_SNDMORE : 0);
+      if(!more)
+        break;
+    }
   }
   return true;
 }
+
 
 bool
 ZMQServerProxy::__stop__()

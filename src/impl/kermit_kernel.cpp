@@ -11,15 +11,15 @@ int
 main()
 {
   auto a = std::make_unique<scpp::curmt::KermitKernel>(
-    "cmd_vel", "command", "data", "real_map", true, true);
+    "cmd_vel", "command", "data", "realtime", true, true);
 
   a->init_comms("tcp://localhost:5571",
-                "tcp://localhost:5556",
-                "tcp://localhost:5557",
-                "tcp://localhost:5558");
+                "tcp://localhost:5580",
+                "tcp://localhost:5555",
+                "tcp://localhost:5581");
 
   std::cout << sizeof(scpp::curmt::KermitKernel) << std::endl;
-  a->start(std::chrono::microseconds(1));
+  a->start(std::chrono::milliseconds(10), std::chrono::seconds(20));
 
   a->quit();
   return 0;

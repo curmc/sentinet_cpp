@@ -19,16 +19,21 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
                            const bool debug)
   : kermit()
 {
+
+  // Initialize topics
   kermit.drive_topic = drive_topic;
   kermit.cmd_topic = cmd_topic;
   kermit.data_topic = data_topic;
   kermit.real_map_topic = real_map_topic;
+
+  // Verbosity and debug mode
   kermit.verbose = verbose;
   kermit.debug = debug;
 
+  // Create a new buffer
   message.cvel_buffer = create_cmd_vel();
 
-  // Temporary
+  // Create a new data buffer
   message.data_buffer_temp = create_cmd_vel();
 }
 
@@ -40,11 +45,16 @@ KermitKernel::init_comms(const std::string& drive_addr,
                          const std::string& data_addr,
                          const std::string& real_map_addr)
 {
+
+  // Create a new set of params
+
+  // Set the addresses of proxies
   kermit.drive_addr = drive_addr;
   kermit.cmd_addr = cmd_addr;
   kermit.data_addr = data_addr;
   kermit.real_map_addr = real_map_addr;
-
+  
+  // The command velocity params for listening (a subscriber)
   params.cmd_vel_p.socket_backend = drive_addr;
   params.cmd_vel_p.topic = kermit.drive_topic;
   params.cmd_vel_p.callback =
@@ -52,19 +62,23 @@ KermitKernel::init_comms(const std::string& drive_addr,
               this,
               std::placeholders::_1);
 
+  // The real time map params (a publisher)
   params.real_map_p.broker_frontend = real_map_addr;
   params.real_map_p.topic = kermit.real_map_topic;
   params.real_map_p.period = std::chrono::seconds(1); // TODO
   params.real_map_p.get_data =
     std::bind(&KermitKernel::map_message_get_data, this);
 
+  // The data sender (a publisher)
   params.data_p.broker_frontend = data_addr;
   params.data_p.topic = kermit.data_topic;
   params.data_p.period = std::chrono::seconds(1);
   params.data_p.get_data =
     std::bind(&KermitKernel::data_message_get_data, this);
 
+  // The command relay (a server)
   params.command_p.address = cmd_addr;
+  std::cout<<"AERARA"<<cmd_addr<<std::endl;
   params.command_p.callback =
     std::bind(&KermitKernel::cmd_message_callback, this, std::placeholders::_1);
   return true;
@@ -89,11 +103,19 @@ KermitKernel::initialize_control_client()
 }
 
 bool
-KermitKernel::start(const std::chrono::microseconds serial_period)
+KermitKernel::start(const std::chrono::microseconds serial_period, const std::chrono::seconds time_alive)
 {
+  using namespace std::chrono;
+
+  std::atomic<bool> infinite(false);
+  if(time_alive == std::chrono::seconds(0)) {
+    infinite = true;
+  }
+
   initialize_control_client();
-  for (int i = 0; i < 1000000000; ++i) {
-    // TODO should remove these if statements
+  steady_clock::time_point time_now = steady_clock::now();
+  
+  while(infinite || std::chrono::steady_clock::now() - time_now < time_alive) {
     if (kermit.verbose) {
       print_state();
     }
@@ -123,6 +145,7 @@ KermitKernel::drive_message_subscribe_callback(std::string& message_)
 std::string
 KermitKernel::cmd_message_callback(std::string& message_)
 {
+  std::cout<<"Recieved "<<message_<<std::endl;
   return "Not implimented " + message_;
 }
 

@@ -108,7 +108,7 @@ bool
 ZMQControlClient::cancel_periodic_publisher(const std::string& reference)
 {
   thread_space.periodic_publishers[reference].exit_signal.set_value();
-  if (thread_space.periodic_publishers[reference].thread->joinable())
+  // if (thread_space.periodic_publishers[reference].thread->joinable())
     thread_space.periodic_publishers[reference].thread->join();
   return true;
 }
@@ -118,7 +118,7 @@ ZMQControlClient::request(const std::string destination,
                           const std::string message)
 {
   if (!this_client) {
-    LOG_ERROR("No Concurrent Publisher In This Control Thread");
+    LOG_ERROR("No Concurrent Requester In This Control Thread");
     return "";
   }
   return concurrent_request(destination, std::move(this_client), message);
@@ -164,7 +164,7 @@ bool
 ZMQControlClient::cancel_periodic_request(const std::string& reference)
 {
   thread_space.periodic_clients[reference].exit_signal.set_value();
-  if (thread_space.periodic_clients[reference].thread->joinable())
+  // if (thread_space.periodic_clients[reference].thread->joinable())
     thread_space.periodic_clients[reference].thread->join();
   return true;
 }
@@ -203,7 +203,7 @@ bool
 ZMQControlClient::cancel_subscription(const std::string& reference)
 {
   thread_space.subscribers[reference].exit_signal.set_value();
-  if (thread_space.subscribers[reference].thread->joinable())
+  // if (thread_space.subscribers[reference].thread->joinable())
     thread_space.subscribers[reference].thread->join();
   return true;
 }
@@ -237,7 +237,7 @@ bool
 ZMQControlClient::terminate_server(const std::string& reference)
 {
   thread_space.servers[reference].exit_signal.set_value();
-  if (thread_space.servers[reference].thread->joinable())
+  // if (thread_space.servers[reference].thread->joinable())
     thread_space.servers[reference].thread->join();
   return true;
 }
@@ -251,15 +251,57 @@ ZMQControlClient::concurrent_publish(std::unique_ptr<::zmq::socket_t> socket,
   s_send(*socket, message);
 }
 
+#define REQUEST_RETRIES 3
 std::string
 ZMQControlClient::concurrent_request(const std::string& server,
                                      std::unique_ptr<::zmq::socket_t> socket,
                                      const std::string& message)
 {
-  socket->connect(server); // TODO Better way of doing this?
-  s_send(*socket, message);
-  std::string response = s_recv(*socket);
-  return response;
+  socket->connect(server);
+  int linger = 0;
+  socket->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
+  int retries_left = REQUEST_RETRIES;
+  std::string reply = "No response";
+  
+  while(retries_left) {
+    s_send(*socket, message);
+    bool expect_reply = true;
+    while(expect_reply) {
+      zmq::pollitem_t items[] = {
+        {static_cast<void*>(*socket), 0, ZMQ_POLLIN, 0 }};
+      zmq::poll(&items[0], 1, 100);
+      if(items[0].revents & ZMQ_POLLIN) {
+        reply = s_recv(*socket);
+        expect_reply = false;
+        break;
+      }
+      else if(--retries_left == 0){
+        LOG_ERROR("Request cannot reach server, dropping request");
+        expect_reply = false;
+        break;
+      }
+      else {
+        LOG_WARN("No response from server, retrying");
+
+        socket.reset();
+
+        socket = std::make_unique<::zmq::socket_t>(context, ZMQ_REQ);
+
+        socket->connect(server);
+        int linger = 0;
+        socket->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
+        s_send(*socket, message);
+      }
+    }
+  }
+
+  // I found it nicer to just delete
+  // the client everytime
+  socket.reset();
+  initialize_client();
+
+  return reply;
 }
+
 } // namespace net
 } // namespace scpp
