@@ -1,47 +1,66 @@
 /**
  * @author      : theo (theo.j.lincke@gmail.com)
  * @file        : TransformationFilter
- * @brief       : A brief description of the file
- *
- * A detailed description of the file
- *
- * @created     : Friday Oct 18, 2019 20:34:07 MDT
- * @license     : MIT
+ * @created     : Friday Oct 18, 2019 20:34:09 MDT
  */
 
-#ifndef TRANSFORMATIONFILTER_HPP
-
-#define TRANSFORMATIONFILTER_HPP
-
-// C++ includes
+#include "include\scpp\messages\pipe\TransformationFilter.hpp"
 #include <cmath>
+#include <stdexcept>
+#include <iostream>
 
-// Local includes
-#include "scpp/core/messages/pipe/FilterInterface.hpp"
+/*IDK why this is here*/
+//clean_message TransformationFilter::transform(raw_data& data);
 
-struct clean_message
-{
-  uint8_t possitionx;
-  uint8_t possitiony;
-  float depth;
+
+const double ANGLE_OF_DEPRESSION = 0.6435011088;                        //This is the angle of the lidar sensor is placed from the horizontal.
+const double HEIGHT = 3.0;                                              //This is the distance from the lidar sensor from the ground.
+const double MAX_DEVIATION = 0.1308996939;                              //This is used to make sure that the angle of diviation entered by the function is not beyond the limits of the sensor.
+                                                                        //This is 7.5 degrees.
+/*
+ * Algorithm: Calculates and inserts values into the 2d array called areanDepthMap, displaced for the position of the robot as well as the actual height calculated by using 
+ *            some trigonomtry and relationship between similar triangles to find out the actual depth value of the pit being processed.
+ * 1. Recieves the parameters: an integer called angleOfDeviationY, an integer called angleOfDeviationX, and an integer called actual hypotenuse.
+ * 2. Takes each of the entered integers and converts them into doubles of values, one hundereths of radians and centimeters respectivly.
+ * 3. Checks to see if the xPosition and the yPostion are valid indexes.
+ * 4. Begins to calculate the actual length of the hypotenuse.
+ * 6. Then based on how long that hypotenuse length is from the actualHypotenuse length it will either relate it to a smaller triangle inside of a bigger triangle
+ *    if it is shorter than the hypotenuse or a really small triangle that is inverted and reflected across the x-axis to the triangle of the contructed figure.
+ * 7. Then the function computes and finds the deviation from the given position stored and saved as an integer.
+ * 8. Returns a clean_message containing either the relative position of the sensor value as well as the depth/ height of that area. or an error stored value of 999,999
+ *    as position (x,y) and depth of 999.
+ * Input parameters: angleOfDeviationY (int type) - The deviation along the Y axis of the beam that the function is looking at.
+ *                   angleOFDeviationX (int type) - The deviation along the X axis of the beam that the function is looking at.
+ *                   actualHypotenuse (int& type) - The actual hypotenuse value you are comparing for the default found hypotenuse value.
+ * Output: Nothing
+ * Returns: A clean message object that contains the relative position of the section scanned and the depth.
+ * Does: Stores an accurate reading of the HEIGHT/depth of a spot on the map.
+*/
+clean_message TransformationFilter::convert(int angleOfDeviationY, int angleOfDeviationX, int actualHypotenuse){
+	//cosecant(angle+deviation)*HEIGHT                                                                 Hypotenuse formula                                                                    //Initializes the returned clean message.
+    double angleOfDevY = 1.0*angleOfDeviationY/100;                                                    //Records the angle of deviation on the y axis in radians.
+    double angleOfDevX = 1.0*angleOfDeviationX/100;                                                    //Records the angle of deviation on the x axis in radians.
+    clean_message values;
+    if(fabs(angleOfDevY) <= MAX_DEVIATION && fabs(angleOfDevX) <= MAX_DEVIATION){                      //Checks to see if the range of deviation is valid.
+        double actHypotenuse = 1.0*actualHypotenuse/100;                                               //Records the height of the found hypotenuse.
+	    double hypotenuse = 0.0;                                                                       //Initializes the default hypotenuse length.
+        hypotenuse = HEIGHT*1/sin(ANGLE_OF_DEPRESSION-angleOfDevY);                                    //Next three lines finds the default hypotenuse length.
+	    hypotenuse = hypotenuse / cos(angleOfDevX);
+        if (hypotenuse < actHypotenuse) {                                                              //If the hypotenuse found by the sensor is bigger than the default hypotenuse you use inverted triangles of find the height.
+		    values.depth =  -1 * (HEIGHT * (actHypotenuse - hypotenuse)+0.005) / hypotenuse*100;
+	    }
+	    else {                                                                                         //If the hypotenuse found by the sensor is smaller then a relationship of similar triangles are used to find the height.
+		    values.depth =  (HEIGHT * (hypotenuse - actHypotenuse)+0.005) / hypotenuse*100;
+	    }
+        values.depth = atan2(angleOfDevX,angleOfDevY);
+        values.positiony = actualHypotenuse*(cos(ANGLE_OF_DEPRESSION-angleOfDevY))+0.5;
+        values.positionx = values.positiony*tan(angleOfDevX)+0.5;
+    }
+    else{
+        values.depth = 999;
+        values.positionx = 999;
+        values.positiony = 999;
+    }
+    return;
+
 };
-
-struct raw_data
-{
-  // ???  Sensor values?
-  int distance_sensed;
-};
-
-class TransformationFilter : public ::scpp::core::FilterInterface
-{
-public:
-  TransformationFilter(){};
-  virtual ~TransformationFilter() = default;
-
-  void convert(std::string& incomming_message) override;
-
-private:
-  clean_message transform(raw_data& data);
-};
-
-#endif /* end of include guard TRANSFORMATIONFILTER_HPP */
