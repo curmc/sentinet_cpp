@@ -32,7 +32,7 @@ public:
    *
    * @param incomming_message a muttable string
    */
-  virtual void convert(std::string& incomming_message) = 0;
+  virtual clean_message convert(int angleOfDeviationY, int angleOfDeviationX, int actualHypotenuse) = 0;
 };
 
 } // namespace core
