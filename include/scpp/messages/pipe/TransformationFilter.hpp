@@ -17,31 +17,31 @@
 #include <cmath>
 
 // Local includes
-#include "scpp/core/messages/pipe/FilterInterface.hpp"
+#include "core\messages\pipe\FilterInterface.hpp"
 
-struct clean_message
-{
-  uint8_t possitionx;
-  uint8_t possitiony;
-  float depth;
-};
-
-struct raw_data
-{
+struct raw_data {
   // ???  Sensor values?
   int distance_sensed;
 };
 
+struct clean_message{
+  int32_t positionx;
+  int32_t positiony;
+  float depth;
+};
+
 class TransformationFilter : public ::scpp::core::FilterInterface
 {
-public:
-  TransformationFilter(){};
-  virtual ~TransformationFilter() = default;
+  public:
+    TransformationFilter (){};
+    virtual ~TransformationFilter () = default;
+    clean_message convert(int angleOfDeviationY, int angleOfDeviationX, int actualHypotenuse) override;
+  private:
+    clean_message transform(raw_data& data);
+    clean_message values;
 
-  void convert(std::string& incomming_message) override;
-
-private:
-  clean_message transform(raw_data& data);
+    
 };
 
 #endif /* end of include guard TRANSFORMATIONFILTER_HPP */
+
