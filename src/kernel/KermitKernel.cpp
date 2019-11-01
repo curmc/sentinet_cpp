@@ -35,6 +35,9 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
 
   // Create a new data buffer
   message.data_buffer_temp = create_cmd_vel();
+
+  // Create a new ping buffer
+  message.ping = create_buffer_ping();
 }
 
 KermitKernel::~KermitKernel() {}
@@ -146,6 +149,9 @@ std::string
 KermitKernel::cmd_message_callback(std::string& message_)
 {
   std::cout<<"Recieved "<<message_<<std::endl;
+  if(!serialize_from_ping(&message.ping, message.c_str())) {
+    return std::string(message.ping.data, PING_HEADER_SIZE);
+  }
   return "Not implimented " + message_;
 }
 

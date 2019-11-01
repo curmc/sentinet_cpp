@@ -36,7 +36,7 @@ const double MAX_DEVIATION = 0.1308996939;                              //This i
  * Returns: A clean message object that contains the relative position of the section scanned and the depth.
  * Does: Stores an accurate reading of the HEIGHT/depth of a spot on the map.
 */
-void TransformationFilter::convert(int angleOfDeviationY, int angleOfDeviationX, int actualHypotenuse){
+void TransformationFilter::transform(int angleOfDeviationY, int angleOfDeviationX, int actualHypotenuse){
 	//cosecant(angle+deviation)*HEIGHT                                                                 Hypotenuse formula                                                                    //Initializes the returned clean message.
     double angleOfDevY = 1.0*angleOfDeviationY/100;                                                    //Records the angle of deviation on the y axis in radians.
     double angleOfDevX = 1.0*angleOfDeviationX/100;                                                    //Records the angle of deviation on the x axis in radians.

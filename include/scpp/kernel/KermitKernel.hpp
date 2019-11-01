@@ -14,6 +14,7 @@
 extern "C"
 {
 #include "scpp/rmt_messages.h"
+#include "scpp/ping_message.h"
 }
 
 // C++ includes
@@ -137,6 +138,7 @@ private:
   {
     cmd_vel cvel_buffer;
     cmd_vel data_buffer_temp;
+    ping_buffer ping;
 
   } KermitMessage;
 

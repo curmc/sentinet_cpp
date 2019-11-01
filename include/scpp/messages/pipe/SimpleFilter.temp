@@ -22,7 +22,7 @@ public:
   SimpleFilter(){};
   virtual ~SimpleFilter() = default;
 
-  void convert(std::string& incomming_message) override;
+  int convert(std::string& incomming_message) override;
 };
 } // namespace filters
 } // namespace scpp
