@@ -40,26 +40,15 @@ struct clean_message{
 
 class TransformationFilter : public ::scpp::core::FilterInterface
 {
-<<<<<<< HEAD
 public:
   TransformationFilter(){};
   virtual ~TransformationFilter() = default;
 
-  void convert(std::string& incomming_message) override;
+  int convert(std::string& incomming_message) override;
 
 private:
-  clean_message transform(raw_data& data);
-=======
-  public:
-    TransformationFilter (){};
-    virtual ~TransformationFilter () = default;
-    void convert(int angleOfDeviationY, int angleOfDeviationX, int actualHypotenuse) override;
-  private:
-    clean_message transform(raw_data& data);
-    clean_message values;
-
-    
->>>>>>> Changes made for imu code hopefully this will work.
+  void transform(int angleOfDeviationY, int angleOfDeviationX, int actualHypotenuse);
+  clean_message values;
 };
 
 #endif /* end of include guard TRANSFORMATIONFILTER_HPP */
