@@ -5,7 +5,6 @@
  */
 
 #include "scpp/core/messages/pipe/PipeInterface.hpp"
-#include "scpp/messages/pipe/SimpleFilter.hpp"
 #include <sstream>
 
 int

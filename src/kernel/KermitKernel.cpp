@@ -81,7 +81,6 @@ KermitKernel::init_comms(const std::string& drive_addr,
 
   // The command relay (a server)
   params.command_p.address = cmd_addr;
-  std::cout<<"AERARA"<<cmd_addr<<std::endl;
   params.command_p.callback =
     std::bind(&KermitKernel::cmd_message_callback, this, std::placeholders::_1);
   return true;
@@ -149,10 +148,14 @@ std::string
 KermitKernel::cmd_message_callback(std::string& message_)
 {
   std::cout<<"Recieved "<<message_<<std::endl;
-  if(!serialize_from_ping(&message.ping, message.c_str())) {
-    return std::string(message.ping.data, PING_HEADER_SIZE);
+  if(!serialize_from_ping(&message.ping, reinterpret_cast<BYTE*>(&message_[0]))) {
+    message.ping.type = 5;
+    message.ping.code = 6;
+    message.ping.check = 9;
+    to_wire_ping(&message.ping);
+    return std::string(reinterpret_cast<char const*>(message.ping.data), PING_HEADER_SIZE);
   }
-  return "Not implimented " + message_;
+  return "Nooop" + message_;
 }
 
 std::string
@@ -164,7 +167,9 @@ KermitKernel::map_message_get_data(void)
 std::string
 KermitKernel::data_message_get_data(void)
 {
-  return "Not implimented ";
+  cmd_vel_to_wire(&message.cvel_buffer);
+  print_message_formatted(message.cvel_buffer.buff.data);
+  return std::string((char const*)(message.cvel_buffer.buff.data), 27);
 }
 
 } // namespace curmt
