@@ -32,6 +32,8 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
 
   // Create a new buffer
   message.cvel_buffer = create_cmd_vel();
+  message.cvel_buffer.lin = 0.0;
+  message.cvel_buffer.ang = 0.0;
 
   // Create a new data buffer
   message.data_buffer_temp = create_cmd_vel();
@@ -167,6 +169,8 @@ KermitKernel::map_message_get_data(void)
 std::string
 KermitKernel::data_message_get_data(void)
 {
+  // message.cvel_buffer.lin = 5.6;
+  // message.cvel_buffer.ang = 10.5;
   cmd_vel_to_wire(&message.cvel_buffer);
   print_message_formatted(message.cvel_buffer.buff.data);
   return std::string((char const*)(message.cvel_buffer.buff.data), 27);

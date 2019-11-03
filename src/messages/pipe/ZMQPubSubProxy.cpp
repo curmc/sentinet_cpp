@@ -6,6 +6,10 @@
 
 #include "scpp/messages/pipe/ZMQPubSubProxy.hpp"
 
+extern "C" {
+#include "scpp/data_message.h"
+}
+
 namespace scpp {
 namespace proxies {
 
@@ -57,7 +61,9 @@ ZMQPubSubProxy::__spin__()
     if (!adding_filter) {
       for (auto i = 0U; i < filters.size(); ++i)
         filters[i]->convert(req);
-      std::cout << "Traffic: " << req << std::endl;
+      std::cout << "Traffic: \n";
+      print_message_raw((BYTE*)&req[0], req.size());
+
       s_sendmore(*backend_sock, topic);
       s_send(*backend_sock, req);
     } else {

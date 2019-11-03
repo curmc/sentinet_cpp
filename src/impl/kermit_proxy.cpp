@@ -27,7 +27,7 @@ main()
   proxies->create_req_rep_endpoint("command", COMMAND_ADDR, COMMAND_ADDR_F);
 
 
-  sleep(20);
+  sleep(1000);
   std::cout << "Killing " << std::endl;
 
   proxies->stop();
