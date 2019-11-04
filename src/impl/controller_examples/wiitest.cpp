@@ -1,10 +1,10 @@
-#include "wiimote.h"
+#include "scpp/controllers/wii/wiimote.h"
 #include <iostream>
 #include <chrono>
 
 using namespace std;
 
-int main(int argc, char* argv[]) 
+int main() 
 {
     scpp::curmt::Wiimote wii;
     wii.start_kermit();
