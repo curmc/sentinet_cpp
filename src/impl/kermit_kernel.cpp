@@ -11,7 +11,11 @@ int
 main()
 {
   auto a = std::make_unique<scpp::curmt::KermitKernel>(
-    "cmd_vel", "command", "data", "realtime", true, true);
+    "cmd_vel", "command", "data", "realtime", true, false);
+
+  if(a->init_teensy_peripheral("192.168.0.2", 80)) {
+    std::cout<<"Yay"<<std::endl; 
+  }
 
   a->init_comms("tcp://localhost:5571",
                 "tcp://localhost:5580",

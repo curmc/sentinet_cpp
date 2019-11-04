@@ -7,6 +7,8 @@
 #include "scpp/kernel/KermitKernel.hpp"
 #include <mutex>
 
+#define INTERFACE "enp0s20f0u1"
+
 static std::mutex guard;
 
 namespace scpp {
@@ -42,7 +44,10 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
   message.ping = create_buffer_ping();
 }
 
-KermitKernel::~KermitKernel() {}
+KermitKernel::~KermitKernel() { 
+  if(teensy.sockfd)
+    close(teensy.sockfd);
+}
 
 bool
 KermitKernel::init_comms(const std::string& drive_addr,
@@ -85,8 +90,52 @@ KermitKernel::init_comms(const std::string& drive_addr,
   params.command_p.address = cmd_addr;
   params.command_p.callback =
     std::bind(&KermitKernel::cmd_message_callback, this, std::placeholders::_1);
+
+  teensy.sockfd = 0;
   return true;
 }
+
+bool 
+KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port){
+
+  teensy.sockfd = socket(AF_INET, SOCK_STREAM, 0); 
+
+  if(teensy.sockfd < 0) {
+    perror("Socket ");
+    kermit.debug = true;
+    return false;
+  }
+
+  memset(&teensy.ifr, 0, sizeof(teensy.ifr));
+
+  snprintf(teensy.ifr.ifr_name, sizeof(teensy.ifr.ifr_name), INTERFACE);
+
+  if(setsockopt(teensy.sockfd, SOL_SOCKET, SO_BINDTODEVICE, (void*)&teensy.ifr, sizeof(teensy.ifr)) < 0) {
+    perror("Interface ");
+    kermit.debug = true;
+    return false;
+  }
+
+  bzero(&teensy.dest, sizeof(teensy.dest));
+
+  teensy.dest.sin_family = AF_INET;
+  teensy.dest.sin_port = htons(port);
+
+  if(inet_aton(ip_addr.c_str(), (in_addr*)&teensy.dest.sin_addr.s_addr) == 0) {
+    perror(ip_addr.c_str());
+    kermit.debug = true;
+    return false;
+  }
+
+  if(connect(teensy.sockfd, (struct sockaddr*)&teensy.dest, sizeof(teensy.dest)) != 0) {
+    perror("Connection");
+    kermit.debug = true;
+    return false;
+  }
+
+  return true;
+}
+
 
 void
 KermitKernel::print_state()
@@ -134,7 +183,21 @@ KermitKernel::start(const std::chrono::microseconds serial_period, const std::ch
 bool
 KermitKernel::send_data()
 {
-  // TODO
+  // std::lock_guard<std::mutex> lock(guard);
+  int16_t* temp = (int16_t*)teensy.send;
+  *temp++ = message.cvel_buffer.lin;
+  *temp = message.cvel_buffer.ang;
+  
+  teensy.send[4] = '\0';
+  teensy.send[3] = '\0';
+
+  std::cout<<"Writing"<<std::endl;
+  write(teensy.sockfd, "hit\0", 4);
+  read(teensy.sockfd, teensy.recv, 4);
+
+  if(kermit.verbose) {
+    std::cout<<"Responded with "<<*(int16_t*)teensy.recv<<" "<<*(int16_t*)(teensy.recv + 2)<<std::endl;
+  }
   return true;
 }
 

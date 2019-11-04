@@ -13,6 +13,13 @@
 #include "scpp/control/ZMQControlClient.hpp"
 extern "C"
 {
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/ioctl.h>
+#include <net/if.h>
+#include <arpa/inet.h>
+#include <resolv.h>
+#include <unistd.h>
 #include "scpp/rmt_messages.h"
 #include "scpp/ping_message.h"
 }
@@ -81,11 +88,21 @@ public:
    */
   bool start(const std::chrono::microseconds ethernet_period, const std::chrono::seconds timer);
 
+  /**
+   * @brief Initializes teensy endpoint or sets to debug if false
+   *
+   * @param ip_addr The ip address of the teensy
+   *
+   * @return Status - if false, changes debuf to true
+   */
+  bool init_teensy_peripheral(const std::string& ip_addr, int port);
+
   // Control Client stuff
 private:
   bool initialize_control_client();
   // Prints robot state
   void print_state();
+  
 
 private:
   // CALLBACKS
@@ -104,12 +121,11 @@ private:
 private:
   bool send_data();
 
-  typedef struct KermitOutputs
+  typedef struct KermitProperties
   {
-    KermitOutputs() {}
+    KermitProperties() {}
 
     // TODO will need more data here
-
     bool verbose;
     bool debug;
 
@@ -124,7 +140,7 @@ private:
     std::string cmd_addr;
     std::string data_addr;
     std::string real_map_addr;
-  } KermitOutputs;
+  } KermitProperties;
 
   typedef struct CCProperties
   {
@@ -142,9 +158,24 @@ private:
 
   } KermitMessage;
 
-  KermitOutputs kermit;
+  typedef struct TeensyEndpoint 
+  {
+    int sockfd;
+    struct sockaddr_in dest;
+    struct ifreq ifr;
+
+    uint8_t send[4];
+    uint8_t recv[4];
+  } TeensyEndpoint;
+
+  TeensyEndpoint teensy;
+
+  KermitProperties kermit;
+
   KermitMessage message;
+
   CCProperties params;
+
 };
 } // namespace curmt
 } // namespace scpp
