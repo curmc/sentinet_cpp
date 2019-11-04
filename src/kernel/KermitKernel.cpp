@@ -42,11 +42,27 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
 
   // Create a new ping buffer
   message.ping = create_buffer_ping();
+
+  running = true;
 }
 
 KermitKernel::~KermitKernel() { 
   if(teensy.sockfd)
     close(teensy.sockfd);
+}
+
+bool KermitKernel::kermit_quit() {
+  // NO MUTEX LOCK
+  // Causes a lock because both this 
+  // and read is locked
+  running = false;
+  std::cout<<"NOOO"<<std::endl;
+  if(async_sender){ 
+    async_sender->join();
+    close(teensy.sockfd);
+  }
+  std::cout<<"NOOO"<<std::endl;
+  return quit();
 }
 
 bool
@@ -133,9 +149,35 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port){
     return false;
   }
 
+  if(!kermit.debug){ 
+    async_sender = std::make_unique<std::thread>( 
+    [this] (void) -> bool {
+    while(running) {
+        std::lock_guard<std::mutex> lock(guard);
+        int16_t* temp = (int16_t*)teensy.send;
+        *temp++ = message.cvel_buffer.lin;
+        *temp = message.cvel_buffer.ang;
+    
+        teensy.send[4] = '\0';
+        teensy.send[3] = '\0';
+
+        write(teensy.sockfd, (char*)teensy.send, 4);
+        read(teensy.sockfd, teensy.recv, 5);
+
+        std::cout<<*(uint16_t*)teensy.recv<<" "<<*(uint16_t*)(teensy.recv + 2)<<std::endl;
+
+        // DEBUG
+        message.cvel_buffer.lin = (float)*(uint16_t*)(teensy.recv);
+        message.cvel_buffer.ang = (float)*(uint16_t*)(teensy.recv + 2);
+        usleep(10000);
+      }
+
+    return true;
+    });
+  }
+
   return true;
 }
-
 
 void
 KermitKernel::print_state()
@@ -176,35 +218,33 @@ KermitKernel::start(const std::chrono::microseconds serial_period, const std::ch
     if (kermit.verbose) {
       print_state();
     }
-    if (!kermit.debug) {
-      send_data();
-    }
+
     usleep(serial_period.count());
   }
   return true;
 }
 
-bool
-KermitKernel::send_data()
-{
-  // std::lock_guard<std::mutex> lock(guard);
-  int16_t* temp = (int16_t*)teensy.send;
-  *temp++ = message.cvel_buffer.lin;
-  *temp = message.cvel_buffer.ang;
-  
-  teensy.send[4] = '\0';
-  teensy.send[3] = '\0';
-
-  std::cout<<"Writing"<<std::endl;
-  write(teensy.sockfd, "hit\0", 4);
-  read(teensy.sockfd, teensy.recv, 4);
-
-  if(kermit.verbose) {
-    std::cout<<"Responded with "<<*(int16_t*)teensy.recv<<" "<<*(int16_t*)(teensy.recv + 2)<<std::endl;
-  }
-  return true;
-}
-
+// bool
+// KermitKernel::send_data()
+// {
+//   // std::lock_guard<std::mutex> lock(guard);
+//   int16_t* temp = (int16_t*)teensy.send;
+//   *temp++ = message.cvel_buffer.lin;
+//   *temp = message.cvel_buffer.ang;
+//
+//   teensy.send[4] = '\0';
+//   teensy.send[3] = '\0';
+//
+//   std::cout<<"Writing"<<std::endl;
+//   write(teensy.sockfd, "hit\0", 4);
+//   read(teensy.sockfd, teensy.recv, 4);
+//
+//   if(kermit.verbose) {
+//     std::cout<<"Responded with "<<*(int16_t*)teensy.recv<<" "<<*(int16_t*)(teensy.recv + 2)<<std::endl;
+//   }
+//   return true;
+// }
+//
 void
 KermitKernel::drive_message_subscribe_callback(std::string& message_)
 {

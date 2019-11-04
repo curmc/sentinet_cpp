@@ -88,6 +88,9 @@ public:
    */
   bool start(const std::chrono::microseconds ethernet_period, const std::chrono::seconds timer);
 
+  // TODO - this should be derived from KCM
+  bool kermit_quit();
+
   /**
    * @brief Initializes teensy endpoint or sets to debug if false
    *
@@ -119,7 +122,7 @@ private:
   std::string data_message_get_data(void);
 
 private:
-  bool send_data();
+  // bool send_data();
 
   typedef struct KermitProperties
   {
@@ -164,8 +167,8 @@ private:
     struct sockaddr_in dest;
     struct ifreq ifr;
 
-    uint8_t send[4];
-    uint8_t recv[4];
+    uint8_t send[5];
+    uint8_t recv[5];
   } TeensyEndpoint;
 
   TeensyEndpoint teensy;
@@ -175,6 +178,9 @@ private:
   KermitMessage message;
 
   CCProperties params;
+
+  std::atomic<bool> running;
+  std::unique_ptr<std::thread> async_sender;
 
 };
 } // namespace curmt
