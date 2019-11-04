@@ -161,14 +161,18 @@ KermitKernel::start(const std::chrono::microseconds serial_period, const std::ch
   using namespace std::chrono;
 
   std::atomic<bool> infinite(false);
-  if(time_alive == std::chrono::seconds(0)) {
+
+  // If you pass 0 seconds / micro / milli, 
+  // it causes an infinite loop
+  // hacky, but works
+  if(time_alive == seconds(0)) {
     infinite = true;
   }
 
   initialize_control_client();
   steady_clock::time_point time_now = steady_clock::now();
   
-  while(infinite || std::chrono::steady_clock::now() - time_now < time_alive) {
+  while(infinite || steady_clock::now() - time_now < time_alive) {
     if (kermit.verbose) {
       print_state();
     }
