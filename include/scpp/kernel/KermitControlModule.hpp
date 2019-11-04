@@ -11,9 +11,12 @@
 // Local includes
 #include "scpp/control/ZMQControlClient.hpp"
 #include "scpp/kernel/Defaults.hpp"
+
 extern "C"
 {
 #include "scpp/data_message.h"
+#include "scpp/rmt_messages.h"
+#include "scpp/ping_message.h"
 }
 
 // C++ includes
@@ -25,6 +28,7 @@ extern "C"
 // STATES
 #define MINING (1 << 0)
 #define DUMPING (1 << 1)
+#define DRIVING (1 << 2)
 
 namespace scpp {
 namespace curmt {
@@ -37,16 +41,7 @@ public:
    *
    * Uses default cmd_vel_front_end for the actual project
    */
-  KermitControlModule()
-    : publish_channel(::scpp::curmt::defaults::cmd_vel_front_end)
-  {}
-
-  /**
-   * @brief Overrides publish_channel proxy name
-   *
-   * @param publish_channel_ The address to publish on
-   */
-  KermitControlModule(const std::string& publish_channel_);
+  KermitControlModule();
 
   /**
    * @brief Destructor
@@ -54,18 +49,6 @@ public:
    * Needs to stop the module if not stopped already
    */
   virtual ~KermitControlModule();
-
-  /**
-   * @brief Defaults start_kermit on the cmd_vel topic
-   *
-   * TODO Need to start up cmd channel
-   *
-   * @return Status
-   */
-  inline bool start_kermit()
-  {
-    return start_kermit(::scpp::curmt::defaults::cmd_vel_topic);
-  }
 
   /**
    * @brief Start Kermit on the specified topic
@@ -76,7 +59,7 @@ public:
    *
    * @return Status
    */
-  bool start_kermit(const std::string& topic);
+  bool start_kermit();
 
   /**
    * @brief The main loop function
@@ -98,13 +81,13 @@ public:
    */
   bool quit_kermit();
 
-private:
+protected:
   /**
    * @brief Implimentation start
    *
    * @return status
    */
-  virtual bool __start__() { return 0; }
+  virtual int __start__() { return 0; }
 
   /**
    * @brief Implimentation quit
@@ -113,20 +96,20 @@ private:
    *
    * @return status
    */
-  virtual bool __quit__() { return 0; }
+  virtual int __quit__() { return 0; }
 
   /**
    * @brief Update robot state implimentation
    *
    * @return status
    */
-  virtual bool __update_state__() { return 0; }
+  virtual int __update_state__() { return 0; }
 
   /**
    * @brief Implimentation getters
    */
-  virtual inline float __get_lin__() { return 0; }
-  virtual inline float __get_ang__() { return 0; }
+  virtual float __get_lin__() const = 0;
+  virtual float __get_ang__() const = 0;
 
   /**
    * @brief An 8 or more bit field that gets the robot
@@ -137,16 +120,32 @@ private:
    *
    * @return A state
    */
-  virtual inline KERMIT_STATE __get_state__() { return 0; }
+  virtual inline KERMIT_STATE __get_state__() const  { return 0; }
 
   // The channel to publish on (tcp://localhost:5555 default)
-  std::string publish_channel;
+  typedef struct {
+    std::string cmd_addr;
+    std::string data_addr;
+    std::string cmd_vel_addr;
+    std::string real_time_addr;
 
-  // The STACK implimented buffer to serialize data into
-  data_buffer buff;
+    std::string cmd_id;
+    std::string data_topic;
+    std::string cmd_vel_topic;
+    std::string real_time_topic;
+  } KermitEndpoints;
 
-  // The STACK implimented buffer to serialize control protocols onto
-  // ping_buffer ping_buff;
+  // The channel to publish on (tcp://localhost:5555 default)
+  typedef struct {
+    cmd_vel cvel_buff;
+    cmd_vel data_buff;
+    ping_buffer command;
+  } KermitMessage;
+
+  KermitEndpoints endpoints;
+  KermitMessage message;
+
+  std::atomic<bool> running;
 };
 
 }
