@@ -18,17 +18,16 @@
 
 class TelemetryHandler
 {
-  public:
-    TelemetryHandler ();
-    virtual ~TelemetryHandler ();
-  private:
-    CURL* curl;
-    CURLcode res;
+public:
+  TelemetryHandler();
+  virtual ~TelemetryHandler();
 
-  typedef struct {
-    
-  }
+private:
+  CURL* curl;
+  CURLcode res;
+
+  typedef struct
+  {}
 };
 
 #endif /* end of include guard TELEMETRYHANDLER_HPP */
-

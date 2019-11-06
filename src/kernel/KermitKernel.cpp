@@ -46,22 +46,25 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
   running = true;
 }
 
-KermitKernel::~KermitKernel() { 
-  if(teensy.sockfd)
+KermitKernel::~KermitKernel()
+{
+  if (teensy.sockfd)
     close(teensy.sockfd);
 }
 
-bool KermitKernel::kermit_quit() {
+bool
+KermitKernel::kermit_quit()
+{
   // NO MUTEX LOCK
-  // Causes a lock because both this 
+  // Causes a lock because both this
   // and read is locked
   running = false;
-  std::cout<<"NOOO"<<std::endl;
-  if(async_sender){ 
+  std::cout << "NOOO" << std::endl;
+  if (async_sender) {
     async_sender->join();
     close(teensy.sockfd);
   }
-  std::cout<<"NOOO"<<std::endl;
+  std::cout << "NOOO" << std::endl;
   return quit();
 }
 
@@ -79,7 +82,7 @@ KermitKernel::init_comms(const std::string& drive_addr,
   kermit.cmd_addr = cmd_addr;
   kermit.data_addr = data_addr;
   kermit.real_map_addr = real_map_addr;
-  
+
   // The command velocity params for listening (a subscriber)
   params.cmd_vel_p.socket_backend = drive_addr;
   params.cmd_vel_p.topic = kermit.drive_topic;
@@ -111,12 +114,13 @@ KermitKernel::init_comms(const std::string& drive_addr,
   return true;
 }
 
-bool 
-KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port){
+bool
+KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port)
+{
 
-  teensy.sockfd = socket(AF_INET, SOCK_STREAM, 0); 
+  teensy.sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-  if(teensy.sockfd < 0) {
+  if (teensy.sockfd < 0) {
     perror("Socket ");
     kermit.debug = true;
     return false;
@@ -126,7 +130,11 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port){
 
   snprintf(teensy.ifr.ifr_name, sizeof(teensy.ifr.ifr_name), INTERFACE);
 
-  if(setsockopt(teensy.sockfd, SOL_SOCKET, SO_BINDTODEVICE, (void*)&teensy.ifr, sizeof(teensy.ifr)) < 0) {
+  if (setsockopt(teensy.sockfd,
+                 SOL_SOCKET,
+                 SO_BINDTODEVICE,
+                 (void*)&teensy.ifr,
+                 sizeof(teensy.ifr)) < 0) {
     perror("Interface ");
     kermit.debug = true;
     return false;
@@ -137,34 +145,36 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port){
   teensy.dest.sin_family = AF_INET;
   teensy.dest.sin_port = htons(port);
 
-  if(inet_aton(ip_addr.c_str(), (in_addr*)&teensy.dest.sin_addr.s_addr) == 0) {
+  if (inet_aton(ip_addr.c_str(), (in_addr*)&teensy.dest.sin_addr.s_addr) == 0) {
     perror(ip_addr.c_str());
     kermit.debug = true;
     return false;
   }
 
-  if(connect(teensy.sockfd, (struct sockaddr*)&teensy.dest, sizeof(teensy.dest)) != 0) {
+  if (connect(teensy.sockfd,
+              (struct sockaddr*)&teensy.dest,
+              sizeof(teensy.dest)) != 0) {
     perror("Connection");
     kermit.debug = true;
     return false;
   }
 
-  if(!kermit.debug){ 
-    async_sender = std::make_unique<std::thread>( 
-    [this] (void) -> bool {
-    while(running) {
+  if (!kermit.debug) {
+    async_sender = std::make_unique<std::thread>([this](void) -> bool {
+      while (running) {
         std::lock_guard<std::mutex> lock(guard);
         int16_t* temp = (int16_t*)teensy.send;
         *temp++ = message.cvel_buffer.lin;
         *temp = message.cvel_buffer.ang;
-    
+
         teensy.send[4] = '\0';
         teensy.send[3] = '\0';
 
         write(teensy.sockfd, (char*)teensy.send, 4);
         read(teensy.sockfd, teensy.recv, 5);
 
-        std::cout<<*(uint16_t*)teensy.recv<<" "<<*(uint16_t*)(teensy.recv + 2)<<std::endl;
+        std::cout << *(uint16_t*)teensy.recv << " "
+                  << *(uint16_t*)(teensy.recv + 2) << std::endl;
 
         // DEBUG
         message.cvel_buffer.lin = (float)*(uint16_t*)(teensy.recv);
@@ -172,7 +182,7 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port){
         usleep(10000);
       }
 
-    return true;
+      return true;
     });
   }
 
@@ -198,23 +208,24 @@ KermitKernel::initialize_control_client()
 }
 
 bool
-KermitKernel::start(const std::chrono::microseconds serial_period, const std::chrono::seconds time_alive)
+KermitKernel::start(const std::chrono::microseconds serial_period,
+                    const std::chrono::seconds time_alive)
 {
   using namespace std::chrono;
 
   std::atomic<bool> infinite(false);
 
-  // If you pass 0 seconds / micro / milli, 
+  // If you pass 0 seconds / micro / milli,
   // it causes an infinite loop
   // hacky, but works
-  if(time_alive == seconds(0)) {
+  if (time_alive == seconds(0)) {
     infinite = true;
   }
 
   initialize_control_client();
   steady_clock::time_point time_now = steady_clock::now();
-  
-  while(infinite || steady_clock::now() - time_now < time_alive) {
+
+  while (infinite || steady_clock::now() - time_now < time_alive) {
     if (kermit.verbose) {
       print_state();
     }
@@ -240,7 +251,8 @@ KermitKernel::start(const std::chrono::microseconds serial_period, const std::ch
 //   read(teensy.sockfd, teensy.recv, 4);
 //
 //   if(kermit.verbose) {
-//     std::cout<<"Responded with "<<*(int16_t*)teensy.recv<<" "<<*(int16_t*)(teensy.recv + 2)<<std::endl;
+//     std::cout<<"Responded with "<<*(int16_t*)teensy.recv<<"
+//     "<<*(int16_t*)(teensy.recv + 2)<<std::endl;
 //   }
 //   return true;
 // }
@@ -256,13 +268,15 @@ KermitKernel::drive_message_subscribe_callback(std::string& message_)
 std::string
 KermitKernel::cmd_message_callback(std::string& message_)
 {
-  std::cout<<"Recieved "<<message_<<std::endl;
-  if(!serialize_from_ping(&message.ping, reinterpret_cast<BYTE*>(&message_[0]))) {
+  std::cout << "Recieved " << message_ << std::endl;
+  if (!serialize_from_ping(&message.ping,
+                           reinterpret_cast<BYTE*>(&message_[0]))) {
     message.ping.type = 5;
     message.ping.code = 6;
     message.ping.check = 9;
     to_wire_ping(&message.ping);
-    return std::string(reinterpret_cast<char const*>(message.ping.data), PING_HEADER_SIZE);
+    return std::string(reinterpret_cast<char const*>(message.ping.data),
+                       PING_HEADER_SIZE);
   }
   return "Nooop" + message_;
 }

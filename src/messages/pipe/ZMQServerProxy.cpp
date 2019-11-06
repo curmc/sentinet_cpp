@@ -53,30 +53,29 @@ ZMQServerProxy::__spin__()
 
   zmq::poll(&items[0], 2, 100);
 
-  if(items[0].revents & ZMQ_POLLIN) {
-    while(1) {
+  if (items[0].revents & ZMQ_POLLIN) {
+    while (1) {
 
       size_t more_size = sizeof(more);
       frontend_sock->recv(&message);
       frontend_sock->getsockopt(ZMQ_RCVMORE, &more, &more_size);
       backend_sock->send(message, more ? ZMQ_SNDMORE : 0);
-      if(!more)
+      if (!more)
         break;
     }
   }
   if (items[1].revents & ZMQ_POLLIN) {
-    while(1) {
+    while (1) {
       backend_sock->recv(&message);
       size_t more_size = sizeof(more);
       backend_sock->getsockopt(ZMQ_RCVMORE, &more, &more_size);
       frontend_sock->send(message, more ? ZMQ_SNDMORE : 0);
-      if(!more)
+      if (!more)
         break;
     }
   }
   return true;
 }
-
 
 bool
 ZMQServerProxy::__stop__()

@@ -6,7 +6,8 @@
 
 #include "scpp/messages/pipe/ZMQPubSubProxy.hpp"
 
-extern "C" {
+extern "C"
+{
 #include "scpp/data_message.h"
 }
 

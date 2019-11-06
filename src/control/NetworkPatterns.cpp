@@ -146,7 +146,7 @@ Server_Context::server_thread(thread_properties& properties)
   // Set up the socket
   auto socket = std::move(properties.socket);
   LOG_INFO("Server started on %s", properties.sock_addr.c_str());
-  
+
   // socket->connect(properties.sock_addr);
   socket->connect("tcp://localhost:5580");
 
@@ -155,9 +155,9 @@ Server_Context::server_thread(thread_properties& properties)
   auto callback = properties.callback;
 
   // Create a zmq poller to check on the socket
-  ::zmq::pollitem_t item[1] = {{
-    static_cast<void*>(*socket.get()), 0, ZMQ_POLLIN, 0
-  }};
+  ::zmq::pollitem_t item[1] = {
+    { static_cast<void*>(*socket.get()), 0, ZMQ_POLLIN, 0 }
+  };
 
   LOG_INFO("Server thread attached to address %s has begun",
            properties.sock_addr.c_str());

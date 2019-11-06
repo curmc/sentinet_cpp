@@ -8,8 +8,4 @@
 
 #define SOCKET_HPP
 
-
-
-
-
 #endif /* end of include guard SOCKET_HPP */

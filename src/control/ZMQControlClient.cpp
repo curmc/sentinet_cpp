@@ -109,7 +109,7 @@ ZMQControlClient::cancel_periodic_publisher(const std::string& reference)
 {
   thread_space.periodic_publishers[reference].exit_signal.set_value();
   // if (thread_space.periodic_publishers[reference].thread->joinable())
-    thread_space.periodic_publishers[reference].thread->join();
+  thread_space.periodic_publishers[reference].thread->join();
   return true;
 }
 
@@ -165,7 +165,7 @@ ZMQControlClient::cancel_periodic_request(const std::string& reference)
 {
   thread_space.periodic_clients[reference].exit_signal.set_value();
   // if (thread_space.periodic_clients[reference].thread->joinable())
-    thread_space.periodic_clients[reference].thread->join();
+  thread_space.periodic_clients[reference].thread->join();
   return true;
 }
 
@@ -204,7 +204,7 @@ ZMQControlClient::cancel_subscription(const std::string& reference)
 {
   thread_space.subscribers[reference].exit_signal.set_value();
   // if (thread_space.subscribers[reference].thread->joinable())
-    thread_space.subscribers[reference].thread->join();
+  thread_space.subscribers[reference].thread->join();
   return true;
 }
 
@@ -238,7 +238,7 @@ ZMQControlClient::terminate_server(const std::string& reference)
 {
   thread_space.servers[reference].exit_signal.set_value();
   // if (thread_space.servers[reference].thread->joinable())
-    thread_space.servers[reference].thread->join();
+  thread_space.servers[reference].thread->join();
   return true;
 }
 
@@ -262,25 +262,24 @@ ZMQControlClient::concurrent_request(const std::string& server,
   socket->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
   int retries_left = REQUEST_RETRIES;
   std::string reply = "No response";
-  
-  while(retries_left) {
+
+  while (retries_left) {
     s_send(*socket, message);
     bool expect_reply = true;
-    while(expect_reply) {
+    while (expect_reply) {
       zmq::pollitem_t items[] = {
-        {static_cast<void*>(*socket), 0, ZMQ_POLLIN, 0 }};
+        { static_cast<void*>(*socket), 0, ZMQ_POLLIN, 0 }
+      };
       zmq::poll(&items[0], 1, 100);
-      if(items[0].revents & ZMQ_POLLIN) {
+      if (items[0].revents & ZMQ_POLLIN) {
         reply = s_recv(*socket);
         expect_reply = false;
         break;
-      }
-      else if(--retries_left == 0){
+      } else if (--retries_left == 0) {
         LOG_ERROR("Request cannot reach server, dropping request");
         expect_reply = false;
         break;
-      }
-      else {
+      } else {
         LOG_WARN("No response from server, retrying");
 
         socket.reset();

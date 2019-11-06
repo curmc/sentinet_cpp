@@ -120,10 +120,11 @@ protected:
    *
    * @return A state
    */
-  virtual inline KERMIT_STATE __get_state__() const  { return 0; }
+  virtual inline KERMIT_STATE __get_state__() const { return 0; }
 
   // The channel to publish on (tcp://localhost:5555 default)
-  typedef struct {
+  typedef struct
+  {
     std::string cmd_addr;
     std::string data_addr;
     std::string cmd_vel_addr;
@@ -136,7 +137,8 @@ protected:
   } KermitEndpoints;
 
   // The channel to publish on (tcp://localhost:5555 default)
-  typedef struct {
+  typedef struct
+  {
     cmd_vel cvel_buff;
     cmd_vel data_buff;
     ping_buffer command;

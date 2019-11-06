@@ -86,7 +86,8 @@ public:
    *
    * @return Status
    */
-  bool start(const std::chrono::microseconds ethernet_period, const std::chrono::seconds timer);
+  bool start(const std::chrono::microseconds ethernet_period,
+             const std::chrono::seconds timer);
 
   // TODO - this should be derived from KCM
   bool kermit_quit();
@@ -105,7 +106,6 @@ private:
   bool initialize_control_client();
   // Prints robot state
   void print_state();
-  
 
 private:
   // CALLBACKS
@@ -161,7 +161,7 @@ private:
 
   } KermitMessage;
 
-  typedef struct TeensyEndpoint 
+  typedef struct TeensyEndpoint
   {
     int sockfd;
     struct sockaddr_in dest;
@@ -181,7 +181,6 @@ private:
 
   std::atomic<bool> running;
   std::unique_ptr<std::thread> async_sender;
-
 };
 } // namespace curmt
 } // namespace scpp

@@ -14,7 +14,6 @@ static const std::string DATA_ADDR = "tcp://localhost:5556";
 static const std::string COMMAND_ADDR = "tcp://localhost:5572";
 static const std::string REAL_TIME_ADDR = "tcp://localhost:5573";
 
-
 KermitControlModule::KermitControlModule()
 {
   endpoints.cmd_addr = COMMAND_ADDR;
@@ -44,7 +43,7 @@ KermitControlModule::start_kermit()
 {
   __start__();
 
-  // TODO make these into callbacks in the main object 
+  // TODO make these into callbacks in the main object
   scpp::publish_params publish;
   publish.broker_frontend = endpoints.cmd_vel_addr;
   publish.topic = endpoints.cmd_vel_topic;
@@ -58,13 +57,11 @@ KermitControlModule::start_kermit()
   };
   publish.period = std::chrono::milliseconds(10);
 
-
-
   scpp::subscribe_params subscribe;
   subscribe.socket_backend = endpoints.data_addr;
   subscribe.topic = endpoints.data_topic;
   subscribe.callback = [this](std::string& msg) -> void {
-    std::cout<<"Recieved a message!"<< msg <<std::endl;
+    std::cout << "Recieved a message!" << msg << std::endl;
     return;
   };
 
