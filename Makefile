@@ -31,7 +31,6 @@ install: rmtcore sentinet cmake compile
 	@echo "Compiling and building"
 	@sudo ${INSTALL_TARGET}
 
-
 .PHONY: examples
 examples: 
 	@echo "Compiling rmt examples"
@@ -59,7 +58,6 @@ compile:
 format:
 	@find ./src -regex ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
 	@find ./include -regex ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
-
 
 .PHONY: install-deps
 install-deps:
