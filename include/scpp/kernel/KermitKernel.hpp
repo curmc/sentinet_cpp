@@ -169,6 +169,9 @@ private:
 
     uint8_t send[5];
     uint8_t recv[5];
+
+    int16_t lin;
+    int16_t ang;
   } TeensyEndpoint;
 
   TeensyEndpoint teensy;

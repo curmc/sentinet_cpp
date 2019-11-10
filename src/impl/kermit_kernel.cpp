@@ -11,14 +11,14 @@ int
 main()
 {
   auto a = std::make_unique<scpp::curmt::KermitKernel>(
-    "cmd_vel", "command", "data", "realtime", true, true);
+    "cmd_vel", "command", "data", "realtime", true, false);
 
   a->init_comms("tcp://localhost:5571",
                 "tcp://localhost:5580",
                 "tcp://localhost:5555",
                 "tcp://localhost:5581");
 
-  // a->init_teensy_peripheral("192.168.0.2", 80);
+  a->init_teensy_peripheral("192.168.0.2", 80);
 
   std::cout << sizeof(scpp::curmt::KermitKernel) << std::endl;
   a->start(std::chrono::milliseconds(10), std::chrono::seconds(0));
