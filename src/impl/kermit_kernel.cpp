@@ -11,7 +11,7 @@ int
 main()
 {
   auto a = std::make_unique<scpp::curmt::KermitKernel>(
-    "cmd_vel", "command", "data", "realtime", true, false);
+    "cmd_vel", "command", "data", "realtime", true, true);
 
   a->init_comms("tcp://localhost:5571",
                 "tcp://localhost:5580",

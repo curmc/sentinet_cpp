@@ -61,12 +61,10 @@ KermitKernel::kermit_quit()
   // Causes a lock because both this
   // and read is locked
   running = false;
-  std::cout << "NOOO" << std::endl;
   if (async_sender) {
     async_sender->join();
     close(teensy.sockfd);
   }
-  std::cout << "NOOO" << std::endl;
   return quit();
 }
 
@@ -161,7 +159,6 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port)
     return false;
   }
 
-  std::cout << "herethere" << std::endl;
 
   if (!kermit.debug) {
     async_sender = std::make_unique<std::thread>([this](void) -> bool {
@@ -189,7 +186,6 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port)
       return true;
     });
   }
-  std::cout << "aldkfaljjkfskljdfn" << std::endl;
 
   return true;
 }
@@ -270,14 +266,12 @@ KermitKernel::drive_message_subscribe_callback(std::string& message_)
   teensy.lin = (int16_t)message.cvel_buffer.lin;
   teensy.ang = (int16_t)message.cvel_buffer.ang;
 
-  std::cout << "Recieved" << std::endl;
   return; // TODO
 }
 
 std::string
 KermitKernel::cmd_message_callback(std::string& message_)
 {
-  std::cout << "Recieved " << message_ << std::endl;
   if (!serialize_from_ping(&message.ping,
                            reinterpret_cast<BYTE*>(&message_[0]))) {
     message.ping.type = 5;
@@ -302,7 +296,7 @@ KermitKernel::data_message_get_data(void)
   // message.cvel_buffer.lin = 5.6;
   // message.cvel_buffer.ang = 10.5;
   cmd_vel_to_wire(&message.cvel_buffer);
-  print_message_formatted(message.cvel_buffer.buff.data);
+  // print_message_formatted(message.cvel_buffer.buff.data);
   return std::string((char const*)(message.cvel_buffer.buff.data), 27);
 }
 
