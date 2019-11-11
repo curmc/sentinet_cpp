@@ -5,6 +5,14 @@
  */
 
 #include "scpp/core/messages/pipe/PipeInterface.hpp"
+#include <csignal>
+
+static std::unique_ptr<scpp::core::PipeInterface> proxies;
+
+void signalHandler(int signum) {
+  if(proxies)
+    proxies->stop();
+}
 
 const std::string CMD_VEL = "tcp://*:5570";
 const std::string DATA_ADDR = "tcp://*:5556";
@@ -19,7 +27,10 @@ const std::string REAL_TIME_ADDR_F = "tcp://*:5581";
 int
 main()
 {
-  auto proxies = std::make_unique<scpp::core::PipeInterface>();
+  signal(SIGINT, signalHandler);
+  signal(SIGQUIT, signalHandler);
+
+  proxies = std::make_unique<scpp::core::PipeInterface>();
 
   proxies->create_pub_sub_endpoint("cmd_vel", CMD_VEL, CMD_VEL_F);
   proxies->create_pub_sub_endpoint("data", DATA_ADDR_F, DATA_ADDR);

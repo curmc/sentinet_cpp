@@ -27,7 +27,6 @@ bool
 ZMQControlClient::quit(int)
 {
   // TODO - make this look prettier
-  std::cout << "here" << std::endl;
   for (auto const& i : thread_space.subscribers)
     cancel_subscription(i.first);
   for (auto const& i : thread_space.servers)
@@ -36,7 +35,6 @@ ZMQControlClient::quit(int)
     cancel_periodic_publisher(i.first);
   for (auto const& i : thread_space.periodic_clients)
     cancel_periodic_request(i.first);
-  std::cout << "there" << std::endl;
   return true;
 }
 

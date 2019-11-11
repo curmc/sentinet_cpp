@@ -6,11 +6,24 @@
 
 #include "scpp/kernel/KermitKernel.hpp"
 //#include "control/RandomPublisher.hpp"
+#include <csignal>
+
+static std::unique_ptr<scpp::curmt::KermitKernel> a;
+
+
+void signalHandler(int signum) {
+  if(a)
+    a->kermit_quit();
+  std::cout<<"Killed"<<std::endl;
+}
 
 int
 main()
 {
-  auto a = std::make_unique<scpp::curmt::KermitKernel>(
+  signal(SIGINT, signalHandler);
+  signal(SIGQUIT, signalHandler);
+
+  a = std::make_unique<scpp::curmt::KermitKernel>(
     "cmd_vel", "command", "data", "realtime", true, true);
 
   a->init_comms("tcp://localhost:5571",
@@ -24,6 +37,5 @@ main()
   a->start(std::chrono::milliseconds(10), std::chrono::seconds(0));
 
   a->kermit_quit();
-
   return 0;
 }

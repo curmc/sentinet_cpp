@@ -226,11 +226,10 @@ KermitKernel::start(const std::chrono::microseconds serial_period,
   initialize_control_client();
   steady_clock::time_point time_now = steady_clock::now();
 
-  while (infinite || steady_clock::now() - time_now < time_alive) {
+  while (running && (infinite || steady_clock::now() - time_now < time_alive)) {
     if (kermit.verbose) {
       print_state();
     }
-
     usleep(serial_period.count());
   }
   return true;
