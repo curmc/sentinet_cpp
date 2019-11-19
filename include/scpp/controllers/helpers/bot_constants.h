@@ -1,4 +1,5 @@
-namespace scpp::curmt {
+namespace scpp {
+namespace curmt {
 
 class BotConstants
 {
@@ -18,4 +19,5 @@ public:
   const float angular_max;
   const float angular_incriment;
 };
+}
 }
