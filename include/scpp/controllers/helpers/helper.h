@@ -1,7 +1,8 @@
 #ifndef HELPER_H
 #define HELPER_H
 
-namespace scpp::curmt {
+namespace scpp {
+namespace curmt {
 
 /* Maintains that value is within bounds */
 template<typename T>
@@ -23,5 +24,5 @@ zero_rounding(T value, T change)
 }
 
 } // End Namespace
-
+}
 #endif
