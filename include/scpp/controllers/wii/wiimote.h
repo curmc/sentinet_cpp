@@ -10,7 +10,8 @@
 /* chrono for timing purposes, making linear and angular scaled by second */
 using namespace std::chrono;
 
-namespace scpp::curmt {
+namespace scpp {
+namespace curmt {
 
 /* these are just some garbage default values, need to replace with real ones */
 constexpr BotConstants default_constants =
@@ -63,4 +64,5 @@ protected:
 };
 
 } // End namespace
+}
 #endif
