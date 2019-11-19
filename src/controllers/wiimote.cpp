@@ -11,7 +11,8 @@
 
 using namespace std;
 
-namespace scpp::curmt {
+namespace scpp {
+namespace curmt {
 
 // A lot of this code is written only expecting one wiimote, if use cases change
 // then update code
@@ -299,3 +300,4 @@ Wiimote::output_status()
 }
 
 } // End Namespace
+}
