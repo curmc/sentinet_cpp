@@ -25,11 +25,8 @@ namespace proxies {
 class ZMQPubSubProxy : public ::scpp::core::ProxyInterface
 {
 public:
-  ZMQPubSubProxy(const std::string&,
-                 std::future<void>,
-                 const std::string&,
-                 const std::string&,
-                 int context = 1);
+  ZMQPubSubProxy(const std::string&, std::future<void>, const std::string&,
+                 const std::string&, int context = 1);
   ~ZMQPubSubProxy();
 
 protected:

@@ -25,9 +25,7 @@ ProxyInterface::ProxyInterface(const std::string& id_,
   running = true;
 
   LOG_INFO("Creating a new proxy interface: id %s, frontend: %s, backend: %s",
-           id.c_str(),
-           frontend.c_str(),
-           backend.c_str());
+           id.c_str(), frontend.c_str(), backend.c_str());
   register_signal(CLEAN_STOP, [this](void) -> int {
     this->stop();
     return CLEAN_STOP;
@@ -50,13 +48,14 @@ ProxyInterface::ProxyInterface(const std::string& id_,
   adding_filter = false;
 }
 
-ProxyInterface::~ProxyInterface() {}
+ProxyInterface::~ProxyInterface()
+{
+}
 
 void
 ProxyInterface::start(const std::chrono::microseconds t)
 {
-  LOG_INFO("Proxy Interface Starting up of type %s and id %s",
-           id.c_str(),
+  LOG_INFO("Proxy Interface Starting up of type %s and id %s", id.c_str(),
            __get_type__().c_str());
 
   paused = false;
@@ -82,8 +81,7 @@ ProxyInterface::start(const std::chrono::microseconds t)
     bool ret = __spin__();
     locker.unlock();
     if (!(ret))
-      LOG_WARN("Spin returned false on proxy of type %s and id %s",
-               id.c_str(),
+      LOG_WARN("Spin returned false on proxy of type %s and id %s", id.c_str(),
                __get_type__().c_str());
 
     // If there's a period, sleep, otherwise, we're just wasting operations
@@ -95,8 +93,7 @@ ProxyInterface::start(const std::chrono::microseconds t)
     }
   }
 
-  LOG_INFO("Proxy Interface Quitting of type %s and id %s",
-           id.c_str(),
+  LOG_INFO("Proxy Interface Quitting of type %s and id %s", id.c_str(),
            __get_type__().c_str());
 }
 
@@ -104,15 +101,13 @@ bool
 ProxyInterface::stop()
 {
   LOG_INFO("Attempting to stop proxy interface of type %s and id %s",
-           __get_type__().c_str(),
-           id.c_str());
+           __get_type__().c_str(), id.c_str());
   running = false;
   bool ret = __stop__();
   if (ret)
     return true;
   LOG_INFO("Error, couldn't stop proxy interface of type %s and id %s",
-           __get_type__().c_str(),
-           id.c_str());
+           __get_type__().c_str(), id.c_str());
   return false;
 }
 
@@ -147,8 +142,7 @@ ProxyInterface::kill()
   LOG_ERROR("Couldn't Kill all resources");
 
   LOG_INFO("Killing proxy interface of type %s and id %s",
-           __get_type__().c_str(),
-           id.c_str());
+           __get_type__().c_str(), id.c_str());
   std::terminate();
   LOG_ERROR("I have no idea why you're here. Something broke");
 
@@ -161,15 +155,11 @@ ProxyInterface::signal(const int32_t signal_val)
   auto found = signal_table.find(signal_val);
   if (found == signal_table.end()) {
     LOG_ERROR("Invalid signal (%d) recieved from Proxy of type %s and id %s",
-              signal_val,
-              __get_type__().c_str(),
-              id.c_str());
+              signal_val, __get_type__().c_str(), id.c_str());
     return -1;
   }
   LOG_INFO("Proxy of type %s and id %s recieved sucessful signal %d",
-           __get_type__().c_str(),
-           id.c_str(),
-           signal_val);
+           __get_type__().c_str(), id.c_str(), signal_val);
   bool ret = signal_table[signal_val]();
   return ret;
 }
@@ -183,8 +173,7 @@ ProxyInterface::register_signal(const int32_t signal_val,
   if (found != signal_table.end()) {
     LOG_ERROR(
       "Proxy of id %s failed to register signal %d, signal already exists",
-      id.c_str(),
-      signal_val);
+      id.c_str(), signal_val);
     return false;
   }
 

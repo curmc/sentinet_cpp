@@ -47,12 +47,14 @@ typedef struct serve_params
                std::function<std::string(std::string&)> callback_)
     : address(address_)
     , callback(callback_)
-  {}
+  {
+  }
 
   serve_params(const serve_params& params)
     : address(params.address)
     , callback(params.callback)
-  {}
+  {
+  }
 
   std::string address;
   std::function<std::string(std::string&)> callback;
@@ -84,7 +86,8 @@ typedef struct publish_params
     , topic(pub.topic)
     , get_data(pub.get_data)
     , period(pub.period)
-  {}
+  {
+  }
 
   std::string broker_frontend;
   std::string topic;
@@ -114,7 +117,8 @@ typedef struct subscribe_params
     : socket_backend(params.socket_backend)
     , topic(params.topic)
     , callback(params.callback)
-  {}
+  {
+  }
   std::string socket_backend;
   std::string topic;
   std::function<void(std::string&)> callback;
@@ -133,8 +137,7 @@ typedef struct request_params
     period = std::chrono::microseconds(100);
   }
 
-  request_params(const std::string& id_,
-                 const std::string& destination_,
+  request_params(const std::string& id_, const std::string& destination_,
                  const std::chrono::microseconds period_)
     : id(id_)
     , destination(destination_)
@@ -151,7 +154,8 @@ typedef struct request_params
     , destination(params.destination)
     , get_data_to_request(params.get_data_to_request)
     , callback(params.callback)
-  {}
+  {
+  }
 
   std::string id;
   std::string destination;
@@ -280,8 +284,8 @@ public:
 
   inline bool publish(::scpp::publish_params& params)
   {
-    return publish(
-      params.broker_frontend, params.topic, params.get_data, params.period);
+    return publish(params.broker_frontend, params.topic, params.get_data,
+                   params.period);
   }
 
   inline bool spin(::scpp::publish_params& params) { return publish(params); }
@@ -313,19 +317,15 @@ public:
    * @return                          [Status of request, returns 1 is ends
    * badly]
    */
-  virtual bool request(const std::string destination,
-                       const std::string id,
+  virtual bool request(const std::string destination, const std::string id,
                        std::function<std::string(void)> get_data_to_request,
                        std::function<void(std::string&)> callback,
                        const std::chrono::microseconds period) = 0;
 
   inline bool request(::scpp::request_params& params)
   {
-    return request(params.destination,
-                   params.id,
-                   params.get_data_to_request,
-                   params.callback,
-                   params.period);
+    return request(params.destination, params.id, params.get_data_to_request,
+                   params.callback, params.period);
   }
 
   inline bool spin(::scpp::request_params& params) { return request(params); }

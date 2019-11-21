@@ -30,9 +30,7 @@ class ProxyInterface
 public:
   ProxyInterface() = delete;
 
-  ProxyInterface(const std::string&,
-                 std::future<void>,
-                 const std::string&,
+  ProxyInterface(const std::string&, std::future<void>, const std::string&,
                  const std::string&);
 
   virtual ~ProxyInterface();

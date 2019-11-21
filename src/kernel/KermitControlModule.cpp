@@ -88,6 +88,5 @@ KermitControlModule::quit_kermit()
   quit();
   return true;
 }
-
 }
 }

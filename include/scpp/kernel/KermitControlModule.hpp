@@ -12,8 +12,7 @@
 #include "scpp/control/ZMQControlClient.hpp"
 #include "scpp/kernel/Defaults.hpp"
 
-extern "C"
-{
+extern "C" {
 #include "scpp/data_message.h"
 #include "scpp/rmt_messages.h"
 #include "scpp/ping_message.h"
@@ -149,7 +148,6 @@ protected:
 
   std::atomic<bool> running;
 };
-
 }
 }
 #endif /* end of include guard KERMITCONTROLMODULE_HPP */

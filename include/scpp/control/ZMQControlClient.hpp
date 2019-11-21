@@ -84,8 +84,7 @@ public:
   bool publish(const scpp::string& topic, const scpp::string& message) override;
 
   // Does not execute above fnc - creates a new periodic publisher thread
-  bool publish(const scpp::string sock_addr,
-               const scpp::string topic,
+  bool publish(const scpp::string sock_addr, const scpp::string topic,
                scpp::function<scpp::string(void)> get_data_to_publish,
                scpp::time::microseconds period) override;
 
@@ -96,8 +95,7 @@ public:
                        const scpp::string message) override;
 
   // Does not execute above fnc
-  bool request(const scpp::string destination,
-               const scpp::string id,
+  bool request(const scpp::string destination, const scpp::string id,
                scpp::function<scpp::string(void)> get_data_to_request,
                const scpp::function<void(scpp::string&)> callback,
                const scpp::time::microseconds period) override;
@@ -105,8 +103,7 @@ public:
   bool cancel_periodic_request(const scpp::string&) override;
 
   ///////////////////////////// SUBSCRIBE /////////////////////////////////
-  bool subscribe(const scpp::string sock_addr,
-                 const scpp::string topic,
+  bool subscribe(const scpp::string sock_addr, const scpp::string topic,
                  scpp::function<void(scpp::string&)> callback) override;
 
   bool cancel_subscription(const scpp::string& topic) override;
@@ -210,9 +207,8 @@ private:
   // Helper Functions
 private:
   // Honestly I was just too lazy to write out std::map ......
-  template<typename T>
-  inline socket_thread_space& create_socket(int type,
-                                            T& map,
+  template <typename T>
+  inline socket_thread_space& create_socket(int type, T& map,
                                             const scpp::string identifier)
   {
     socket_thread_space socket_thread;
