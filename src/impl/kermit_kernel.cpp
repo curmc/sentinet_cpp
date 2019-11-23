@@ -17,8 +17,10 @@ void signalHandler(int signum) {
   std::cout<<"Killed"<<std::endl;
 }
 
+
+
 int
-main()
+main(int argc, char* argv[])
 {
   signal(SIGINT, signalHandler);
   signal(SIGQUIT, signalHandler);
