@@ -9,6 +9,5 @@
 namespace utils {
 namespace fs {
 bool utils::fs::mkdir
-
 }
 } // namespace utils

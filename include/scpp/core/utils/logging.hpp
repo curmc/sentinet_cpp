@@ -39,8 +39,8 @@ enum
 #define log_error(...) log_log(LLOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)
 #define log_fatal(...) log_log(LLOG_FATAL, __FILE__, __LINE__, __VA_ARGS__)
 
-static void
-log_log(int level, const char* file, int line, const char* fmt, ...);
+static void log_log(int level, const char* file, int line, const char* fmt,
+                    ...);
 
 static struct
 {
@@ -140,13 +140,8 @@ log_log(int level, const char* file_, int line, const char* fmt, ...)
     char buf[16];
     buf[strftime(buf, sizeof(buf), "%H:%M:%S", lt)] = '\0';
 #ifdef LOG_USE_COLOR
-    fprintf(stderr,
-            "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ",
-            buf,
-            level_colors[level],
-            level_names[level],
-            file,
-            line);
+    fprintf(stderr, "%s %s%-5s\x1b[0m \x1b[90m%s:%d:\x1b[0m ", buf,
+            level_colors[level], level_names[level], file, line);
 #else
     fprintf(stderr, "%s %-5s %s:%d: ", buf, level_names[level], file, line);
 #endif
