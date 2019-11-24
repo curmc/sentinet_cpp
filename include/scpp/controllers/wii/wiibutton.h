@@ -9,8 +9,7 @@ public:
   WiiButton(const unsigned num, const std::string str)
     : button_num(num)
     , button_str(str)
-  {
-  }
+  {}
   ~WiiButton() = default;
   const unsigned button_num;
   const std::string button_str;

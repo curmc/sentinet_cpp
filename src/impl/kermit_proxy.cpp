@@ -38,8 +38,8 @@ main()
 
   proxies->create_pub_sub_endpoint("data", DATA_ADDR_F, DATA_ADDR);
 
-  proxies->create_pub_sub_endpoint("realtime", REAL_TIME_ADDR_F,
-                                   REAL_TIME_ADDR);
+  proxies->create_pub_sub_endpoint(
+    "realtime", REAL_TIME_ADDR_F, REAL_TIME_ADDR);
 
   proxies->create_req_rep_endpoint("command", COMMAND_ADDR, COMMAND_ADDR_F);
 

@@ -1,4 +1,4 @@
-#include "NetworkPatterns.hpp"
+#include "control/NetworkPatterns.hpp"
 
 int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);

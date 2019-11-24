@@ -11,7 +11,8 @@
 // Local includes
 #include "scpp/kernel/SerialPort.hpp"
 #include "scpp/control/ZMQControlClient.hpp"
-extern "C" {
+extern "C"
+{
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/ioctl.h>
@@ -53,9 +54,12 @@ public:
    * @param verbose Prints robot status to the screen
    * @param debug In debug mode, nothing is actually sent over serial / ethernet
    */
-  KermitKernel(const std::string& drive_topic, const std::string& cmd_topic,
-               const std::string& data_topic, const std::string& real_map_topic,
-               const bool verbose, const bool debug = true);
+  KermitKernel(const std::string& drive_topic,
+               const std::string& cmd_topic,
+               const std::string& data_topic,
+               const std::string& real_map_topic,
+               const bool verbose,
+               const bool debug = true);
 
   // Default constructor
   virtual ~KermitKernel();
@@ -70,7 +74,8 @@ public:
    *
    * @return Status
    */
-  bool init_comms(const std::string& drive_addr, const std::string& cmd_addr,
+  bool init_comms(const std::string& drive_addr,
+                  const std::string& cmd_addr,
                   const std::string& data_addr,
                   const std::string& real_map_addr);
 

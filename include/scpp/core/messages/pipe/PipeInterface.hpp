@@ -71,7 +71,8 @@ public:
   /**
    * Things also have the ability to register signals
    */
-  virtual bool register_signal(const std::string id, const int32_t signal_val,
+  virtual bool register_signal(const std::string id,
+                               const int32_t signal_val,
                                std::function<int(void)>);
 
   /**

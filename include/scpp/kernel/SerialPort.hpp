@@ -29,7 +29,8 @@ class SerialPort : public InputOutputInterface
 {
 public:
   SerialPort() = delete;
-  SerialPort(const std::string& port, const int& baud,
+  SerialPort(const std::string& port,
+             const int& baud,
              const int& bytes = DEFAULT_BYTES);
 
   virtual ~SerialPort();
@@ -49,7 +50,8 @@ public:
   bool scan(int max_times);
 
 private:
-  static bool write_impl(const int& fd, const char* message,
+  static bool write_impl(const int& fd,
+                         const char* message,
                          const int& num_bytes);
   static bool read_impl(const int& fd, char* buffer, const int& num_bytes);
 

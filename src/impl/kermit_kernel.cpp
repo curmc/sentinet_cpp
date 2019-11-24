@@ -18,19 +18,19 @@ signalHandler(int signum)
   std::cout << "Killed" << std::endl;
 }
 
-
-
 int
 main(int argc, char* argv[])
 {
   signal(SIGINT, signalHandler);
   signal(SIGQUIT, signalHandler);
 
-  a = std::make_unique<scpp::curmt::KermitKernel>("cmd_vel", "command", "data",
-                                                  "realtime", true, true);
+  a = std::make_unique<scpp::curmt::KermitKernel>(
+    "cmd_vel", "command", "data", "realtime", true, true);
 
-  a->init_comms("tcp://localhost:5571", "tcp://localhost:5580",
-                "tcp://localhost:5555", "tcp://localhost:5581");
+  a->init_comms("tcp://localhost:5571",
+                "tcp://localhost:5580",
+                "tcp://localhost:5555",
+                "tcp://localhost:5581");
 
   a->init_teensy_peripheral("192.168.0.2", 80);
 

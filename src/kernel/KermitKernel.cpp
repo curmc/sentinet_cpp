@@ -18,7 +18,8 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
                            const std::string& cmd_topic,
                            const std::string& data_topic,
                            const std::string& real_map_topic,
-                           const bool verbose, const bool debug)
+                           const bool verbose,
+                           const bool debug)
   : kermit()
 {
 
@@ -87,7 +88,8 @@ KermitKernel::init_comms(const std::string& drive_addr,
   params.cmd_vel_p.socket_backend = drive_addr;
   params.cmd_vel_p.topic = kermit.drive_topic;
   params.cmd_vel_p.callback =
-    std::bind(&KermitKernel::drive_message_subscribe_callback, this,
+    std::bind(&KermitKernel::drive_message_subscribe_callback,
+              this,
               std::placeholders::_1);
 
   // The real time map params (a publisher)
@@ -129,7 +131,10 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port)
 
   snprintf(teensy.ifr.ifr_name, sizeof(teensy.ifr.ifr_name), INTERFACE);
 
-  if (setsockopt(teensy.sockfd, SOL_SOCKET, SO_BINDTODEVICE, (void*)&teensy.ifr,
+  if (setsockopt(teensy.sockfd,
+                 SOL_SOCKET,
+                 SO_BINDTODEVICE,
+                 (void*)&teensy.ifr,
                  sizeof(teensy.ifr)) < 0) {
     perror("Interface ");
     kermit.debug = true;
@@ -147,7 +152,8 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port)
     return false;
   }
 
-  if (connect(teensy.sockfd, (struct sockaddr*)&teensy.dest,
+  if (connect(teensy.sockfd,
+              (struct sockaddr*)&teensy.dest,
               sizeof(teensy.dest)) != 0) {
     perror("Connection");
     kermit.debug = true;

@@ -80,7 +80,7 @@ parse(const std::string& value, const char delim)
  * hello*,0world*,07
  */
 // Helper for join
-template <typename T>
+template<typename T>
 static inline T
 join(T value)
 {
@@ -88,7 +88,7 @@ join(T value)
 }
 
 // Join a list of strings / ints / whatever (streamable) no deliminator
-template <typename T, typename... ArgsT>
+template<typename T, typename... ArgsT>
 static inline std::string
 join(T value, ArgsT... strings)
 {
@@ -98,14 +98,14 @@ join(T value, ArgsT... strings)
 }
 
 // Helper for join_d
-template <typename T, typename D>
+template<typename T, typename D>
 static inline T
 join_d(D delim, T value)
 {
   return value;
 }
 // Join a list of strings / ints / whatever (streamable) with a deliminator
-template <typename Delim, typename T, typename... ArgsT>
+template<typename Delim, typename T, typename... ArgsT>
 static inline std::string
 join_d(Delim delim, T value, ArgsT... strings)
 {

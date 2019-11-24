@@ -5,7 +5,7 @@ namespace scpp {
 namespace curmt {
 
 /* Maintains that value is within bounds */
-template <typename T>
+template<typename T>
 constexpr T
 clamp(const T& value, const T& min, const T& max)
 {
@@ -13,7 +13,7 @@ clamp(const T& value, const T& min, const T& max)
 }
 
 /* brings small numbers to zero instead of bouncing back and forth */
-template <typename T>
+template<typename T>
 constexpr T
 zero_rounding(T value, T change)
 {

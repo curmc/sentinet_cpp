@@ -67,7 +67,8 @@ ZMQControlClient::publish(const std::string& topic, const std::string& message)
 }
 
 bool
-ZMQControlClient::publish(const std::string sock_addr, const std::string topic,
+ZMQControlClient::publish(const std::string sock_addr,
+                          const std::string topic,
                           std::function<std::string(void)> get_data_to_publish,
                           std::chrono::microseconds period)
 {
@@ -123,7 +124,8 @@ ZMQControlClient::request(const std::string destination,
 
 bool
 ZMQControlClient::request(
-  const std::string destination, const std::string id,
+  const std::string destination,
+  const std::string id,
   std::function<std::string(void)> get_data_to_request,
   std::function<void(std::string&)> action_to_recieved_data,
   const std::chrono::microseconds period)
@@ -263,8 +265,9 @@ ZMQControlClient::concurrent_request(const std::string& server,
     s_send(*socket, message);
     bool expect_reply = true;
     while (expect_reply) {
-      zmq::pollitem_t items[] = { { static_cast<void*>(*socket), 0, ZMQ_POLLIN,
-                                    0 } };
+      zmq::pollitem_t items[] = {
+        { static_cast<void*>(*socket), 0, ZMQ_POLLIN, 0 }
+      };
       zmq::poll(&items[0], 1, 100);
       if (items[0].revents & ZMQ_POLLIN) {
         reply = s_recv(*socket);

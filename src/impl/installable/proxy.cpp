@@ -58,21 +58,21 @@ main(int argc, char* argv[])
   std::promise<void> pubsub;
   std::promise<void> servereq;
 
-  scpp::proxies::ZMQPubSubProxy a(topic, pubsub.get_future(), frontend, backend,
-                                  1);
+  scpp::proxies::ZMQPubSubProxy a(
+    topic, pubsub.get_future(), frontend, backend, 1);
 
-  scpp::proxies::ZMQServerProxy b(topic, pubsub.get_future(), frontend, backend,
-                                  1);
+  scpp::proxies::ZMQServerProxy b(
+    topic, pubsub.get_future(), frontend, backend, 1);
 
   std::unique_ptr<std::thread> vb();
 
-  std::thread va(&scpp::proxies::ZMQPubSubProxy::start, &a,
-                 std::chrono::microseconds(10));
+  std::thread va(
+    &scpp::proxies::ZMQPubSubProxy::start, &a, std::chrono::microseconds(10));
 
   if (server != "" && client != "") {
 
-    vb = std::make_unique<std::thread>(&scpp::proxies::ZMQPubSubProxy::start,
-                                       &a, std::chrono::microseconds(10));
+    vb = std::make_unique<std::thread>(
+      &scpp::proxies::ZMQPubSubProxy::start, &a, std::chrono::microseconds(10));
   }
 
   while (1) {

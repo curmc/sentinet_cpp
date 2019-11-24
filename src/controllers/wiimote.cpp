@@ -231,7 +231,9 @@ Wiimote::control(const high_resolution_clock::time_point& now)
   float angular_change = constants.angular_incriment * ms_elapsed.count();
 
   const auto incriment_velocity =
-    [&](float velocity, float incriment, const unsigned& button_increase,
+    [&](float velocity,
+        float incriment,
+        const unsigned& button_increase,
         const unsigned& button_decrease) -> float {
     if (IS_PRESSED(data[0], button_increase)) {
       velocity += incriment;
@@ -259,10 +261,10 @@ Wiimote::control(const high_resolution_clock::time_point& now)
     }
   };
 
-  linear = incriment_velocity(linear, linear_change, WIIMOTE_BUTTON_UP,
-                              WIIMOTE_BUTTON_DOWN);
-  angular = incriment_velocity(angular, angular_change, WIIMOTE_BUTTON_RIGHT,
-                               WIIMOTE_BUTTON_LEFT);
+  linear = incriment_velocity(
+    linear, linear_change, WIIMOTE_BUTTON_UP, WIIMOTE_BUTTON_DOWN);
+  angular = incriment_velocity(
+    angular, angular_change, WIIMOTE_BUTTON_RIGHT, WIIMOTE_BUTTON_LEFT);
 
   linear = clamp(linear, -constants.linear_max, constants.linear_max);
   angular = clamp(angular, -constants.angular_max, constants.angular_max);

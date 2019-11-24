@@ -27,8 +27,7 @@ private:
   CURLcode res;
 
   typedef struct
-  {
-  }
+  {}
 };
 
 #endif /* end of include guard TELEMETRYHANDLER_HPP */

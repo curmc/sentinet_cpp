@@ -6,7 +6,8 @@
 
 #include "scpp/messages/pipe/ZMQPubSubProxy.hpp"
 
-extern "C" {
+extern "C"
+{
 #include "scpp/data_message.h"
 }
 
@@ -16,7 +17,8 @@ namespace proxies {
 ZMQPubSubProxy::ZMQPubSubProxy(const std::string& id_,
                                std::future<void> futureObj,
                                const std::string& frontend_,
-                               const std::string& backend_, int context_)
+                               const std::string& backend_,
+                               int context_)
   : ProxyInterface(id_, std::move(futureObj), frontend_, backend_)
   , context(context_)
 {

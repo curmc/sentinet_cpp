@@ -2,14 +2,15 @@
 BUILD_DIR=`pwd`/build
 
 # CMAKE build target
-CMAKE_TARGET=cmake -S . -B ${BUILD_DIR} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBUILD_SHARED=ON
+CMAKE_TARGET_PREFIX=cmake -S . -B ${BUILD_DIR} -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DBUILD_SHARED=ON
 
 # Target options
 CMAKE_EXE_OPTIONS=-DBUILD_EXE=ON
 CMAKE_RMT_CORE_OPTIONS=-DRMT_CORE=ON
 CMAKE_EXAMPLES_OPTIONS=-DEXAMPLES=ON
+CMAKE_TESTS_OPTIONS=-DBUILD_TESTS=ON
 
-# Global make target commands
+# Global make target commands - common for all 
 MAKE_TARGET=make -C ${BUILD_DIR}
 INSTALL_TARGET=${MAKE_TARGET} install
 
@@ -23,36 +24,39 @@ ARCH_DEPS=cmake curl unzip zeromq
 
 
 .PHONY: all
-all: rmtcore examples sentinet cmake compile
+all: validate
 	@echo "Compiling rmt_core, examples and sentinet libs"
 
 .PHONY: install
-install: rmtcore sentinet cmake compile
+install: rmtcore sentinet tests cmake compile validate
 	@echo "Compiling and building"
 	@sudo ${INSTALL_TARGET}
 
-.PHONY: examples
-examples: 
-	@echo "Compiling rmt examples"
-	$(eval CMAKE_TARGET = ${CMAKE_TARGET} ${CMAKE_EXAMPLES_OPTIONS})
-
 .PHONY: rmtcore
 rmtcore: 
-	@echo "Compiling rmt core"
-	$(eval CMAKE_TARGET = ${CMAKE_TARGET} ${CMAKE_RMT_CORE_OPTIONS})
-
-.PHONY: sentinet
-	@echo "Nothing done herE"
-
-.PHONY: cmake
-cmake:
-	@echo "Generating cmake command"
+	$(eval CMAKE_TARGET = ${CMAKE_TARGET_PREFIX} ${CMAKE_RMT_CORE_OPTIONS})
+	@printf "\n\n\n\n============== Generating rmt core ============= \n\n\n\n"
 	${CMAKE_TARGET}
+	${MAKE_TARGET}
 
-.PHONY: compile
-compile:
-	@echo "Compiling"
-	@${MAKE_TARGET}
+.PHONY: validate 
+validate: tests
+	@printf "\n\n\n\n=============== Running Unit Tests ====================\n\n\n\n"
+	@`pwd`/build/x86_64/core/bin/run_unit_tests
+
+.PHONY: tests 
+tests:
+	$(eval CMAKE_TARGET = ${CMAKE_TARGET_PREFIX} ${CMAKE_TESTS_OPTIONS} ${CMAKE_RMT_CORE_OPTIONS})
+	@printf "\n\n\n\n============== Generating Tests ============= \n\n\n\n"
+	${CMAKE_TARGET}
+	${MAKE_TARGET}
+
+.PHONY: examples
+examples: 
+	$(eval CMAKE_TARGET = ${CMAKE_TARGET_PREFIX} ${CMAKE_EXAMPLES_OPTIONS} ${CMAKE_RMT_CORE_OPTIONS})
+	@printf "\n\n\n\n============== Generating Examples ============= \n\n\n\n"
+	${CMAKE_TARGET}
+	${MAKE_TARGET}
 
 .PHONY: format
 format:

@@ -7,7 +7,8 @@
 #include "scpp/kernel/SerialPort.hpp"
 #include <iostream>
 
-SerialPort::SerialPort(const std::string& port, const int& baud,
+SerialPort::SerialPort(const std::string& port,
+                       const int& baud,
                        const int& bytes)
   : close_signals({ SIGQUIT, SIGKILL, SIGINT })
   , properties(bytes)

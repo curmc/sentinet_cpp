@@ -13,9 +13,7 @@
 namespace scpp {
 namespace core {
 
-PipeInterface::PipeInterface()
-{
-}
+PipeInterface::PipeInterface() {}
 
 bool
 PipeInterface::stop()
@@ -54,7 +52,8 @@ PipeInterface::create_pub_sub_endpoint(const std::string& id,
   proxies.proxies[id] = std::move(proxy);
   proxies.proxies[id].t_space =
     std::thread(&scpp::proxies::ZMQPubSubProxy::start,
-                proxies.proxies[id].proxy.get(), std::chrono::microseconds(10));
+                proxies.proxies[id].proxy.get(),
+                std::chrono::microseconds(10));
 
   return true;
 }
@@ -83,7 +82,8 @@ PipeInterface::create_req_rep_endpoint(const std::string& id,
   proxies.proxies[id] = std::move(proxy);
   proxies.proxies[id].t_space =
     std::thread(&scpp::proxies::ZMQPubSubProxy::start,
-                proxies.proxies[id].proxy.get(), std::chrono::microseconds(10));
+                proxies.proxies[id].proxy.get(),
+                std::chrono::microseconds(10));
 
   return true;
 }
@@ -132,7 +132,8 @@ PipeInterface::signal(const std::string id, const int32_t signal_val)
 }
 
 bool
-PipeInterface::register_signal(const std::string id, const int32_t signal_val,
+PipeInterface::register_signal(const std::string id,
+                               const int32_t signal_val,
                                std::function<int(void)> func)
 {
 
