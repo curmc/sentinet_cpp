@@ -62,8 +62,8 @@ ZMQPubSubProxy::__spin__()
     if (!adding_filter) {
       for (auto i = 0U; i < filters.size(); ++i)
         filters[i]->convert(req);
-      std::cout << "Traffic: \n";
-      print_message_raw((BYTE*)&req[0], req.size());
+      // std::cout << "Traffic: \n";
+      // print_message_raw((BYTE*)&req[0], req.size());
 
       s_sendmore(*backend_sock, topic);
       s_send(*backend_sock, req);

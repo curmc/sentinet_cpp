@@ -96,6 +96,7 @@ private:
 
   PipeInterfaceProperties proxies;
   std::mutex locker;
+  bool verbose;
 };
 } // namespace core
 } // namespace scpp

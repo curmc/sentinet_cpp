@@ -42,7 +42,7 @@ rmtcore:
 .PHONY: validate 
 validate: tests
 	@printf "\n\n\n\n=============== Running Unit Tests ====================\n\n\n\n"
-	@`pwd`/build/x86_64/core/bin/run_unit_tests
+	@`pwd`/build/x86_64/core/bin/run_unit_tests --gtest_color=yes
 
 .PHONY: tests 
 tests:
