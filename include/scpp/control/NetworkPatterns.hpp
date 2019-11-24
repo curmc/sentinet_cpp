@@ -18,7 +18,7 @@ namespace net {
 
 class Publisher_Context
 {
-private:
+protected:
   typedef struct thread_properties
   {
     scpp::string sock_addr;
@@ -70,7 +70,7 @@ public:
 
 class Server_Context
 {
-private:
+protected:
   typedef struct thread_properties
   {
     scpp::string sock_addr;
@@ -112,7 +112,7 @@ public:
 
 class Subscriber_Context
 {
-private:
+protected:
   typedef struct thread_properties
   {
     scpp::string topic;
@@ -157,7 +157,7 @@ public:
 
 class Requester_Context
 {
-private:
+protected:
   typedef struct thread_properties
   {
     scpp::future<void> exit_signal;

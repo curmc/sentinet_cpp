@@ -26,6 +26,9 @@ include_directories("${MSG_PKG}/c/include")
 
 add_subdirectory(third_party)
 add_subdirectory(src)
+if(BUILD_TESTS)
+  add_subdirectory(tests)
+endif()
 
 install(DIRECTORY include DESTINATION ${CMAKE_INSTALL_PREFIX})
 install(DIRECTORY ${MSG_PKG}/c/include DESTINATION ${CMAKE_INSTALL_PREFIX})
