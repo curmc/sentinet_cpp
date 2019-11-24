@@ -28,7 +28,7 @@ all: validate
 	@echo "Compiling rmt_core, examples and sentinet libs"
 
 .PHONY: install
-install: rmtcore sentinet tests cmake compile validate
+install: validate
 	@echo "Compiling and building"
 	@sudo ${INSTALL_TARGET}
 
