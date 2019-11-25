@@ -44,8 +44,8 @@ remove_all () {
 }
 
 link_libs () {
-  link_lib "libmessages.a"
-  link_lib "libcontrol.a"
-  link_lib "libkernel.a"
+  link_lib "libmessages.so"
+  link_lib "libcontrol.so"
+  link_lib "libkernel.so"
 }
 
