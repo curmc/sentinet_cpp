@@ -41,16 +41,18 @@ ZMQControlClient::quit(int)
 bool
 ZMQControlClient::initialize_publisher(const std::string& address)
 {
-  using namespace ::utils;
+  if(this_publisher)
+    return false;
   this_publisher = std::make_unique<::zmq::socket_t>(context, ZMQ_PUB);
-  this_publisher->connect(address); // TODO - Add guards that protect from
-                                    // false endpoints. A ping protocol persay
+  this_publisher->connect(address); 
   return true;
 }
 
 bool
 ZMQControlClient::initialize_client()
 {
+  if(this_client)
+    return false;
   this_client = std::make_unique<::zmq::socket_t>(context, ZMQ_REQ);
   return true;
 }
@@ -105,10 +107,14 @@ ZMQControlClient::publish(const std::string sock_addr,
 bool
 ZMQControlClient::cancel_periodic_publisher(const std::string& reference)
 {
-  thread_space.periodic_publishers[reference].exit_signal.set_value();
-  // if (thread_space.periodic_publishers[reference].thread->joinable())
-  thread_space.periodic_publishers[reference].thread->join();
-  return true;
+  auto found = thread_space.periodic_publishers.find(reference);
+  if(found != thread_space.periodic_publishers.end()) {
+    thread_space.periodic_publishers[reference].exit_signal.set_value();
+    // if (thread_space.periodic_publishers[reference].thread->joinable())
+    thread_space.periodic_publishers[reference].thread->join();
+    return true;
+  }
+  return false;
 }
 
 std::string
@@ -161,10 +167,14 @@ ZMQControlClient::request(
 bool
 ZMQControlClient::cancel_periodic_request(const std::string& reference)
 {
-  thread_space.periodic_clients[reference].exit_signal.set_value();
-  // if (thread_space.periodic_clients[reference].thread->joinable())
-  thread_space.periodic_clients[reference].thread->join();
-  return true;
+  auto found = thread_space.periodic_clients.find(reference);
+  if(found != thread_space.periodic_clients.end()) {
+    thread_space.periodic_clients[reference].exit_signal.set_value();
+    // if (thread_space.periodic_clients[reference].thread->joinable())
+    thread_space.periodic_clients[reference].thread->join();
+    return true;
+  }
+  return false;
 }
 
 bool
@@ -200,10 +210,14 @@ ZMQControlClient::subscribe(const std::string sock_addr,
 bool
 ZMQControlClient::cancel_subscription(const std::string& reference)
 {
-  thread_space.subscribers[reference].exit_signal.set_value();
-  // if (thread_space.subscribers[reference].thread->joinable())
-  thread_space.subscribers[reference].thread->join();
-  return true;
+  auto found = thread_space.subscribers.find(reference);
+  if(found != thread_space.subscribers.end()){
+    thread_space.subscribers[reference].exit_signal.set_value();
+    // if (thread_space.subscribers[reference].thread->joinable())
+    thread_space.subscribers[reference].thread->join();
+    return true;
+  }
+  return false;
 }
 
 bool
@@ -234,10 +248,14 @@ ZMQControlClient::serve(const std::string address,
 bool
 ZMQControlClient::terminate_server(const std::string& reference)
 {
-  thread_space.servers[reference].exit_signal.set_value();
-  // if (thread_space.servers[reference].thread->joinable())
-  thread_space.servers[reference].thread->join();
-  return true;
+  auto found = thread_space.servers.find(reference);
+  if(found != thread_space.servers.end()) {
+    thread_space.servers[reference].exit_signal.set_value();
+    // if (thread_space.servers[reference].thread->joinable())
+    thread_space.servers[reference].thread->join();
+    return true;
+  }
+  return false;
 }
 
 void
@@ -261,6 +279,7 @@ ZMQControlClient::concurrent_request(const std::string& server,
   int retries_left = REQUEST_RETRIES;
   std::string reply = "No response";
 
+
   while (retries_left) {
     s_send(*socket, message);
     bool expect_reply = true;
@@ -272,7 +291,10 @@ ZMQControlClient::concurrent_request(const std::string& server,
       if (items[0].revents & ZMQ_POLLIN) {
         reply = s_recv(*socket);
         expect_reply = false;
-        break;
+        socket.reset();
+        initialize_client();
+
+        return reply;
       } else if (--retries_left == 0) {
         LOG_ERROR("Request cannot reach server, dropping request");
         expect_reply = false;

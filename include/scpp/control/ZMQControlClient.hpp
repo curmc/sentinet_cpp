@@ -209,8 +209,9 @@ private:
 
   // Helper Functions
 private:
-  // Honestly I was just too lazy to write out std::map ......
   template<typename T>
+
+  // Creates and inserts socket into map
   inline socket_thread_space& create_socket(int type,
                                             T& map,
                                             const scpp::string identifier)

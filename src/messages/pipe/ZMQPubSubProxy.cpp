@@ -28,10 +28,12 @@ ZMQPubSubProxy::ZMQPubSubProxy(const std::string& id_,
 
 ZMQPubSubProxy::~ZMQPubSubProxy()
 {
-  if (frontend_sock)
+  if (frontend_sock){
     frontend_sock->close();
-  if (backend_sock)
+  }
+  if (backend_sock){
     backend_sock->close();
+  }
 }
 
 bool
@@ -78,6 +80,14 @@ ZMQPubSubProxy::__spin__()
 bool
 ZMQPubSubProxy::__stop__()
 {
+  // if (frontend_sock)
+  //   zmq_close(frontend_sock.get());
+  // if (backend_sock)
+  //   zmq_close(backend_sock.get());
+  // std::this_thread::sleep_for(std::chrono::seconds(2));
+  //   // backend_sock->close();
+  // frontend_sock.release();
+  // backend_sock.release();
   return true;
 }
 
