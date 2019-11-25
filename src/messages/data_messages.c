@@ -4,7 +4,7 @@
  * @created     : Saturday Sep 14, 2019 11:04:17 MDT
  */
 
-#include "scpp/data_message.h"
+#include "scpp/messages/data_message.h"
 
 static int
 check_data_message_validity()
@@ -233,7 +233,7 @@ serialize_data(data_buffer* buffer,
     *head = 0x00;
 
     // We good
-    return 1;
+    return 0;
   }
   return 0;
 }

@@ -20,8 +20,8 @@ extern "C"
 #include <arpa/inet.h>
 #include <resolv.h>
 #include <unistd.h>
-#include "scpp/rmt_messages.h"
-#include "scpp/ping_message.h"
+#include "scpp/messages/rmt_messages.h"
+#include "scpp/messages/ping_message.h"
 }
 
 // C++ includes
