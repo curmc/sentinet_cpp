@@ -28,10 +28,10 @@ ZMQPubSubProxy::ZMQPubSubProxy(const std::string& id_,
 
 ZMQPubSubProxy::~ZMQPubSubProxy()
 {
-  if (frontend_sock){
+  if (frontend_sock) {
     frontend_sock->close();
   }
-  if (backend_sock){
+  if (backend_sock) {
     backend_sock->close();
   }
 }

@@ -24,7 +24,7 @@ find_library(ZMQ_LIB zmq)
 include_directories(include)
 include_directories("${MSG_PKG}/c/include")
 
-add_subdirectory(third_party)
+# add_subdirectory(third_party)
 add_subdirectory(src)
 if(BUILD_TESTS)
   add_subdirectory(tests)

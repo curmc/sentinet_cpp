@@ -41,17 +41,17 @@ ZMQControlClient::quit(int)
 bool
 ZMQControlClient::initialize_publisher(const std::string& address)
 {
-  if(this_publisher)
+  if (this_publisher)
     return false;
   this_publisher = std::make_unique<::zmq::socket_t>(context, ZMQ_PUB);
-  this_publisher->connect(address); 
+  this_publisher->connect(address);
   return true;
 }
 
 bool
 ZMQControlClient::initialize_client()
 {
-  if(this_client)
+  if (this_client)
     return false;
   this_client = std::make_unique<::zmq::socket_t>(context, ZMQ_REQ);
   return true;
@@ -108,7 +108,7 @@ bool
 ZMQControlClient::cancel_periodic_publisher(const std::string& reference)
 {
   auto found = thread_space.periodic_publishers.find(reference);
-  if(found != thread_space.periodic_publishers.end()) {
+  if (found != thread_space.periodic_publishers.end()) {
     thread_space.periodic_publishers[reference].exit_signal.set_value();
     // if (thread_space.periodic_publishers[reference].thread->joinable())
     thread_space.periodic_publishers[reference].thread->join();
@@ -168,7 +168,7 @@ bool
 ZMQControlClient::cancel_periodic_request(const std::string& reference)
 {
   auto found = thread_space.periodic_clients.find(reference);
-  if(found != thread_space.periodic_clients.end()) {
+  if (found != thread_space.periodic_clients.end()) {
     thread_space.periodic_clients[reference].exit_signal.set_value();
     // if (thread_space.periodic_clients[reference].thread->joinable())
     thread_space.periodic_clients[reference].thread->join();
@@ -211,7 +211,7 @@ bool
 ZMQControlClient::cancel_subscription(const std::string& reference)
 {
   auto found = thread_space.subscribers.find(reference);
-  if(found != thread_space.subscribers.end()){
+  if (found != thread_space.subscribers.end()) {
     thread_space.subscribers[reference].exit_signal.set_value();
     // if (thread_space.subscribers[reference].thread->joinable())
     thread_space.subscribers[reference].thread->join();
@@ -249,7 +249,7 @@ bool
 ZMQControlClient::terminate_server(const std::string& reference)
 {
   auto found = thread_space.servers.find(reference);
-  if(found != thread_space.servers.end()) {
+  if (found != thread_space.servers.end()) {
     thread_space.servers[reference].exit_signal.set_value();
     // if (thread_space.servers[reference].thread->joinable())
     thread_space.servers[reference].thread->join();
@@ -278,7 +278,6 @@ ZMQControlClient::concurrent_request(const std::string& server,
   socket->setsockopt(ZMQ_LINGER, &linger, sizeof(linger));
   int retries_left = REQUEST_RETRIES;
   std::string reply = "No response";
-
 
   while (retries_left) {
     s_send(*socket, message);

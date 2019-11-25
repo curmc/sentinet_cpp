@@ -139,7 +139,6 @@ Requester_Context::requester_thread(thread_properties& properties)
 
   LOG_INFO("A request thread has ended");
 
-
   /*
 
    */

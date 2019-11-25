@@ -1,0 +1,452 @@
+/**
+ * @author      : theo (theo@$HOSTNAME)
+ * @file        : data
+ * @created     : Thursday Oct 03, 2019 08:17:01 MDT
+ */
+
+#include "data.h"
+
+void
+print_memory(void* data, unsigned int byte_size)
+{
+  for (int i = 0; i < byte_size; ++i) {
+    char j = *(((char*)data) + i);
+    for (int k = 0; k < 8; ++k) {
+      printf("%d", j & (1 << 7) ? 1 : 0);
+      j <<= 1;
+    }
+    printf(" ");
+  }
+  printf("\n");
+}
+
+void
+print_memory_hex(void* data, unsigned int byte_size)
+{
+  for (int i = 0; i < byte_size; ++i) {
+    printf("%x", *(((char*)data + i)));
+  }
+  printf("\n");
+}
+
+/** TODO - This doesnt work for signed ints
+ * Tried taking the abs value, but I need to  do some tests
+ * and its 11:30 pm so Imma quit
+ */
+const int
+smallest_64_size(uint64_t data)
+{
+	if (data == (data & 0xF))
+		return 4;
+  if (data == (data & 0xFF))
+    return 8;
+  if (data == (data & 0xFFFF))
+    return 16;
+  if (data == (data & 0xFFFFFFFF))
+    return 32;
+  return 64;
+}
+const int
+smallest_32_size(uint32_t data)
+{
+	if (data == (data & 0xF))
+		return 4;
+  if (data == (data & 0xFF))
+    return 8;
+  if (data == (data & 0xFFFF))
+    return 16;
+  return 32;
+}
+const int
+smallest_16_size(uint16_t data)
+{
+	if (data == (data & 0xF))
+		return 4;
+  if (data == (data & 0xFF))
+    return 8;
+  return 16;
+}
+
+const int
+smallest_8_size(unit8_t data)
+{
+	if (data == (data & 0xF){
+		return 4;
+	}
+	return 8;
+}
+
+//question, why not just check with last smallest method first to check the length?
+//Note from Trace, This may not be effective as the function would need to recurivly call through
+//the daisy chain before it would return a valid value but would also cost processing power going down the loop
+/*
+
+const int
+smallest_64_size(uint64_t data)
+{
+  int checkValue = smallest_32_size((unit32_t)data));
+  if((checkValue == 32 && data == (data & 0xFFFF)) || checkValue != 32)
+  {
+	return checkValue;
+  }
+  return 64;
+}
+const int
+smallest_32_size(uint32_t data)
+{
+  int checkValue = smallest_16_size((unit16_t)data));
+  if((checkValue == 16 && data == (data & 0xFF)) || checkValue != 16)
+  {
+	return checkValue;
+  }
+  return 32;
+}
+const int
+smallest_16_size(uint16_t data)
+{
+  int checkValue = smallest_8_size((unit8_t)data));
+  if((checkValue == 8 && data == (data & 0xF)) || checkValue != 8)
+  {
+	return checkValue;
+  }
+  return 16;
+}
+
+const int
+smallest_8_size(unit8_t data)
+{
+	if (data == (data & 0xF){
+		return 4;
+	}
+	return 8;
+}
+
+or
+
+//Probably does not work but if it does, maybe a way around the multiple function calls? Big O efficency is something I should know
+const int
+smallest_64_size(uint64_t data)
+{
+  if(data == (data & 0xFFFFFFFFF) && data != (data & 0xFFFF)){
+	return 32;
+  }
+  int checkValue = smallest_32_size((unit32_t)data));
+  if(checkValue != 32)
+  {
+	return checkValue;
+  }
+  return 64;
+}
+const int
+smallest_32_size(uint32_t data)
+{
+  if(data == (data & 0xFFFF) && data != (data & 0xFF) && data != (data & 0xFFFFFFFF)){
+	return 16;
+  }
+  int checkValue = smallest_16_size((unit16_t)data));
+  if(checkValue != 16)
+  {
+	return checkValue;
+  }
+  return 32;
+}
+const int
+smallest_16_size(uint16_t data)
+{
+  if(data == (data & 0xFF) && data != (data & 0xF) && data != (data & 0xFFFF)){
+	return 16;
+  }
+  int checkValue = smallest_8_size((unit8_t)data));
+  if(checkValue != 8)
+  {
+	return checkValue;
+  }
+  return 16;
+}
+
+const int
+smallest_8_size(unit8_t data)
+{
+	if (data == (data & 0xF){
+		return 4;
+	}
+	return 8;
+}
+
+//232 bit floats
+//4096 bytes
+//Web Express I do not want to be that person again!!!!!!
+//Next step after we clean up this code, then move onto the maping stuff start research in that.
+//Lastly rewire the IMU
+*/
+
+
+
+//    a |= 0xff << 24;
+//From what I understand this shoud shift the data over by a  set amount by what I do not understand is the after shift nor what I should be setting the hex value to since this is variable
+//in our case.
+//24 is the bit size which will be variable in this case so what we can use is a store value so this would have to be variable to the size we are using and have a premade variable that
+//checks its value range to see if it is something that can be parsed in that character around.
+//This is what I will show Theo on Thursday, if this makes sense to him we can carry on.
+//=============================================================================================================//
+const int
+not_signed_smallest_64_size(uint64_t data) 
+{
+	data |= 0xFFFFFFFFFFFFFFFF << 64;
+
+	int fourBit |= 0xF << 4;
+	int eightBit |= 0xFF << 8;
+	int sixteenBit |= 0xFFFF << 16;
+	int thirtyTwoBit |= 0xFFFFFFFF << 32;
+	if (data == (data & fourBit))
+		return 4;
+	if (data == (data & eightBit))
+		return 8;
+	if (data == (data & sixteenBit))
+		return 16;
+	if (data == (data & thirtyTwoBit))
+		return 32;
+	return 64;
+}
+//=============================================================================================================//
+const int
+signed_smallest_64_size(uint64_t data)
+{
+	if (~data == (~data & 0xF))
+		return 4;
+  if (~data == (~data & 0xFF))
+    return 8;
+  if (~data == (~data & 0xFFFF))
+    return 16;
+  if (~data == (~data & 0xFFFFFFFF))
+    return 32;
+  return 64;
+}
+const int
+signed_smallest_32_size(uint32_t data)
+{
+	if (~data == (~data & 0xF))
+		return 4;
+  if (~data == (~data & 0xFF))
+    return 8;
+  if (~data == (~data & 0xFFFF))
+    return 16;
+  return 32;
+}
+const int
+signed_smallest_16_size(uint16_t data)
+{
+	if (~data == (~data & 0xF))
+		return 4;
+  if (~data == (~data & 0xFF))
+    return 8;
+  return 64;
+}
+
+uint8_t
+bitswap8(uint8_t data)
+{
+  uint8_t count = sizeof(data) * 8;
+  uint8_t reversed = data;
+  data >>= 1;
+  while (data) {
+    reversed <<= 1;
+    reversed |= data & 1;
+    data >>= 1;
+    count--;
+  }
+  reversed <<= count;
+  return reversed;
+}
+
+uint16_t
+bitswap16(uint16_t data)
+{
+  uint16_t count = sizeof(data) * 8;
+  uint16_t reversed = data;
+  data >>= 1;
+  while (data) {
+    reversed <<= 1;
+    reversed |= data & 1;
+    data >>= 1;
+    count--;
+  }
+  reversed <<= count;
+  return reversed;
+}
+
+uint32_t
+bitswap32(uint32_t data)
+{
+  uint32_t count = sizeof(data) * 8;
+  uint32_t reversed = data;
+  data >>= 1;
+  while (data) {
+    reversed <<= 1;
+    reversed |= data & 1;
+    data >>= 1;
+    count--;
+  }
+  reversed <<= count;
+  return reversed;
+}
+
+uint64_t
+bitswap64(uint64_t data)
+{
+  uint64_t count = sizeof(data) * 8;
+  uint64_t reversed = data;
+  data >>= 1;
+  while (data) {
+    reversed <<= 1;
+    reversed |= data & 1;
+    data >>= 1;
+    count--;
+  }
+  reversed <<= count;
+  return reversed;
+}
+
+uint16_t
+host16(uint16_t data)
+{
+#if BYTE_ORDER == BIG_ENDIAN
+  return data;
+#else
+  return __bswap_constant_16_rmt(data);
+#endif
+}
+uint32_t
+host32(uint32_t data)
+{
+#if BYTE_ORDER == BIG_ENDIAN
+  return data;
+#else
+  return __bswap_constant_32_rmt(data);
+#endif
+}
+uint64_t
+host64(uint64_t data)
+{
+#if BYTE_ORDER == BIG_ENDIAN
+  return data;
+#else
+  return __bswap_constant_64_rmt(data);
+#endif
+}
+
+// No need to cast to a signed **yet until I
+// change smallest_x_func
+// cause a signed is just always going be false if
+// negative
+int
+optimize_time(char* type_code, void const* const data, uint8_t* num_bytes)
+{
+  int nu_b;
+  switch (*type_code) {
+	  //maybe change this again?
+	/*
+	case (INT8): {
+	  nu_b = smallest_8_size(*(uint8_t*)data);
+	  if (*num_bytes != nu_b) {
+		*num_bytes = nu_b;
+		*type_code = INT4;
+		return 1;
+		}
+		return 0;
+	}
+	*/
+    case (INT16): {
+      nu_b = smallest_16_size(*(uint16_t*)data);
+      if (*num_bytes != nu_b) {
+        *num_bytes = nu_b;
+        *type_code = INT8;
+        /** *((int16_t*)(data)) = (int8_t)((int16_t*)(data)); */
+        return 1;
+      }
+      return 0;
+    }
+	//You have a signed function why not change it?
+    case (UINT16): {
+      nu_b = smallest_16_size(*(uint16_t*)data);
+      if (*num_bytes != nu_b) {
+        *num_bytes = nu_b;
+        *type_code = UINT8;
+        return 1;
+      }
+      return 0;
+    }
+
+    case (INT32): {
+      nu_b = smallest_32_size(*(uint32_t*)data);
+      if (*num_bytes != nu_b) {
+        *num_bytes = nu_b;
+        *type_code = nu_b == 8 ? INT8 : INT16;
+        /** *data = nu_b == 8 ? (int8_t)(*data) : (int16_t)(*data); */
+        return 1;
+      }
+      return 0;
+    }
+
+    case (UINT32): {
+      nu_b = smallest_32_size(*(uint32_t*)data);
+      if (*num_bytes != nu_b) {
+        *num_bytes = nu_b;
+        *type_code = nu_b == 8 ? UINT8 : UINT16;
+        return 1;
+      }
+      return 0;
+    }
+
+    case (INT64): {
+      nu_b = smallest_16_size(*(uint16_t*)data);
+      // could be an embedded ternerary, but
+      // i'll change later
+      switch (nu_b) {
+        case (8): {
+          *num_bytes = nu_b;
+          *type_code = INT8;
+          /** *data = (int8_t)(*data); */
+          return 1;
+        }
+        case (16): {
+          *num_bytes = nu_b;
+          *type_code = INT16;
+          /** *data = (int16_t)(*data); */
+          return 1;
+        }
+        case (32): {
+          *num_bytes = nu_b;
+          *type_code = INT32;
+          /** *data = (int32_t)(*data); */
+        }
+        default: {
+          return 0;
+        }
+      }
+    }
+
+    case (UINT64): {
+      nu_b = smallest_64_size(*(uint64_t*)data);
+      switch (nu_b) {
+        case (8): {
+          *num_bytes = nu_b;
+          *type_code = UINT8;
+          return 1;
+        }
+        case (16): {
+          *num_bytes = nu_b;
+          *type_code = UINT16;
+          return 1;
+        }
+        case (32): {
+          *num_bytes = nu_b;
+          *type_code = UINT32;
+        }
+        default: {
+          return 0;
+        }
+      }
+    }
+  }
+}
