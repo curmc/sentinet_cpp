@@ -7,8 +7,6 @@
 #include "scpp/kernel/KermitKernel.hpp"
 #include <mutex>
 
-// #define INTERFACE "enp0s20f0u1"
-#define INTERFACE "eth0"
 
 static std::mutex guard;
 
@@ -116,8 +114,10 @@ KermitKernel::init_comms(const std::string& drive_addr,
 }
 
 bool
-KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port)
+KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port, const std::string& interface)
 {
+  std::cout<<"\n\n\nIP ADDRESS, PORT, INTERFACE"<<std::endl;
+  std::cout<<ip_addr<<" "<<port<<" "<<interface<<"\n\n\n";
 
   teensy.sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -129,7 +129,7 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port)
 
   memset(&teensy.ifr, 0, sizeof(teensy.ifr));
 
-  snprintf(teensy.ifr.ifr_name, sizeof(teensy.ifr.ifr_name), INTERFACE);
+  snprintf(teensy.ifr.ifr_name, sizeof(teensy.ifr.ifr_name), interface.c_str());
 
   if (setsockopt(teensy.sockfd,
                  SOL_SOCKET,

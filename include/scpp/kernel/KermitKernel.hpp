@@ -99,7 +99,7 @@ public:
    *
    * @return Status - if false, changes debuf to true
    */
-  bool init_teensy_peripheral(const std::string& ip_addr, int port);
+  bool init_teensy_peripheral(const std::string& ip_addr, int port, const std::string& interface);
 
   // Control Client stuff
 private:

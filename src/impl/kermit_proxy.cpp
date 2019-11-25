@@ -44,20 +44,24 @@ main(int argc, char* argv[])
 
   while (i < argc) {
     if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || argc == 1) {
-      std::cout << "Usage: kermit_proxy [options] --time [time_period]\n";
-      std::cout << "Options:\n\n";
-      std::cout << "    --help          Show this help menu\n";
-      std::cout
-        << "    --cmd_vel       Start a new publisher proxy on cmd_vel topic\n";
-      std::cout << "    --rt            Start a new real time proxy\n";
-      std::cout << "    --data          Start a new data proxy on topic data\n";
-      std::cout << "    --command       Start a new command proxy\n";
-      std::cout
-        << "    --time          Specify the time period in seconds to run\n";
-      std::cout << "                    -1 for infinite (ctrl+C to exit)\n";
-      std::cout << "                    else any number for the number of "
-                   "seconds to run\n";
-      std::cout << "                    (with ctrl+c to exit\n";
+      std::cout << 
+        "\nUsage: kermit_proxy [options] --time [time_period]\n"
+        "Options:\n\n"
+        "    --help          Show this help menu\n\n"
+
+        "    --cmd_vel       Start a new publisher proxy on cmd_vel topic\n\n"
+
+        "    --rt            Start a new real time proxy\n\n"
+
+        "    --data          Start a new data proxy on topic data\n\n"
+
+        "    --command       Start a new command proxy\n\n"
+
+        "    --time          Specify the time period in seconds to run\n"
+        "                    -1 for infinite (ctrl+C to exit)\n"
+        "                    else any number for the number of \n"
+        "                    seconds to run\n\n"
+        "                    (with ctrl+c to exit\n\n";
       return 0;
     }
     if (!strcmp(argv[i], "--cmd_vel") && !cmdvel) {
