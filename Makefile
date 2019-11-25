@@ -24,7 +24,7 @@ ARCH_DEPS=cmake curl unzip zeromq check
 
 
 .PHONY: all
-all: validate
+all: rmtcore
 	@echo "Compiling rmt_core, examples and sentinet libs"
 
 .PHONY: install
