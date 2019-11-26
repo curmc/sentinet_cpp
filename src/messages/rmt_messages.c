@@ -4,7 +4,7 @@
  * @created     : Saturday Oct 26, 2019 17:06:35 MDT
  */
 
-#include "scpp/rmt_messages.h"
+#include "scpp/messages/rmt_messages.h"
 
 cmd_vel
 create_cmd_vel()
@@ -58,9 +58,9 @@ cmd_vel_to_wire(cmd_vel* vel)
 }
 
 int
-cmd_vel_from_wire(cmd_vel* vel, const char* data)
+cmd_vel_from_wire(cmd_vel* vel, const uint8_t* data)
 {
-  if (!vel || !(data + vel->buff.byte_length)) {
+  if (!vel || !data) {
     printf("Error \n");
     return -1;
   }
@@ -125,9 +125,9 @@ teensy_msg_to_wire(teensy_msg* msg)
 }
 
 int
-teensy_msg_from_wire(teensy_msg* msg, const char* data)
+teensy_msg_from_wire(teensy_msg* msg, const uint8_t* data)
 {
-  if (!msg || !(data + msg->buff.byte_length)) {
+  if (!msg || !data) {
     printf("Error \n");
     return -1;
   }

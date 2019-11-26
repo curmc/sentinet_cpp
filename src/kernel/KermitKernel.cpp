@@ -73,7 +73,6 @@ KermitKernel::init_comms(const std::string& drive_addr,
                          const std::string& data_addr,
                          const std::string& real_map_addr)
 {
-
   // Create a new set of params
 
   // Set the addresses of proxies
@@ -164,6 +163,7 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port, const
     async_sender = std::make_unique<std::thread>([this](void) -> bool {
       while (running) {
         int16_t* temp = (int16_t*)teensy.send;
+
         *temp++ = (int16_t)teensy.lin;
         *temp = (int16_t)teensy.ang;
 
@@ -174,12 +174,6 @@ KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port, const
         read(teensy.sockfd, teensy.recv, 4);
 
         teensy.recv[4] = '\0';
-        // printf("%d %d\n", *(int16_t*)&teensy.recv[0],
-        // *(int16_t*)&teensy.recv[2]);
-
-        // DEBUG
-        // message.cvel_buffer.lin = (float)*(uint16_t*)(teensy.recv);
-        // message.cvel_buffer.ang = (float)*(uint16_t*)(teensy.recv + 2);
         usleep(10000);
       }
 
@@ -235,33 +229,11 @@ KermitKernel::start(const std::chrono::microseconds serial_period,
   return true;
 }
 
-// bool
-// KermitKernel::send_data()
-// {
-//   // std::lock_guard<std::mutex> lock(guard);
-//   int16_t* temp = (int16_t*)teensy.send;
-//   *temp++ = message.cvel_buffer.lin;
-//   *temp = message.cvel_buffer.ang;
-//
-//   teensy.send[4] = '\0';
-//   teensy.send[3] = '\0';
-//
-//   std::cout<<"Writing"<<std::endl;
-//   write(teensy.sockfd, "hit\0", 4);
-//   read(teensy.sockfd, teensy.recv, 4);
-//
-//   if(kermit.verbose) {
-//     std::cout<<"Responded with "<<*(int16_t*)teensy.recv<<"
-//     "<<*(int16_t*)(teensy.recv + 2)<<std::endl;
-//   }
-//   return true;
-// }
-//
 void
 KermitKernel::drive_message_subscribe_callback(std::string& message_)
 {
   std::lock_guard<std::mutex> lock(guard);
-  cmd_vel_from_wire(&message.cvel_buffer, message_.c_str());
+  cmd_vel_from_wire(&message.cvel_buffer, reinterpret_cast<const uint8_t*>(message_.c_str()));
   teensy.lin = (int16_t)message.cvel_buffer.lin;
   teensy.ang = (int16_t)message.cvel_buffer.ang;
 

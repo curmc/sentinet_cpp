@@ -46,7 +46,7 @@ int
 cmd_vel_to_wire(cmd_vel* vel);
 
 int
-cmd_vel_from_wire(cmd_vel* vel, const char* data);
+cmd_vel_from_wire(cmd_vel* vel, const uint8_t* data);
 
 teensy_msg
 create_teensy_msg();
@@ -55,12 +55,12 @@ int
 teensy_msg_to_wire(teensy_msg* msg);
 
 int
-teensy_msg_from_wire(teensy_msg* msg, const char* data);
+teensy_msg_from_wire(teensy_msg* msg, const uint8_t* data);
 
 int
 imu_data_to_wire(imu_data* msg);
 
 int
-imu_data_from_wire(imu_data* msg, const char* data);
+imu_data_from_wire(imu_data* msg, const uint8_t* data);
 
 #endif /* end of include guard RMT_MESSAGES_H */

@@ -4,7 +4,7 @@
  * @created     : Saturday Oct 12, 2019 22:48:48 MDT
  */
 
-#include "scpp/ping_message.h"
+#include "scpp/messages/ping_message.h"
 
 static int
 check_packet_validity()
