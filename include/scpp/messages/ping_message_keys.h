@@ -40,8 +40,6 @@
  */
 #define INVALID_REQUEST 3
 
-#define INVALID_MESSAGE
-
 /*
  * Send the next message recieved to the given address
  * Sends invalid request if host is not up
@@ -112,8 +110,9 @@
 // MINE FLAGS
 #define ENTERING_MINE_STATE (1 << 0)
 #define START_MINING (1 << 1)
-#define CLEAN_END_MINING (1 << 2)
-#define EXITING_MINE_STATE (1 << 3)
+#define ABORT_MINING (1 << 2)
+#define CLEAN_END_MINING (1 << 3)
+#define EXITING_MINE_STATE (1 << 4)
 
 // MOVE TO MINE FLAG
 #define ENTERING_MOVE_TO_MINE (1 << 0)
@@ -123,8 +122,6 @@
 
 // MOVE TO DUMP FLAG
 #define ENTERING_MOVE_TO_DUMP (1 << 0)
-#define START_DUMPING (1 << 1)
-#define CLEAN_END_DUMPING (1 << 2)
 #define EXITING_MOVE_TO_DUMP (1 << 3)
 
 // INIT STATE

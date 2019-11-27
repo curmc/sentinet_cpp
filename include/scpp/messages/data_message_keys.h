@@ -13,11 +13,12 @@
 
 // DATA MESSAGE SIZE - SIZE OF THE MESSAGE BUFFER
 #ifndef MESSAGE_SIZE
-#ifndef LIGHT_MESSAGES
-#define MESSAGE_SIZE (1 << 12)
-#else
-#define MESSAGE_SIZE (1 << 8)
-#endif
+#define MESSAGE_SIZE (256)
+// #ifndef LIGHT_MESSAGES
+// #define MESSAGE_SIZE (1 << 12)
+// #else
+// #define MESSAGE_SIZE (1 << 8)
+// #endif
 #endif
 
 #ifndef MESSAGE_SIZE

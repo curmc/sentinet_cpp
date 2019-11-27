@@ -99,7 +99,9 @@ public:
    *
    * @return Status - if false, changes debuf to true
    */
-  bool init_teensy_peripheral(const std::string& ip_addr, int port, const std::string& interface);
+  bool init_teensy_peripheral(const std::string& ip_addr,
+                              int port,
+                              const std::string& interface);
 
   // Control Client stuff
 private:
@@ -120,6 +122,26 @@ private:
 
   // The get_data to the data channel
   std::string data_message_get_data(void);
+
+  // Ping callbacks
+private:
+  // Handles lower utility pings and returns a new constructed response ping
+  // Responds with ACK if ping is a state request
+  ping_buffer ping_handler(uint8_t type, uint16_t code, uint64_t excess);
+
+  ping_buffer message_request_handler(uint16_t code, uint64_t excess);
+
+  // Handles ping message with type 8 (state request ping)
+  int robot_ping_handler(uint16_t code, uint64_t excess);
+
+  // Handlers for each state
+  int stop_everything_handler(uint64_t excess);
+  int dump_handler(uint64_t excess);
+  int mine_handler(uint64_t excess);
+  int move_to_mine_handler(uint64_t excess);
+  int move_to_dump_handler(uint64_t excess);
+  int init_handler(uint64_t excess);
+  int clean_exit_handler(uint64_t excess);
 
 private:
   // bool send_data();
@@ -155,6 +177,7 @@ private:
 
   typedef struct KermitMessage
   {
+    std::atomic<bool> receiving_cvels;
     cmd_vel cvel_buffer;
     cmd_vel data_buffer_temp;
     ping_buffer ping;
@@ -185,6 +208,7 @@ private:
   std::atomic<bool> running;
   std::unique_ptr<std::thread> async_sender;
 };
+
 } // namespace curmt
 } // namespace scpp
 #endif /* end of include guard KERMITKERNEL_HPP */

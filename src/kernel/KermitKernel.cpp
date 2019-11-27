@@ -7,7 +7,6 @@
 #include "scpp/kernel/KermitKernel.hpp"
 #include <mutex>
 
-
 static std::mutex guard;
 
 namespace scpp {
@@ -43,6 +42,9 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
 
   // Create a new ping buffer
   message.ping = create_buffer_ping();
+
+  // Set the robot to not receving data at first
+  message.receiving_cvels = false;
 
   running = true;
 }
@@ -113,10 +115,12 @@ KermitKernel::init_comms(const std::string& drive_addr,
 }
 
 bool
-KermitKernel::init_teensy_peripheral(const std::string& ip_addr, int port, const std::string& interface)
+KermitKernel::init_teensy_peripheral(const std::string& ip_addr,
+                                     int port,
+                                     const std::string& interface)
 {
-  std::cout<<"\n\n\nIP ADDRESS, PORT, INTERFACE"<<std::endl;
-  std::cout<<ip_addr<<" "<<port<<" "<<interface<<"\n\n\n";
+  std::cout << "\n\n\nIP ADDRESS, PORT, INTERFACE" << std::endl;
+  std::cout << ip_addr << " " << port << " " << interface << "\n\n\n";
 
   teensy.sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -188,8 +192,8 @@ void
 KermitKernel::print_state()
 {
   std::lock_guard<std::mutex> lock(guard);
-  std::cout << "Linear = " << message.cvel_buffer.lin;
-  std::cout << " Angular = " << message.cvel_buffer.ang << std::endl;
+  std::cout << "Linear = " << teensy.lin;
+  std::cout << " Angular = " << teensy.ang << std::endl;
 }
 
 bool
@@ -220,11 +224,14 @@ KermitKernel::start(const std::chrono::microseconds serial_period,
   initialize_control_client();
   steady_clock::time_point time_now = steady_clock::now();
 
+  int i = 0;
+
   while (running && (infinite || steady_clock::now() - time_now < time_alive)) {
-    if (kermit.verbose) {
+    if (!(i % 100) && kermit.verbose) {
       print_state();
     }
     usleep(serial_period.count());
+    i++;
   }
   return true;
 }
@@ -233,26 +240,50 @@ void
 KermitKernel::drive_message_subscribe_callback(std::string& message_)
 {
   std::lock_guard<std::mutex> lock(guard);
-  cmd_vel_from_wire(&message.cvel_buffer, reinterpret_cast<const uint8_t*>(message_.c_str()));
-  teensy.lin = (int16_t)message.cvel_buffer.lin;
-  teensy.ang = (int16_t)message.cvel_buffer.ang;
 
-  return; // TODO
+  // TODO I have a choice here, rn, everytime we get a message,
+  // we deserialize it. Other option is to drop the message if receiving_cvels
+  // is false need to think about it though
+
+  // Interpret the incomming message from the string
+  cmd_vel_from_wire(&message.cvel_buffer,
+                    reinterpret_cast<const uint8_t*>(message_.c_str()));
+
+  if (message.receiving_cvels) {
+    teensy.lin = (int16_t)message.cvel_buffer.lin;
+    teensy.ang = (int16_t)message.cvel_buffer.ang;
+  } else {
+    teensy.lin = 0;
+    teensy.ang = 0;
+  }
 }
 
 std::string
 KermitKernel::cmd_message_callback(std::string& message_)
 {
+  std::lock_guard<std::mutex> lock(guard);
+  std::cout << "Recieved ping\n";
+  // Interpret the incomming message
   if (!serialize_from_ping(&message.ping,
                            reinterpret_cast<BYTE*>(&message_[0]))) {
-    message.ping.type = 5;
-    message.ping.code = 6;
-    message.ping.check = 9;
-    to_wire_ping(&message.ping);
-    return std::string(reinterpret_cast<char const*>(message.ping.data),
+    std::cout << "valid ping\n";
+    std::cout << message.ping.type << " " << message.ping.code << " "
+              << message.ping.excess << std::endl;
+
+    ping_buffer resp =
+      ping_handler(message.ping.type, message.ping.code, message.ping.excess);
+
+    to_wire_ping(&resp);
+    return std::string(reinterpret_cast<char const*>(resp.data),
                        PING_HEADER_SIZE);
   }
-  return "Nooop" + message_;
+
+  ping_buffer resp = create_buffer_ping();
+  resp.type = INVALID_REQUEST;
+  resp.excess = 0x00;
+  resp.code = 0x00;
+  return std::string(reinterpret_cast<char const*>(resp.data),
+                     PING_HEADER_SIZE);
 }
 
 std::string
@@ -269,6 +300,229 @@ KermitKernel::data_message_get_data(void)
   cmd_vel_to_wire(&message.cvel_buffer);
   // print_message_formatted(message.cvel_buffer.buff.data);
   return std::string((char const*)(message.cvel_buffer.buff.data), 27);
+}
+
+ping_buffer
+KermitKernel::ping_handler(uint8_t type, uint16_t code, uint64_t excess)
+{
+  ping_buffer resp = create_buffer_ping();
+
+  switch (type) {
+    case (UNDEF): {
+      resp.type = INVALID_REQUEST;
+      resp.excess = 0x00;
+      resp.code = 0x00;
+      return resp;
+    }
+    case (ACK): {
+      resp.type = ACK;
+      resp.code = 0x00;
+      resp.excess = 0x00;
+      return resp;
+    }
+    case (PING_ECHO): {
+      resp.type = type;
+      resp.code = code;
+      resp.excess = excess;
+      return resp;
+    }
+    case (INVALID_REQUEST): {
+      resp.type = INVALID_REQUEST;
+      resp.code = 0x00;
+      resp.excess = 0x00;
+      return resp;
+    }
+    case (REDIRECT_MESSAGE): { // TODO ???
+      resp.type = INVALID_REQUEST;
+      resp.code = 0x00;
+      resp.excess = 0x00;
+      return resp;
+    }
+    case (MESSAGE_REQUEST): {
+      resp = message_request_handler(code, excess);
+      return resp;
+    }
+    case (TIME_STAMP): {
+      resp.type = ACK;
+      resp.code = 0x00;
+      resp.excess = 0x00;
+      return resp;
+    }
+    case (TIME_EXCEEDED): {
+      resp.type = ACK;
+      resp.code = 0x00;
+      resp.excess = 0x00;
+      return resp;
+    }
+    case (STATE_REQUEST): {
+      resp.type = ACK;
+      resp.code = 0x00;
+      resp.excess = 0x00;
+      robot_ping_handler(code, excess);
+      return resp;
+    }
+  }
+  return resp;
+}
+
+// TODO
+ping_buffer
+KermitKernel::message_request_handler(uint16_t code, uint64_t excess)
+{
+  ping_buffer resp = create_buffer_ping();
+  resp.type = ACK;
+  return resp;
+}
+
+int
+KermitKernel::robot_ping_handler(uint16_t code, uint64_t excess)
+{
+  switch (code) {
+    case (STOP_EVERYTHING): {
+      return stop_everything_handler(excess);
+    }
+    case (DUMP): {
+      return dump_handler(excess);
+    }
+    case (MINE): {
+      return mine_handler(excess);
+    }
+    case (MOVE_TO_DUMP): {
+      return move_to_dump_handler(excess);
+    }
+    case (MOVE_TO_MINE): {
+      return move_to_mine_handler(excess);
+    }
+    case (INIT_STATE): {
+      return init_handler(excess);
+    }
+    case (CLEAN_EXIT): {
+      return clean_exit_handler(excess);
+    }
+  }
+  return 1;
+}
+
+int
+KermitKernel::stop_everything_handler(uint64_t excess)
+{
+  message.receiving_cvels = false;
+  teensy.lin = 0;
+  teensy.ang = 0;
+  return excess;
+}
+
+int
+KermitKernel::dump_handler(uint64_t excess)
+{
+  if (excess & ENTERING_DUMP_STATE) {
+    message.receiving_cvels = false;
+  }
+  if (excess & START_DUMPING) {
+    message.receiving_cvels = false;
+  }
+  if (excess & CLEAN_END_DUMPING) {
+    message.receiving_cvels = false;
+  }
+  if (excess & ABORT_DUMPING) {
+    message.receiving_cvels = false;
+  }
+  if (excess & EXITING_DUMP_STATE) {
+    message.receiving_cvels = false;
+  }
+  return excess;
+}
+
+int
+KermitKernel::mine_handler(uint64_t excess)
+{
+  if (excess & ENTERING_MINE_STATE) {
+    message.receiving_cvels = false;
+  }
+  if (excess & START_MINING) {
+    message.receiving_cvels = false;
+  }
+  if (excess & CLEAN_END_MINING) {
+    message.receiving_cvels = false;
+  }
+  if (excess & ABORT_MINING) {
+    message.receiving_cvels = false;
+  }
+  if (excess & EXITING_MINE_STATE) {
+    message.receiving_cvels = false;
+  }
+  return excess;
+}
+
+int
+KermitKernel::move_to_mine_handler(uint64_t excess)
+{
+  std::cout << "move to mine ping\n";
+  if (excess & ENTERING_MOVE_TO_MINE) {
+    message.receiving_cvels = false;
+  }
+  if (excess & START_DRIVING) {
+    message.receiving_cvels = true;
+  }
+  if (excess & STOP_DRIVING) {
+    message.receiving_cvels = false;
+  }
+  if (excess & EXITING_MOVE_TO_MINE) {
+    message.receiving_cvels = false;
+  }
+  return excess;
+}
+
+int
+KermitKernel::move_to_dump_handler(uint64_t excess)
+{
+  std::cout << "move to dump ping\n";
+  if (excess & ENTERING_MOVE_TO_DUMP) {
+    message.receiving_cvels = false;
+  }
+  if (excess & START_DRIVING) {
+    message.receiving_cvels = true;
+  }
+  if (excess & STOP_DRIVING) {
+    message.receiving_cvels = false;
+  }
+  if (excess & EXITING_MOVE_TO_MINE) {
+    message.receiving_cvels = false;
+  }
+  return excess;
+}
+
+int
+KermitKernel::init_handler(uint64_t excess)
+{
+  if (excess & ENTERING_INIT_STATE) {
+    message.receiving_cvels = false;
+  }
+  if (excess & SYS_ON) {
+    message.receiving_cvels = false;
+  }
+  if (excess & ZERO_ALL) {
+    message.receiving_cvels = true;
+  }
+  if (excess & DEPLOY_CAMERA) {
+    message.receiving_cvels = false;
+  }
+  return excess;
+}
+
+int
+KermitKernel::clean_exit_handler(uint64_t excess)
+{
+  if (excess & ENTERING_CLEAN_EXIT) {
+    message.receiving_cvels = false;
+  }
+  if (excess & RETRACT_ALL) {
+    message.receiving_cvels = true;
+  }
+  if (excess & SYS_OFF) {
+    message.receiving_cvels = false;
+  }
+  return excess;
 }
 
 } // namespace curmt
