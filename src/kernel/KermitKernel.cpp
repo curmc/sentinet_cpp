@@ -417,9 +417,19 @@ KermitKernel::dump_handler(uint64_t excess)
 {
   if (excess & ENTERING_DUMP_STATE) {
     message.receiving_cvels = false;
+    if(states.current_state) {
+      LOG_ERROR("In the middle of another state, cannot enter dump");
+      return -1;
+    }
+    LOG_INFO("Entering Dump State");
   }
   if (excess & START_DUMPING) {
     message.receiving_cvels = false;
+    if(states.current_state & DUMP) {
+      LOG_INFO("Starting Dumping");
+      return 1;
+    }
+    LOG_ERROR("Cannot enter dumping, not in dumping state");
   }
   if (excess & CLEAN_END_DUMPING) {
     message.receiving_cvels = false;
@@ -457,7 +467,6 @@ KermitKernel::mine_handler(uint64_t excess)
 int
 KermitKernel::move_to_mine_handler(uint64_t excess)
 {
-  std::cout << "move to mine ping\n";
   if (excess & ENTERING_MOVE_TO_MINE) {
     message.receiving_cvels = false;
   }
@@ -476,7 +485,6 @@ KermitKernel::move_to_mine_handler(uint64_t excess)
 int
 KermitKernel::move_to_dump_handler(uint64_t excess)
 {
-  std::cout << "move to dump ping\n";
   if (excess & ENTERING_MOVE_TO_DUMP) {
     message.receiving_cvels = false;
   }

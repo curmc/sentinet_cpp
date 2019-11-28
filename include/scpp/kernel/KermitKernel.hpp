@@ -197,6 +197,21 @@ private:
     int16_t ang;
   } TeensyEndpoint;
 
+  typedef struct KermitState
+  {
+    uint8_t current_state;
+     
+
+
+    uint8_t hard_stop;
+    uint8_t dump;
+    uint8_t mine;
+    uint8_t move_to_mine;
+    uint8_t move_to_dump;
+    uint8_t init;
+    uint8_t clean_exit;
+  } KermitStates;
+
   TeensyEndpoint teensy;
 
   KermitProperties kermit;
@@ -204,6 +219,8 @@ private:
   KermitMessage message;
 
   CCProperties params;
+
+  KermitStates states;
 
   std::atomic<bool> running;
   std::unique_ptr<std::thread> async_sender;
