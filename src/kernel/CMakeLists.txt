@@ -1,7 +1,11 @@
 project(kernel)
 
-file(GLOB KERNEL_SOURCE "${PROJECT_SOURCE_DIR}/*.cpp")
+file(GLOB KERNEL_SOURCE_CPP "${PROJECT_SOURCE_DIR}/*.cpp")
+file(GLOB KERNEL_SOURCE_C "${PROJECT_SOURCE_DIR}/*.c")
 
+set(KERNEL_SOURCE "${KERNEL_SOURCE_CPP};${KERNEL_SOURCE_C}")
+
+message(${KERNEL_SOURCE})
 target_sources(sentinet
   PUBLIC 
   ${KERNEL_SOURCE})

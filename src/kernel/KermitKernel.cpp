@@ -417,7 +417,7 @@ KermitKernel::dump_handler(uint64_t excess)
 {
   if (excess & ENTERING_DUMP_STATE) {
     message.receiving_cvels = false;
-    if(states.current_state) {
+    if (states.current_state) {
       LOG_ERROR("In the middle of another state, cannot enter dump");
       return -1;
     }
@@ -425,7 +425,7 @@ KermitKernel::dump_handler(uint64_t excess)
   }
   if (excess & START_DUMPING) {
     message.receiving_cvels = false;
-    if(states.current_state & DUMP) {
+    if (states.current_state & DUMP) {
       LOG_INFO("Starting Dumping");
       return 1;
     }

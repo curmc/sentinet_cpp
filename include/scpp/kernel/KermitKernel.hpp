@@ -200,8 +200,6 @@ private:
   typedef struct KermitState
   {
     uint8_t current_state;
-     
-
 
     uint8_t hard_stop;
     uint8_t dump;
