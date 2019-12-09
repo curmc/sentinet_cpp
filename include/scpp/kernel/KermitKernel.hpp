@@ -190,8 +190,8 @@ private:
     struct sockaddr_in dest;
     struct ifreq ifr;
 
-    uint8_t send[5];
-    uint8_t recv[5];
+    uint8_t send[64];
+    uint8_t recv[64];
 
     int16_t lin;
     int16_t ang;
