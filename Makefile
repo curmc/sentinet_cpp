@@ -15,8 +15,9 @@ MAKE_TARGET=make -C ${BUILD_DIR}
 INSTALL_TARGET=${MAKE_TARGET} install
 
 # Files
-FILE_SUFFIXES='.*\.\(cpp\|hpp\|h\)'
+FILE_SUFFIXES='.*\.\(c\|cpp\|hpp\|h\)'
 FORMAT_TARGET=clang-format -i -sort-includes=false -style=Mozilla
+LINE_TARGET=xargs wc -l
 CLEAN=rm -rf ${BUILD_DIR}
 CLEAN_ALL=rm -rf ${BUILD_DIR}
 UBUNDUT_DEPS=cmake curl libcurl4-gnutls-dev autoconf automake libtool g++ unzip libzmq3-dev xargs check libgtest-dev
@@ -62,6 +63,11 @@ examples:
 format:
 	@find ./src -regex ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
 	@find ./include -regex ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
+
+.PHONY:linecount 
+linecount:
+	@find ./src -regex ${FILE_SUFFIXES} | xargs ${LINE_TARGET}
+	@find ./include -regex ${FILE_SUFFIXES} | xargs ${LINE_TARGET}
 
 .PHONY: install-deps
 install-deps:
