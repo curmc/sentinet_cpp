@@ -8,86 +8,77 @@
 
 #define SERIAL_C_H
 
-#include <termios.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <sys/ioctl.h>
-#include <string.h>
-#include <errno.h>
-#include <inttypes.h>
-#include <stddef.h>
-#include <stdlib.h>
+
+#include <stdint.h>
 #include <stdio.h>
+#include <errno.h>
+#include <unistd.h>
+
+#define delay(val) usleep(1000 * val) 
+#define DRIVE_COM 'd'
+#define DEFAULT_BAUD 9600
+#define BUFFER_SIZE 30
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+
+typedef struct {
+  int8_t lin;
+  int8_t ang;
+} cmd_vel_message;
+
+
+typedef struct {
+  int fd;
+  cmd_vel_message msg;
+  uint8_t buffer[BUFFER_SIZE];
+} teensy_device;
+
 
 /*
-Teensy 3.6 Specifications Notes:
-  12 Mbit / Sec
-*/
-// Sending a command velocity packet
-#define CMD_VEL_PACKET 0x1
-#define LINEAR_DATA 0x1
-#define ANGULAR_DATA 0X2
-
-// Sending a command packet (mine / dump etc)
-#define COMMAND_PACKET 0x2
-
-#define MINE 0x1
-#define START_MINING 0x1
-#define CLEAN_STOP_MINING 0x2
-#define HARD_STOP_MINING 0x3
-
-#define DUMP 0x2
-#define START_DUMPING 0x1
-#define CLEAN_STOP_DUMPING 0x2
-#define HARD_STOP_DUMPING 0x3
-
-#define CLEAN_STOP 0x3
-
-#define HARD_STOP 0x4
-
-/*
- * Signals the next command to be sent
- * can be cmd_vel_packet, or command_packet
+ * Serial 
+ * communication 
+ * functions
  */
 int
-signal_teensy36_header(int fd, uint8_t header);
-
-/*
- * Sends linear and angular values to teensy
- */
+serialport_init(const char* serialport, int baud);
 int
-send_teensy36_cmd_vel(int fd, int16_t linear, int16_t angular);
-
-/*
- * Sends a command to teensy and receives ack
- */
+serialport_close(int fd);
 int
-teensy36_send_command(int fd, uint8_t command);
-
-/*
- * Recieve an ack response from the
- * teensy36
- */
+serialport_writebyte(int fd, uint8_t b);
 int
-teensy36_recieve_ack(int fd);
+serialport_write_len(int fd, const uint8_t* str);
+int
+serialport_write(int fd, const uint8_t* str, size_t bytes);
+int
+serialport_read(int fd, uint8_t* buf, size_t bytes, int timeout);
 
 int
-xhci_hcd_write_teensy36(int fd, const uint8_t* buffer, size_t buffer_len);
-
+serialport_read_until(int fd, uint8_t* buf, uint8_t until, size_t buf_max, int timeout);
 int
-xhci_hcd_read_teensy36(int fd, uint8_t* destination, size_t num_bytes);
+serialport_flush(int fd);
 
-// Resets the buffer (input and output)
-#define reset_buffer(fd) tcflush(fd, TCIOFLUSH)
 
-int
-teensy36_fd_is_valid(int fd);
+int 
+new_teensy_device(teensy_device* device, const char* serialport);
+int 
+teensy_cleanup(teensy_device* device);
+int 
+send_teensy_status(teensy_device* device, int lin, int ang);
+size_t
+send_drive(teensy_device* device, int lin, int ang);
+size_t
+send_float_drive(teensy_device* device, float lin, float ang);
+int 
+stop_robot(teensy_device* device);
 
-/*
- * Initializes USB port for teensy 3.6
- * @return file descriptor
- */
-int
-xhci_hcd_teensy36_opt(const char* port);
+
+#ifdef __cplusplus
+}
+#endif
+
 
 #endif /* end of include guard SERIAL_H */

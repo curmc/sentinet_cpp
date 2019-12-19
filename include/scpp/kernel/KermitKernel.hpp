@@ -22,6 +22,7 @@ extern "C"
 #include <unistd.h>
 #include "scpp/messages/rmt_messages.h"
 #include "scpp/messages/ping_message.h"
+#include "scpp/kernel/serial.h"
 }
 
 // C++ includes
@@ -99,9 +100,7 @@ public:
    *
    * @return Status - if false, changes debuf to true
    */
-  bool init_teensy_peripheral(const std::string& ip_addr,
-                              int port,
-                              const std::string& interface);
+  bool init_teensy_peripheral(const std::string& port);
 
   // Control Client stuff
 private:
@@ -186,15 +185,11 @@ private:
 
   typedef struct TeensyEndpoint
   {
-    int sockfd;
-    struct sockaddr_in dest;
-    struct ifreq ifr;
-
-    uint8_t send[64];
-    uint8_t recv[64];
-
+    teensy_device dev;
     int16_t lin;
     int16_t ang;
+    // Might add more telemetry here, that
+    // is why its a struct
   } TeensyEndpoint;
 
   typedef struct KermitState

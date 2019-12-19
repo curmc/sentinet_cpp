@@ -51,8 +51,7 @@ KermitKernel::KermitKernel(const std::string& drive_topic,
 
 KermitKernel::~KermitKernel()
 {
-  if (teensy.sockfd)
-    close(teensy.sockfd);
+  teensy_cleanup(&teensy.dev);
 }
 
 bool
@@ -64,7 +63,7 @@ KermitKernel::kermit_quit()
   running = false;
   if (async_sender) {
     async_sender->join();
-    close(teensy.sockfd);
+    teensy_cleanup(&teensy.dev);
   }
   return quit();
 }
@@ -110,77 +109,20 @@ KermitKernel::init_comms(const std::string& drive_addr,
   params.command_p.callback =
     std::bind(&KermitKernel::cmd_message_callback, this, std::placeholders::_1);
 
-  teensy.sockfd = 0;
   return true;
 }
 
 bool
-KermitKernel::init_teensy_peripheral(const std::string& ip_addr,
-                                     int port,
-                                     const std::string& interface)
+KermitKernel::init_teensy_peripheral(const std::string& port) 
 {
-  std::cout << "\n\n\nIP ADDRESS, PORT, INTERFACE" << std::endl;
-  std::cout << ip_addr << " " << port << " " << interface << "\n\n\n";
-
-  teensy.sockfd = socket(AF_INET, SOCK_STREAM, 0);
-
-  if (teensy.sockfd < 0) {
-    perror("Socket ");
-    kermit.debug = true;
-    return false;
-  }
-
-  memset(&teensy.ifr, 0, sizeof(teensy.ifr));
-
-  snprintf(teensy.ifr.ifr_name, sizeof(teensy.ifr.ifr_name), interface.c_str());
-
-  if (setsockopt(teensy.sockfd,
-                 SOL_SOCKET,
-                 SO_BINDTODEVICE,
-                 (void*)&teensy.ifr,
-                 sizeof(teensy.ifr)) < 0) {
-    perror("Interface ");
-    kermit.debug = true;
-    return false;
-  }
-
-  bzero(&teensy.dest, sizeof(teensy.dest));
-
-  teensy.dest.sin_family = AF_INET;
-  teensy.dest.sin_port = htons(port);
-
-  if (inet_aton(ip_addr.c_str(), (in_addr*)&teensy.dest.sin_addr.s_addr) == 0) {
-    perror(ip_addr.c_str());
-    kermit.debug = true;
-    return false;
-  }
-
-  if (connect(teensy.sockfd,
-              (struct sockaddr*)&teensy.dest,
-              sizeof(teensy.dest)) != 0) {
-    perror("Connection");
-    kermit.debug = true;
-    return false;
-  }
+  new_teensy_device(&teensy.dev, port.c_str());
 
   if (!kermit.debug) {
     async_sender = std::make_unique<std::thread>([this](void) -> bool {
       while (running) {
-        int16_t* temp = (int16_t*)teensy.send;
-
-        *temp++ = (int16_t)teensy.lin;
-        *temp = (int16_t)teensy.ang;
-
-        teensy.send[4] = '\0';
-        teensy.send[3] = '\0';
-
-        write(teensy.sockfd, (char*)teensy.send, 4);
-        read(teensy.sockfd, teensy.recv, 4);
-
-        teensy.recv[4] = '\0';
-        usleep(10000);
+        send_drive(&teensy.dev, teensy.lin, teensy.ang);
+        delay(100);
       }
-
       return true;
     });
   }
@@ -510,7 +452,7 @@ KermitKernel::init_handler(uint64_t excess)
     message.receiving_cvels = false;
   }
   if (excess & ZERO_ALL) {
-    message.receiving_cvels = true;
+    message.receiving_cvels = false;
   }
   if (excess & DEPLOY_CAMERA) {
     message.receiving_cvels = false;

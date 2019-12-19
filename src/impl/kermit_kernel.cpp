@@ -112,7 +112,7 @@ main(int argc, char* argv[])
                 "tcp://localhost:5581");
   std::cout << sizeof(scpp::curmt::KermitKernel) << std::endl;
   if (!debug) {
-    a->init_teensy_peripheral(ipaddr, port, interface);
+    a->init_teensy_peripheral("/dev/ttyACM0");
   }
 
   a->start(std::chrono::milliseconds(10), std::chrono::seconds(0));

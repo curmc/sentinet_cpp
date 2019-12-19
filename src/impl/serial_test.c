@@ -9,17 +9,29 @@
 int
 main()
 {
-  int fd = xhci_hcd_teensy36_opt("/dev/ttyACM0");
+  teensy_device dev;
+  int i = new_teensy_device(&dev, "/dev/ttyACM0");
+  printf("%d\n", i);
 
-  char buff[2];
-  write(fd, "hi\0", 3);
-  read(fd, buff, 2);
+  puts("Sending data now");
 
-  /** int ack = (int)send_teensy36_cmd_vel(fd, 5, 5); */
-  printf("%s\n", buff);
-  if (fd != -1) {
-    close(fd);
+  uint8_t buffer[12];
+  serialport_flush(dev.fd);
+  for(int j = 0; j < 100; ++j){
+
+    send_drive(&dev, 10, 11); 
+    delay(100);
+    serialport_read(dev.fd, buffer, 9, 2);
+
+    int* a = (int*)buffer;
+    int b = *a;
+    a++;
+    int c = *a;
+
+    printf("%d %d\n", b, c);
   }
+  
 
+  teensy_cleanup(&dev);
   return 1;
 }
