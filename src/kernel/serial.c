@@ -7,7 +7,6 @@
 #include <strings.h>
 #include <memory.h> // strcpy and memcpy
 
-
 int
 serialport_init(const char* serialport, int baud)
 {
@@ -143,7 +142,7 @@ serialport_read(int fd, uint8_t* buf, size_t bytes, int timeout)
 {
   char b[1]; // read expects an array, so we give it a 1-byte array
   int i = 0;
-  for(size_t i = 0U; i < bytes && timeout > 0; ++i){
+  for (size_t i = 0U; i < bytes && timeout > 0; ++i) {
     int n = read(fd, b, 1);
     if (n == -1)
       return -1; // couldn't read
@@ -164,7 +163,11 @@ serialport_read(int fd, uint8_t* buf, size_t bytes, int timeout)
 
 //
 int
-serialport_read_until(int fd, uint8_t* buf, uint8_t until, size_t buf_max, int timeout)
+serialport_read_until(int fd,
+                      uint8_t* buf,
+                      uint8_t until,
+                      size_t buf_max,
+                      int timeout)
 {
   char b[1]; // read expects an array, so we give it a 1-byte array
   int i = 0;
@@ -198,8 +201,9 @@ serialport_flush(int fd)
   return tcflush(fd, TCIOFLUSH);
 }
 
-
-int new_teensy_device(teensy_device* device, const char* serialport) {
+int
+new_teensy_device(teensy_device* device, const char* serialport)
+{
   device->fd = 0;
   device->msg.lin = 0;
   device->msg.ang = 0;
@@ -209,8 +213,9 @@ int new_teensy_device(teensy_device* device, const char* serialport) {
   return device->fd;
 }
 
-
-static int teensy_send_data(teensy_device* device) {
+static int
+teensy_send_data(teensy_device* device)
+{
   device->buffer[0] = 'd';
 
   int* temp = (int*)&device->buffer[1];
@@ -224,7 +229,7 @@ static int teensy_send_data(teensy_device* device) {
   size_t size = next - device->buffer;
 
   printf("Sending: ");
-  for(int i = 0; i < size; ++i) {
+  for (int i = 0; i < size; ++i) {
     printf("%x ", device->buffer[i]);
   }
   printf("\n");
@@ -234,25 +239,31 @@ static int teensy_send_data(teensy_device* device) {
 }
 
 size_t
-send_drive(teensy_device* device, int lin, int ang) {
+send_drive(teensy_device* device, int lin, int ang)
+{
   device->msg.lin = lin;
   device->msg.ang = ang;
   return teensy_send_data(device);
 }
 
 size_t
-send_float_drive(teensy_device* device, float lin, float ang) {
+send_float_drive(teensy_device* device, float lin, float ang)
+{
   device->msg.lin = (int)lin;
   device->msg.ang = (int)ang;
   return teensy_send_data(device);
 }
 
-int stop_robot(teensy_device* device) {
+int
+stop_robot(teensy_device* device)
+{
   device->msg.lin = 0;
   device->msg.ang = 0;
   return teensy_send_data(device);
 }
 
-int teensy_cleanup(teensy_device* device) {
+int
+teensy_cleanup(teensy_device* device)
+{
   return serialport_close(device->fd);
 }

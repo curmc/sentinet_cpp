@@ -113,7 +113,7 @@ KermitKernel::init_comms(const std::string& drive_addr,
 }
 
 bool
-KermitKernel::init_teensy_peripheral(const std::string& port) 
+KermitKernel::init_teensy_peripheral(const std::string& port)
 {
   new_teensy_device(&teensy.dev, port.c_str());
 

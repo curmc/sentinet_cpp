@@ -8,12 +8,13 @@
 #include <signal.h>
 #include <stdlib.h>
 
-
 teensy_device dev;
 
-void signalHandler(int sig) {
+void
+signalHandler(int sig)
+{
   printf("Recieved: %d\n", sig);
-  teensy_cleanup(&dev); 
+  teensy_cleanup(&dev);
   exit(0);
 }
 
@@ -29,9 +30,9 @@ main()
 
   uint8_t buffer[12];
   serialport_flush(dev.fd);
-  for(int j = 0; j < 100; ++j){
+  for (int j = 0; j < 100; ++j) {
 
-    send_drive(&dev, 20, 0); 
+    send_drive(&dev, 20, 0);
     delay(100);
     serialport_read(dev.fd, buffer, 8, 2);
 
@@ -40,14 +41,13 @@ main()
     a++;
     int c = *a;
 
-    for(int i = 0; i < 8; ++i) {
+    for (int i = 0; i < 8; ++i) {
       printf("%x ", buffer[i]);
     }
     printf("\n");
 
     printf("MSG: %d %d\n", b, c);
   }
-  
 
   teensy_cleanup(&dev);
   return 1;
