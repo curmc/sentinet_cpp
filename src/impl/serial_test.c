@@ -5,11 +5,23 @@
  */
 
 #include "scpp/kernel/serial.h"
+#include <signal.h>
+#include <stdlib.h>
+
+
+teensy_device dev;
+
+void signalHandler(int sig) {
+  printf("Recieved: %d\n", sig);
+  teensy_cleanup(&dev); 
+  exit(0);
+}
 
 int
 main()
 {
-  teensy_device dev;
+  signal(SIGINT, signalHandler);
+
   int i = new_teensy_device(&dev, "/dev/ttyACM0");
   printf("%d\n", i);
 
@@ -19,16 +31,21 @@ main()
   serialport_flush(dev.fd);
   for(int j = 0; j < 100; ++j){
 
-    send_drive(&dev, 10, 11); 
+    send_drive(&dev, 20, 0); 
     delay(100);
-    serialport_read(dev.fd, buffer, 9, 2);
+    serialport_read(dev.fd, buffer, 8, 2);
 
     int* a = (int*)buffer;
     int b = *a;
     a++;
     int c = *a;
 
-    printf("%d %d\n", b, c);
+    for(int i = 0; i < 8; ++i) {
+      printf("%x ", buffer[i]);
+    }
+    printf("\n");
+
+    printf("MSG: %d %d\n", b, c);
   }
   
 

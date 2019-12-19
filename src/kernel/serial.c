@@ -213,16 +213,17 @@ int new_teensy_device(teensy_device* device, const char* serialport) {
 static int teensy_send_data(teensy_device* device) {
   device->buffer[0] = 'd';
 
-  int* temp = (int*)&device->buffer[2];
+  int* temp = (int*)&device->buffer[1];
   *temp++ = device->msg.lin;
   *temp++ = device->msg.ang;
 
   uint8_t* next = (uint8_t*)temp;
   *next++ = '\n';
-  *next = '\0';
+  *next++ = '\0';
 
   size_t size = next - device->buffer;
 
+  printf("Sending: ");
   for(int i = 0; i < size; ++i) {
     printf("%x ", device->buffer[i]);
   }
