@@ -9,7 +9,7 @@
 #define RMT_MESSAGES_H
 
 // #define LIGHT_MESSAGES
-#include "scpp/data_message.h"
+#include "data_message.h"
 
 typedef struct
 {

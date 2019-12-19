@@ -4,7 +4,7 @@
  * @created     : Sunday Oct 13, 2019 13:06:20 MDT
  */
 
-#include "scpp/checksum.h"
+#include "scpp/messages/checksum.h"
 
 /*
  * A checksum is simply a number that is
