@@ -8,7 +8,7 @@
 
 extern "C"
 {
-#include "scpp/data_message.h"
+#include "scpp/messages/data_message.h"
 }
 
 namespace scpp {
