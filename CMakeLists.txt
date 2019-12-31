@@ -4,6 +4,9 @@ project(core)
 set(CMAKE_INSTALL_PREFIX "/opt/sentinet_cpp/${PROJECT_NAME}")
 set(ARCHITECTURE "x86_64")
 
+find_package(OpenCV REQUIRED )
+
+
 # Used for language analysis (and clang)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 # Third party sentinet message package

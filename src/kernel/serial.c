@@ -190,7 +190,7 @@ serialport_read_until(int fd,
   } while (b[0] != until && i < buf_max && timeout > 0);
 
   buf[i] = 0; // null terminate the string
-  return 0;
+  return i + 1;
 }
 
 //
@@ -228,11 +228,11 @@ teensy_send_data(teensy_device* device)
 
   size_t size = next - device->buffer;
 
-  printf("Sending: ");
-  for (int i = 0; i < size; ++i) {
-    printf("%x ", device->buffer[i]);
-  }
-  printf("\n");
+  /** printf("Sending: "); */
+  /** for (int i = 0; i < size; ++i) { */
+  /**   printf("%x ", device->buffer[i]); */
+  /** } */
+  /** printf("\n"); */
 
   serialport_write(device->fd, device->buffer, size);
   return size;

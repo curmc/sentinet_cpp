@@ -64,11 +64,6 @@ format:
 	@find ./src -regex ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
 	@find ./include -regex ${FILE_SUFFIXES} | xargs ${FORMAT_TARGET}
 
-.PHONY:linecount 
-linecount:
-	@find ./src -regex ${FILE_SUFFIXES} | xargs ${LINE_TARGET}
-	@find ./include -regex ${FILE_SUFFIXES} | xargs ${LINE_TARGET}
-
 .PHONY: install-deps
 install-deps:
 	@echo "Installing requirements"

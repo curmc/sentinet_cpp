@@ -12,7 +12,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/control")
 add_subdirectory("${PROJECT_SOURCE_DIR}/kernel")
 # add_subdirectory("${PROJECT_SOURCE_DIR}/controllers")
 
-target_link_libraries(sentinet zmq pthread smessages)
+target_link_libraries(sentinet zmq pthread smessages ${OpenCV_LIBS})
 install(TARGETS sentinet LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib")
 
 add_subdirectory("${PROJECT_SOURCE_DIR}/impl")

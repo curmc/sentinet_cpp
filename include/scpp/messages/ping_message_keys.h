@@ -100,38 +100,29 @@
 #define MICRO_MOVEMENT (1 << 7)
 #endif
 
+#define ENTERING_STATE (1 << 0)
+#define EXITING_STATE (1 << 4)
+
 // DUMP FLAGS
-#define ENTERING_DUMP_STATE (1 << 0)
 #define START_DUMPING (1 << 1)
 #define CLEAN_END_DUMPING (1 << 2)
 #define ABORT_DUMPING (1 << 3)
-#define EXITING_DUMP_STATE (1 << 4)
 
 // MINE FLAGS
-#define ENTERING_MINE_STATE (1 << 0)
 #define START_MINING (1 << 1)
 #define ABORT_MINING (1 << 2)
 #define CLEAN_END_MINING (1 << 3)
-#define EXITING_MINE_STATE (1 << 4)
 
-// MOVE TO MINE FLAG
-#define ENTERING_MOVE_TO_MINE (1 << 0)
+// MOVE TO MINE FLAG AND MOVE TO DUMP FLAG
 #define START_DRIVING (1 << 1)
 #define STOP_DRIVING (1 << 2)
-#define EXITING_MOVE_TO_MINE (1 << 3)
-
-// MOVE TO DUMP FLAG
-#define ENTERING_MOVE_TO_DUMP (1 << 0)
-#define EXITING_MOVE_TO_DUMP (1 << 3)
 
 // INIT STATE
-#define ENTERING_INIT_STATE (1 << 0)
 #define SYS_ON (1 << 1)
 #define ZERO_ALL (1 << 2)
 #define DEPLOY_CAMERA (1 << 3)
 
 // CLEAN EXIT
-#define ENTERING_CLEAN_EXIT (1)
 #define STOP_ALL (1 << 1)
 #define RETRACT_ALL (1 << 2)
 #define SYS_OFF (1 << 3)
