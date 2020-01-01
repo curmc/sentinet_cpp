@@ -48,8 +48,6 @@ protected:
   // The get_data to the real time pipe channel
   std::string map_message_get_data(void) override;
 
-  // The get_data to the data channel
-  std::string data_message_get_data(void) override;
 
   // Ping callbacks
 private:
@@ -77,7 +75,6 @@ private:
   {
     std::atomic<bool> receiving_cvels;
     cmd_vel cvel_buffer;
-    cmd_vel data_buffer_temp;
     ping_buffer ping;
 
   } message;

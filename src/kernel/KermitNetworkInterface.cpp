@@ -18,7 +18,6 @@ KermitNetworkInterface::KermitNetworkInterface(bool verbose, bool debug)
   // Initialize topics
   kermit.drive_topic = drive_topic;
   kermit.cmd_topic = cmd_topic;
-  kermit.data_topic = data_topic;
   kermit.real_map_topic = real_map_topic;
 
   // Verbosity and debug mode
@@ -55,7 +54,6 @@ KermitNetworkInterface::init_comms()
   // Set the addresses of proxies
   kermit.drive_addr = drive_addr;
   kermit.cmd_addr = cmd_addr;
-  kermit.data_addr = data_addr;
   kermit.real_map_addr = real_map_addr;
 
   // The command velocity params for listening (a subscriber)
@@ -72,13 +70,6 @@ KermitNetworkInterface::init_comms()
   params.real_map_p.period = std::chrono::seconds(1); // TODO
   params.real_map_p.get_data =
     std::bind(&KermitNetworkInterface::map_message_get_data, this);
-
-  // The data sender (a publisher)
-  params.data_p.broker_frontend = data_addr;
-  params.data_p.topic = kermit.data_topic;
-  params.data_p.period = std::chrono::seconds(1);
-  params.data_p.get_data =
-    std::bind(&KermitNetworkInterface::data_message_get_data, this);
 
   // The command relay (a server)
   params.command_p.address = cmd_addr;
@@ -119,7 +110,6 @@ KermitNetworkInterface::initialize_control_client()
 {
   spin(params.cmd_vel_p);
   spin(params.real_map_p);
-  // spin(params.data_p); // ignoring this for now
   spin(params.command_p);
   return true;
 }

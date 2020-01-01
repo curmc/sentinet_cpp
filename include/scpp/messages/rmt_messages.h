@@ -30,6 +30,16 @@ typedef struct
 
 typedef struct
 {
+  float x;
+  float y;
+  float z;
+  float theta;
+  size_t indexes[4];
+  data_buffer buff;
+} pos_localizer;
+
+typedef struct
+{
   int16_t lin;
   int16_t ang;
   size_t indexes[2];
@@ -37,6 +47,8 @@ typedef struct
 } teensy_msg;
 
 
+pos_localizer
+create_pos_localizer();
 
 cmd_vel
 create_cmd_vel();
@@ -44,21 +56,31 @@ create_cmd_vel();
 imu_data
 create_imu_data();
 
+teensy_msg
+create_teensy_msg();
+
+// CMD_VEL
 int
 cmd_vel_to_wire(cmd_vel* vel);
 
 int
 cmd_vel_from_wire(cmd_vel* vel, const uint8_t* data);
 
-teensy_msg
-create_teensy_msg();
+// POS_LOCALIZER
+int
+pos_localizer_to_wire(pos_localizer* pos);
 
+int
+pos_localizer_from_wire(pos_localizer* pos, const uint8_t* data);
+
+// TEENSY_MSG
 int
 teensy_msg_to_wire(teensy_msg* msg);
 
 int
 teensy_msg_from_wire(teensy_msg* msg, const uint8_t* data);
 
+// IMU_DATA
 int
 imu_data_to_wire(imu_data* msg);
 

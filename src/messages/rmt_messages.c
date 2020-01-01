@@ -70,6 +70,98 @@ cmd_vel_from_wire(cmd_vel* vel, const uint8_t* data)
   return 1;
 }
 
+pos_localizer
+create_pos_localizer()
+{
+
+  pos_localizer pos;
+
+  float tempx = 1.0;
+  float tempy = 1.0;
+  float tempz = 1.0;
+  float temptheta = 1.0;
+
+  pos.x = tempx;
+  pos.y = tempy;
+  pos.z = tempz;
+  pos.theta = temptheta;
+
+  create_buffer(&pos.buff);
+
+  serialize_data(&pos.buff, &pos.x, sizeof(float), FLOAT);
+  serialize_data(&pos.buff, &pos.y, sizeof(float), FLOAT);
+  serialize_data(&pos.buff, &pos.z, sizeof(float), FLOAT);
+  serialize_data(&pos.buff, &pos.theta, sizeof(float), FLOAT);
+
+  to_wire(&pos.buff);
+
+  pos.indexes[0] =
+    (size_t)(get_data(pos.buff.data, &pos.x, 0).data - pos.buff.data);
+  pos.indexes[1] =
+    (size_t)(get_data(pos.buff.data, &pos.y, 1).data - pos.buff.data);
+  pos.indexes[2] =
+    (size_t)(get_data(pos.buff.data, &pos.z, 2).data - pos.buff.data);
+  pos.indexes[3] =
+    (size_t)(get_data(pos.buff.data, &pos.theta, 3).data - pos.buff.data);
+
+
+  if (*(float*)(pos.buff.data + pos.indexes[0]) != tempx) {
+    printf("Error\n");
+    return (pos_localizer){ 0 };
+  }
+  if (*(float*)(pos.buff.data + pos.indexes[1]) != tempy) {
+    printf("Error\n");
+    return (pos_localizer){ 0 };
+  }
+  if (*(float*)(pos.buff.data + pos.indexes[2]) != tempz) {
+    printf("Error\n");
+    return (pos_localizer){ 0 };
+  }
+  if (*(float*)(pos.buff.data + pos.indexes[3]) != temptheta) {
+    printf("Error\n");
+    return (pos_localizer){ 0 };
+  }
+
+  pos.x = 0.0;
+  pos.y = 0.0;
+  pos.z = 0.0;
+  pos.theta = 0.0;
+  return pos;
+}
+
+int
+pos_localizer_to_wire(pos_localizer* pos)
+{
+  if (!pos) {
+    printf("Error\n");
+    return -1;
+  }
+  float* tempx = (float*)(pos->buff.data + pos->indexes[0]);
+  float* tempy = (float*)(pos->buff.data + pos->indexes[1]);
+  float* tempz = (float*)(pos->buff.data + pos->indexes[2]);
+  float* temptheta = (float*)(pos->buff.data + pos->indexes[3]);
+  *tempx = pos->x;
+  *tempy = pos->y;
+  *tempz = pos->z;
+  *temptheta = pos->theta;
+  return 1;
+}
+
+int
+pos_localizer_from_wire(pos_localizer* pos, const uint8_t* data)
+{
+  if (!pos || !data) {
+    printf("Error \n");
+    return -1;
+  }
+
+  pos->x= *(float*)(data + pos->indexes[0]);
+  pos->y = *(float*)(data + pos->indexes[1]);
+  pos->z = *(float*)(data + pos->indexes[2]);
+  pos->theta = *(float*)(data + pos->indexes[3]);
+  return 1;
+}
+
 teensy_msg
 create_teensy_msg()
 {

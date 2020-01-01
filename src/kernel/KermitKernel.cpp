@@ -42,8 +42,6 @@ KermitKernel::KermitKernel(bool verbose, bool debug)
   message.cvel_buffer.ang = 0.0;
   update_teensy_message(0.0, 0.0);
 
-  // Create a new data buffer
-  message.data_buffer_temp = create_cmd_vel();
 
   // Create a new ping buffer
   message.ping = create_buffer_ping();
@@ -105,19 +103,6 @@ std::string
 KermitKernel::map_message_get_data(void)
 {
   return "Not implimented ";
-}
-
-std::string
-KermitKernel::data_message_get_data(void)
-{
-  cmd_vel_to_wire(&message.cvel_buffer);
-
-  if(kermit.verbose){
-    LOG_INFO("Data: ");
-    print_message_formatted(message.cvel_buffer.buff.data);
-  }
-
-  return std::string((char const*)(message.cvel_buffer.buff.data), 27);
 }
 
 ping_buffer

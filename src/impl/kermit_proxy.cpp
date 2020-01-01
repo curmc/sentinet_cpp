@@ -18,12 +18,12 @@ signalHandler(int signum)
 }
 
 const std::string CMD_VEL = "tcp://*:5570";
-const std::string DATA_ADDR = "tcp://*:5556";
+const std::string CAMERA_ADDR = "tcp://*:5556";
 const std::string COMMAND_ADDR = "tcp://*:5572";
 const std::string REAL_TIME_ADDR = "tcp://*:5573";
 
 const std::string CMD_VEL_F = "tcp://*:5571";
-const std::string DATA_ADDR_F = "tcp://*:5555";
+const std::string CAMERA_ADDR_F = "tcp://*:5555";
 const std::string COMMAND_ADDR_F = "tcp://*:5580";
 const std::string REAL_TIME_ADDR_F = "tcp://*:5581";
 
@@ -35,7 +35,7 @@ main(int argc, char* argv[])
 
   int cmdvel = 0;
   int realtime = 0;
-  int data = 0;
+  int camera = 0;
   int cmd = 0;
   int timer = 0;
   long time_period = 0;
@@ -54,7 +54,7 @@ main(int argc, char* argv[])
 
            "    --rt            Start a new real time proxy\n\n"
 
-           "    --data          Start a new data proxy on topic data\n\n"
+           "    --camera          Start a new camera proxy on topic camera\n\n"
 
            "    --command       Start a new command proxy\n\n"
 
@@ -71,8 +71,8 @@ main(int argc, char* argv[])
     if (!strcmp(argv[i], "--rt") && !realtime) {
       realtime = 1;
     }
-    if (!strcmp(argv[i], "--data") && !data) {
-      data = 1;
+    if (!strcmp(argv[i], "--camera") && !camera) {
+      camera = 1;
     }
     if (!strcmp(argv[i], "--command") && !cmd) {
       cmd = 1;
@@ -101,8 +101,8 @@ main(int argc, char* argv[])
       "realtime", REAL_TIME_ADDR_F, REAL_TIME_ADDR);
   }
 
-  if (data) {
-    proxies->create_pub_sub_endpoint("data", DATA_ADDR_F, DATA_ADDR);
+  if (camera) {
+    proxies->create_pub_sub_endpoint("camera", CAMERA_ADDR_F, CAMERA_ADDR);
   }
 
   if (cmd) {

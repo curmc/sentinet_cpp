@@ -27,12 +27,10 @@ namespace curmt {
 
 const static std::string drive_topic = "cmd_vel";
 const static std::string cmd_topic = "command";
-const static std::string data_topic = "data";
 const static std::string real_map_topic = "realtime";
 
 const static std::string drive_addr = "tcp://localhost:5571";
 const static std::string cmd_addr = "tcp://localhost:5580";
-const static std::string data_addr = "tcp://localhost:5555";
 const static std::string real_map_addr = "tcp://localhost:5581";
 
 /**
@@ -84,9 +82,6 @@ protected:
   // The get_data to the real time pipe channel
   virtual std::string map_message_get_data(void) = 0;
 
-  // The get_data to the data channel
-  virtual std::string data_message_get_data(void) = 0;
-
   // Ping callbacks
 protected:
   // Handles lower utility pings and returns a new constructed response ping
@@ -105,13 +100,11 @@ protected:
     // The topics / ids for each proxy
     std::string drive_topic;
     std::string cmd_topic;
-    std::string data_topic;
     std::string real_map_topic;
 
     // The addresses of each proxy
     std::string drive_addr;
     std::string cmd_addr;
-    std::string data_addr;
     std::string real_map_addr;
   } kermit;
 
@@ -120,7 +113,6 @@ private:
   {
     scpp::subscribe_params cmd_vel_p;
     scpp::publish_params real_map_p;
-    scpp::publish_params data_p;
     scpp::serve_params command_p;
   } params;
 
