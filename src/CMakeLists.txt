@@ -7,6 +7,7 @@ else()
 endif()
 
 # Order matters
+add_subdirectory("${PROJECT_SOURCE_DIR}/core")
 add_subdirectory("${PROJECT_SOURCE_DIR}/messages")
 add_subdirectory("${PROJECT_SOURCE_DIR}/control")
 add_subdirectory("${PROJECT_SOURCE_DIR}/kernel")

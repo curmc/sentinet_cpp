@@ -11,6 +11,8 @@
 // Local includes
 #include "scpp/kernel/SerialPort.hpp"
 #include "scpp/control/ZMQControlClient.hpp"
+#include "scpp/common.h"
+
 extern "C"
 {
 #include "scpp/messages/rmt_messages.h"

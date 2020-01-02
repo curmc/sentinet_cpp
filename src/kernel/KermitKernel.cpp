@@ -112,6 +112,12 @@ KermitKernel::ping_handler(uint8_t type, uint16_t code, uint64_t excess)
   ping_buffer resp = create_buffer_ping();
 
   switch (type) {
+    case (NOTIFICATION): {
+      resp.type = ACK;
+      resp.excess = 0x00;
+      resp.code = 0x00;
+      return resp;
+    }
     case (UNDEF): {
       resp.type = INVALID_REQUEST;
       resp.excess = 0x00;

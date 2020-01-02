@@ -17,24 +17,15 @@ signalHandler(int signum)
   exit(0);
 }
 
-const std::string CMD_VEL = "tcp://*:5570";
-const std::string CAMERA_ADDR = "tcp://*:5556";
-const std::string COMMAND_ADDR = "tcp://*:5572";
-const std::string REAL_TIME_ADDR = "tcp://*:5573";
-
-const std::string CMD_VEL_F = "tcp://*:5571";
-const std::string CAMERA_ADDR_F = "tcp://*:5555";
-const std::string COMMAND_ADDR_F = "tcp://*:5580";
-const std::string REAL_TIME_ADDR_F = "tcp://*:5581";
 
 int
 main(int argc, char* argv[])
 {
+  // Exit signals
   signal(SIGINT, signalHandler);
   signal(SIGQUIT, signalHandler);
 
   int cmdvel = 0;
-  int realtime = 0;
   int camera = 0;
   int cmd = 0;
   int timer = 0;
@@ -52,8 +43,6 @@ main(int argc, char* argv[])
            "    --cmd_vel       Start a new publisher proxy on cmd_vel "
            "topic\n\n"
 
-           "    --rt            Start a new real time proxy\n\n"
-
            "    --camera          Start a new camera proxy on topic camera\n\n"
 
            "    --command       Start a new command proxy\n\n"
@@ -67,9 +56,6 @@ main(int argc, char* argv[])
     }
     if (!strcmp(argv[i], "--cmd_vel") && !cmdvel) {
       cmdvel = 1;
-    }
-    if (!strcmp(argv[i], "--rt") && !realtime) {
-      realtime = 1;
     }
     if (!strcmp(argv[i], "--camera") && !camera) {
       camera = 1;
@@ -96,17 +82,14 @@ main(int argc, char* argv[])
     proxies->create_pub_sub_endpoint("cmd_vel", CMD_VEL, CMD_VEL_F);
   }
 
-  if (realtime) {
-    proxies->create_pub_sub_endpoint(
-      "realtime", REAL_TIME_ADDR_F, REAL_TIME_ADDR);
-  }
-
   if (camera) {
     proxies->create_pub_sub_endpoint("camera", CAMERA_ADDR_F, CAMERA_ADDR);
   }
 
   if (cmd) {
-    proxies->create_req_rep_endpoint("command", COMMAND_ADDR, COMMAND_ADDR_F);
+    proxies->create_req_rep_endpoint("command_kernel", COMMAND_ADDR, COMMAND_ADDR_F);
+    proxies->create_req_rep_endpoint("command_localizer", COMMAND_ADDR, COMMAND_ADDR_F);
+    proxies->create_req_rep_endpoint("command_tracker", COMMAND_ADDR, COMMAND_ADDR_F);
   }
 
   if (time_period == -1) {

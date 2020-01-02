@@ -72,6 +72,11 @@
  */
 #define STATE_REQUEST 8
 
+#define NOTIFICATION 9
+#define KERNEL 1
+#define LOCALIZER (1 << 1)
+#define KERNEL_UPDATE (1 << 2)
+
 #define DATA_REQUEST
 #define DATA_PING
 

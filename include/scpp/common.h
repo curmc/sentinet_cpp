@@ -1,25 +1,60 @@
 /**
- *  @file logging
- *  @brief A logging library
- *
- *  So the implimentation of logging WILL change. But, they system calls will
- * always be LOG_ERROR("stuf", args...) LOG_TRACE()
- *  ...
- *
- *  @author       theo (theo@varnsen)
- *  @created      Monday Jul 29, 2019 17:57:18 MDT
+ * @author      : theo (theo.j.lincke@gmail.com)
+ * @file        : common
+ * @created     : Thursday Jan 02, 2020 16:03:42 MST
  */
 
-#ifndef LOGGING_HPP
+#ifndef COMMON_H
 
-#define LOGGING_HPP
+#define COMMON_H
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <string.h>
 
+#include <memory>
+#include <chrono>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <vector>
+#include <thread>
+
+#include <cstdio>
+#include <cstdarg>
+#include <cstring>
+
+
+////////////////////////// ADDRESS STUFF ///////////////
+namespace addr {
+const std::string camera_topic = "camera";
+const std::string cmd_vel_topic = "cmd_vel";
+
+// KERNEL ADDRESSES
+namespace kernel {
+const int CAMERA = 5568;
+const int CMD_VEL = 5570;
+const int CONTROL_KERNEL = 5572;
+const int KERNEL_LOCALIZER = 5574;
+}
+
+// LOCALIZER ADDRESSES
+namespace localizer {
+const int KERNEL_LOCALIZER = 5576;
+const int LOCALIZER_CONTROL = 5578;
+}
+
+// CONTROLLER ADDRESSES
+namespace controller {
+const int LOCALIZER_CONTROL = 5580;
+const int CONTROL_KERNEL = 5582;
+}
+}
+
+std::string to_bind_addr(const int port);
+std::string to_conn_addr(const int port);
+
+
+
+//////////////////// LOGGING /////////////////////
 #define LOG_VERSION "0.1.0"
-
 typedef void (*log_LockFn)(void* udata, int lock);
 
 enum
@@ -32,12 +67,13 @@ enum
   LLOG_FATAL
 };
 
-#define log_trace(...) log_log(LLOG_TRACE, __FILE__, __LINE__, __VA_ARGS__)
-#define log_debug(...) log_log(LLOG_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
-#define log_info(...) log_log(LLOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
-#define log_warn(...) log_log(LLOG_WARN, __FILE__, __LINE__, __VA_ARGS__)
-#define log_error(...) log_log(LLOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)
-#define log_fatal(...) log_log(LLOG_FATAL, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_TRACE(...) log_log(LLOG_TRACE, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_DEBUG(...) log_log(LLOG_DEBUG, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_INFO(...) log_log(LLOG_INFO, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_WARN(...) log_log(LLOG_WARN, __FILE__, __LINE__, __VA_ARGS__)
+#define LOG_ERROR(...) log_log(LLOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)
+#define LLOG_FATAL(...) log_log(LLOG_FATAL, __FILE__, __LINE__, __VA_ARGS__)
+
 
 static void
 log_log(int level, const char* file, int line, const char* fmt, ...);
@@ -174,10 +210,4 @@ log_log(int level, const char* file_, int line, const char* fmt, ...)
   unlock();
 }
 
-#define LOG_TRACE log_trace
-#define LOG_DEBUG log_debug
-#define LOG_INFO log_info
-#define LOG_WARN log_warn
-#define LOG_ERROR log_error
-
-#endif /* end of include guard LOGGING_HPP */
+#endif
