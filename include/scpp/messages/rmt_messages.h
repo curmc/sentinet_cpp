@@ -11,6 +11,11 @@
 // #define LIGHT_MESSAGES
 #include "data_message.h"
 
+/*
+ * Message sent from the control unit to the kernel
+ * Decides desired linear and angular
+ * velocity or rotation
+ */
 typedef struct
 {
   float lin;
@@ -19,45 +24,79 @@ typedef struct
   data_buffer buff;
 } cmd_vel;
 
+/*
+ * A data packet from
+ * the given data keys
+ */
+#define TEENSY_MSG 1
+#define CAMERA_MESSAGE 2
 typedef struct
 {
-  float x_accel;
-  float y_accel;
-  float theta_accel;
-  size_t indexes[3];
+  int type;
+  size_t indexes[1];
   data_buffer buff;
-} imu_data;
+} sensor_msg;
 
 typedef struct
 {
   float x;
   float y;
-  float z;
   float theta;
-  size_t indexes[4];
-  data_buffer buff;
-} pos_localizer;
+  float dt;
+  size_t indexes[5];
+  sensor_msg msg;
+} camera_msg;
 
 typedef struct
 {
-  int16_t lin;
-  int16_t ang;
+  float v;
+  float w;
+  float dt;
+  size_t indexes[4];
+  sensor_msg msg;
+} teensy_sensor_array;
+
+typedef struct
+{
+  // The state vector
+  float x;
+  float y;
+  float theta;
+  float v;
+  float w;
+
+  size_t indexes[5];
+  data_buffer buff;
+} path_state;
+
+typedef struct
+{
+  float lin;
+  float ang;
   size_t indexes[2];
   data_buffer buff;
 } teensy_msg;
 
-
-pos_localizer
-create_pos_localizer();
-
 cmd_vel
 create_cmd_vel();
 
-imu_data
-create_imu_data();
-
 teensy_msg
 create_teensy_msg();
+
+path_state
+create_path_state();
+
+teensy_sensor_array
+create_teensy_sensor_array();
+
+camera_msg
+create_camera_msg();
+
+sensor_msg
+create_sensor_msg();
+
+int
+sensor_msg_from_wire(sensor_msg* msg, const uint8_t* data);
 
 // CMD_VEL
 int
@@ -66,12 +105,12 @@ cmd_vel_to_wire(cmd_vel* vel);
 int
 cmd_vel_from_wire(cmd_vel* vel, const uint8_t* data);
 
-// POS_LOCALIZER
+// PATH_STATE
 int
-pos_localizer_to_wire(pos_localizer* pos);
+path_state_to_wire(path_state* pos);
 
 int
-pos_localizer_from_wire(pos_localizer* pos, const uint8_t* data);
+path_state_from_wire(path_state* pos, const uint8_t* data);
 
 // TEENSY_MSG
 int
@@ -80,11 +119,18 @@ teensy_msg_to_wire(teensy_msg* msg);
 int
 teensy_msg_from_wire(teensy_msg* msg, const uint8_t* data);
 
-// IMU_DATA
+// TEENSY SENSOR ARRAY
 int
-imu_data_to_wire(imu_data* msg);
+teensy_sensor_array_to_wire(teensy_sensor_array* msg);
 
 int
-imu_data_from_wire(imu_data* msg, const uint8_t* data);
+teensy_sensor_array_from_wire(teensy_sensor_array* msg, const uint8_t* data);
+
+// TEENSY SENSOR ARRAY
+int
+camera_msg_to_wire(camera_msg* msg);
+
+int
+camera_msg_from_wire(camera_msg* msg, const uint8_t* data);
 
 #endif /* end of include guard RMT_MESSAGES_H */

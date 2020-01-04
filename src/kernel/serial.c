@@ -205,8 +205,13 @@ int
 new_teensy_device(teensy_device* device, const char* serialport)
 {
   device->fd = 0;
-  device->msg.lin = 0;
-  device->msg.ang = 0;
+  device->msg = (cmd_vel_message){
+    0,
+  };
+  device->resp_msg = (state_resp){
+    0,
+  };
+
   memset(device->buffer, 0, BUFFER_SIZE);
 
   device->fd = serialport_init(serialport, 9600);
@@ -218,7 +223,7 @@ teensy_send_data(teensy_device* device)
 {
   device->buffer[0] = 'd';
 
-  int* temp = (int*)&device->buffer[1];
+  float* temp = (float*)&device->buffer[1];
   *temp++ = device->msg.lin;
   *temp++ = device->msg.ang;
 
@@ -228,18 +233,12 @@ teensy_send_data(teensy_device* device)
 
   size_t size = next - device->buffer;
 
-  /** printf("Sending: "); */
-  /** for (int i = 0; i < size; ++i) { */
-  /**   printf("%x ", device->buffer[i]); */
-  /** } */
-  /** printf("\n"); */
-
   serialport_write(device->fd, device->buffer, size);
   return size;
 }
 
 size_t
-send_drive(teensy_device* device, int lin, int ang)
+send_drive(teensy_device* device, float lin, float ang)
 {
   device->msg.lin = lin;
   device->msg.ang = ang;
@@ -247,11 +246,33 @@ send_drive(teensy_device* device, int lin, int ang)
 }
 
 size_t
-send_float_drive(teensy_device* device, float lin, float ang)
+read_teensy_response(teensy_device* device,
+                     float* omega,
+                     float* velocity,
+                     float* w_err,
+                     float* dt)
 {
-  device->msg.lin = (int)lin;
-  device->msg.ang = (int)ang;
-  return teensy_send_data(device);
+  size_t size = 1 + sizeof(float) * 4; // size of the incomming message
+  int ret;
+  if ((ret = serialport_read(device->fd, device->buffer, size, 1)) < 0)
+    return ret;
+
+  // Invalid message
+  if (device->buffer[0] != 'r')
+    return ret;
+
+  float* handle = (float*)&device->buffer[1];
+
+  device->resp_msg = (state_resp){ .v = *(handle),
+                                   .w = *(handle + 1),
+                                   .w_err = *(handle + 2),
+                                   .dt = *(handle + 3) };
+
+  *velocity = *(handle);
+  *omega = *(handle + 1);
+  *w_err = *(handle + 2);
+  *dt = *(handle + 3);
+  return ret;
 }
 
 int

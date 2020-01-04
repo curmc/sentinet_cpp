@@ -13,12 +13,8 @@
 
 #define PIPEINTERFACE_HPP
 
-// C++ Includes
-#include <string>
-#include <memory>
-#include <unordered_map>
-
 // Local Includes
+#include "scpp/common.h"
 #include "scpp/core/messages/pipe/FilterInterface.hpp"
 #include "scpp/core/messages/pipe/ProxyInterface.hpp"
 #include "scpp/messages/pipe/ZMQPubSubProxy.hpp"

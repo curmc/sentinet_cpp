@@ -10,7 +10,6 @@
 
 // Local includes
 #include "scpp/control/ZMQControlClient.hpp"
-#include "scpp/kernel/Defaults.hpp"
 
 extern "C"
 {
@@ -18,10 +17,6 @@ extern "C"
 #include "scpp/messages/rmt_messages.h"
 #include "scpp/messages/ping_message.h"
 }
-
-// C++ includes
-#include <chrono>
-#include <memory>
 
 #define KERMIT_STATE uint8_t
 

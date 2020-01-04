@@ -53,7 +53,7 @@ KermitControlModule::start_kermit()
     message.cvel_buff.lin = __get_lin__();
     message.cvel_buff.ang = __get_ang__();
     cmd_vel_to_wire(&message.cvel_buff);
-    return scpp::string((char const*)message.cvel_buff.buff.data, 27);
+    return std::string((char const*)message.cvel_buff.buff.data, 27);
   };
   publish.period = std::chrono::milliseconds(10);
 

@@ -17,10 +17,6 @@ extern "C"
 #include "scpp/messages/ping_message.h"
 }
 
-// C++ includes
-#include <memory>
-#include <chrono>
-
 namespace scpp {
 namespace curmt {
 
@@ -28,71 +24,72 @@ namespace curmt {
  * @brief Kermit Kernel is the low level kernel that is
  * driving the robot
  */
-class KermitKernel : public ::scpp::curmt::KermitNetworkInterface
+class KermitKernel : private ::scpp::curmt::KermitNetworkInterface
 {
 public:
   /*
    * No default constructor
    */
   KermitKernel(bool verbose, bool debug);
-  virtual ~KermitKernel() = default;
+  virtual ~KermitKernel() { kermit_quit(); }
+
+public:
+  // Set the serial attributes (port and period)
+  bool set_serial_attributes(const std::string port,
+                             const std::chrono::microseconds serial_period);
+
+  // Set the amount of alive time
+  bool set_alive_time(const std::chrono::seconds timer);
+
+  // start
+  bool start(int context = 0) override;
 
 protected:
   // CALLBACKS
-  // The subscription to cmd_vel topic
   void drive_message_subscribe_callback(std::string& message) override;
-
-  // The subscription to the command channel
-  std::string cmd_message_callback(std::string& message) override;
-
-  // The get_data to the real time pipe channel
-  std::string map_message_get_data(void) override;
-
+  std::string localizer_cmd_get_data(void) override;
 
   // Ping callbacks
 private:
-  // Handles lower utility pings and returns a new constructed response ping
-  // Responds with ACK if ping is a state request
-  ping_buffer ping_handler(uint8_t type, uint16_t code, uint64_t excess) override;
+  // Registered for type STATE_REQUEST
+  ping robot_ping_handler(ping);
 
-  ping_buffer message_request_handler(uint16_t code, uint64_t excess);
-
-  // Handles ping message with type 8 (state request ping)
-  int robot_ping_handler(uint16_t code, uint64_t excess);
-
-  // Handlers for each state
-  int stop_everything_handler(uint64_t excess);
-  int dump_handler(uint64_t excess);
-  int mine_handler(uint64_t excess);
-  int move_to_mine_handler(uint64_t excess);
-  int move_to_dump_handler(uint64_t excess);
-  int init_handler(uint64_t excess);
-  int clean_exit_handler(uint64_t excess);
+  // Ping handlers
+  int stop_everything_handler(uint64_t excess, ping& resp);
+  int dump_handler(uint64_t excess, ping& resp);
+  int mine_handler(uint64_t excess, ping& resp);
+  int move_to_mine_handler(uint64_t excess, ping& resp);
+  int move_to_dump_handler(uint64_t excess, ping& resp);
+  int init_handler(uint64_t excess, ping& resp);
+  int clean_exit_handler(uint64_t excess, ping& resp);
 
 private:
   // bool send_data();
-  struct 
+  struct
   {
-    std::atomic<bool> receiving_cvels;
     cmd_vel cvel_buffer;
-    ping_buffer ping;
+    teensy_sensor_array teensy_buffer;
 
   } message;
 
-  struct 
+  struct
   {
-    uint8_t current_state;
-
-    uint8_t hard_stop;
-    uint8_t dump;
-    uint8_t mine;
-    uint8_t move_to_mine;
-    uint8_t move_to_dump;
-    uint8_t init;
-    uint8_t clean_exit;
+    uint8_t hard_stop : 1;
+    uint8_t dump : 1;
+    uint8_t mine : 1;
+    uint8_t move_to_mine : 1;
+    uint8_t move_to_dump : 1;
+    uint8_t init : 1;
+    uint8_t clean_exit : 1;
   } states;
+
+  std::chrono::seconds time_alive;
+  std::string s_port;
+  std::chrono::microseconds s_period;
+  std::atomic<bool> receiving_cvels;
 };
 
 } // namespace curmt
 } // namespace scpp
+
 #endif /* end of include guard KERMITKERNEL_HPP */

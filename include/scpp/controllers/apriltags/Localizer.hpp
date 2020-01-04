@@ -15,7 +15,8 @@
 
 #include "scpp/control/ZMQControlClient.hpp"
 
-extern "C" {
+extern "C"
+{
 #include "scpp/messages/rmt_messages.h"
 }
 
@@ -27,42 +28,43 @@ const static std::string camera_addr = "tcp://localhost:5555";
 
 class Localizer : public scpp::net::ZMQControlClient
 {
-  public:
-    Localizer() = delete;
+public:
+  Localizer() = delete;
 
-    Localizer (bool verbose = false);
-    virtual ~Localizer () = default;
-    
-    bool localizer_start(const std::chrono::seconds period_);
-    bool localizer_quit();
+  Localizer(bool verbose = false);
+  virtual ~Localizer() = default;
 
-  protected:
-    void set_pos(float x, float y, float z, float theta);
-    inline void stop_running() { running = false; }
-    void print_state();
-    bool verbose;
+  bool localizer_start(const std::chrono::seconds period_);
+  bool localizer_quit();
 
-  private:
-    // The publisher callback
-    std::string get_pos(void);
+protected:
+  void set_pos(float x, float y, float z, float theta);
+  inline void stop_running() { running = false; }
+  void print_state();
+  bool verbose;
 
-  private:
-    struct {
-      pos_localizer loc;
-      size_t size;
-    } message;
+private:
+  // The publisher callback
+  std::string get_pos(void);
 
-    struct {
-      scpp::publish_params camera_p; 
-      std::string camera_addr;
-      std::string camera_topic;
-    } network;
+private:
+  struct
+  {
+    pos_localizer loc;
+    size_t size;
+  } message;
 
-    volatile bool running;
+  struct
+  {
+    scpp::publish_params camera_p;
+    std::string camera_addr;
+    std::string camera_topic;
+  } network;
+
+  volatile bool running;
 };
 
 }
 }
 
 #endif /* end of include guard LOCALIZER_HPP */
-

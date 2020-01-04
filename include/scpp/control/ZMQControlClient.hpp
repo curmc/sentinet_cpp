@@ -9,12 +9,10 @@
 #define ZMQCONTROLCLIENT_HPP
 
 // Local includes
-#include "scpp/core/types.h"
-#include "scpp/core/utils/logging.hpp"
-#include "scpp/core/utils/strings.hpp"
-#include "scpp/core/control/ControlClientInterface.hpp"
 #include "scpp/control/zhelpers.hpp"
+#include "scpp/core/control/ControlClientInterface.hpp"
 #include "scpp/control/NetworkPatterns.hpp"
+#include "scpp/common.h"
 
 /**
  * @brief A ZMQControl Client is an implementation of the Control Client
@@ -31,17 +29,6 @@
  * threads. This is why ZMQ socket thread space exists, to seperate sockets from
  * threads.
  */
-
-namespace utils {
-namespace defaults {
-constexpr auto DEFAULT_SOCKET_PREFIX = "default";
-constexpr auto SERVER_TCP_PREFIX = "tcp://*";
-constexpr auto SERVER_UDP_PREFIX = "udp://*";
-constexpr auto LOCAL_HOST_UDP_PREFIX = "udp://127.0.0.1";
-constexpr auto LOCAL_HOST_TCP_PREFIX = "tcp://127.0.0.1";
-constexpr auto DEFAULT_ZMQ_CONTROL_NAME = "ZMQController";
-} // namespace defaults
-} // namespace utils
 
 namespace scpp {
 namespace net {
@@ -66,7 +53,7 @@ public:
    *
    * @return status
    */
-  bool initialize_publisher(const scpp::string& address) override;
+  bool initialize_publisher(const std::string& address) override;
 
   /**
    * @brief Refer to initialize_publisher
@@ -81,73 +68,75 @@ public:
 public:
   ///////////////////////////// PUBLISH /////////////////////////////////
   // Publishes on <this thread>
-  bool publish(const scpp::string& topic, const scpp::string& message) override;
+  bool publish(const std::string& topic, const std::string& message) override;
 
   // Does not execute above fnc - creates a new periodic publisher thread
-  bool publish(const scpp::string sock_addr,
-               const scpp::string topic,
-               scpp::function<scpp::string(void)> get_data_to_publish,
-               scpp::time::microseconds period) override;
+  bool publish(const std::string sock_addr,
+               const std::string topic,
+               std::function<std::string(void)> get_data_to_publish,
+               std::chrono::microseconds period) override;
 
-  bool cancel_periodic_publisher(const scpp::string&) override;
+  bool cancel_periodic_publisher(const std::string&) override;
 
   ///////////////////////////// REQUEST /////////////////////////////////
-  scpp::string request(const scpp::string destination,
-                       const scpp::string message) override;
+  std::string request(const std::string destination,
+                      const std::string message) override;
 
   // Does not execute above fnc
-  bool request(const scpp::string destination,
-               const scpp::string id,
-               scpp::function<scpp::string(void)> get_data_to_request,
-               const scpp::function<void(scpp::string&)> callback,
-               const scpp::time::microseconds period) override;
+  bool request(const std::string destination,
+               const std::string id,
+               std::function<std::string(void)> get_data_to_request,
+               const std::function<void(std::string&)> callback,
+               const std::chrono::microseconds period) override;
 
-  bool cancel_periodic_request(const scpp::string&) override;
+  bool cancel_periodic_request(const std::string&) override;
 
   ///////////////////////////// SUBSCRIBE /////////////////////////////////
-  bool subscribe(const scpp::string sock_addr,
-                 const scpp::string topic,
-                 scpp::function<void(scpp::string&)> callback) override;
+  bool subscribe(const std::string sock_addr,
+                 const std::string topic,
+                 std::function<void(std::string&)> callback) override;
 
-  bool cancel_subscription(const scpp::string& topic) override;
+  bool cancel_subscription(const std::string& topic) override;
 
   ///////////////////////////// SERVE /////////////////////////////////
-  bool serve(const scpp::string address,
-             scpp::function<scpp::string(scpp::string&)> callback) override;
+  bool serve(const std::string address,
+             std::function<std::string(std::string&)> callback) override;
 
-  bool terminate_server(const scpp::string& address) override;
+  bool terminate_server(const std::string& address) override;
 
+  bool bind_server(const std::string address,
+                   std::function<std::string(std::string&)> callback);
   // Thread functions
 private:
   static void periodic_publish_thread(
-    scpp::unique_ptr<Publisher_Context> pub_context)
+    std::unique_ptr<Publisher_Context> pub_context)
   {
     pub_context->enter_thread();
   }
   static void periodic_request_thread(
-    scpp::unique_ptr<Requester_Context> req_context)
+    std::unique_ptr<Requester_Context> req_context)
   {
     req_context->enter_thread();
   }
   static void subscription_thread(
-    scpp::unique_ptr<Subscriber_Context> sub_context)
+    std::unique_ptr<Subscriber_Context> sub_context)
   {
     sub_context->enter_thread();
   }
-  static void server_thread(scpp::unique_ptr<Server_Context> serv_thread)
+  static void server_thread(std::unique_ptr<Server_Context> serv_thread)
   {
     serv_thread->enter_thread();
   }
 
 private:
   // Assuming socket is already bound to an address
-  static void concurrent_publish(scpp::unique_ptr<::zmq::socket_t> socket,
-                                 const scpp::string& topic,
-                                 const scpp::string& message);
+  static void concurrent_publish(std::unique_ptr<::zmq::socket_t> socket,
+                                 const std::string& topic,
+                                 const std::string& message);
 
-  scpp::string concurrent_request(const scpp::string& server,
-                                  scpp::unique_ptr<::zmq::socket_t> socket,
-                                  const scpp::string& message);
+  std::string concurrent_request(const std::string& server,
+                                 std::unique_ptr<::zmq::socket_t> socket,
+                                 const std::string& message);
 
   // Data structures
 private:
@@ -161,9 +150,9 @@ private:
   typedef struct
   {
     // Might add more
-    scpp::unique_ptr<scpp::thread> thread;
-    scpp::promise<void> exit_signal;
-    scpp::unique_ptr<::zmq::socket_t> socket;
+    std::unique_ptr<std::thread> thread;
+    std::promise<void> exit_signal;
+    std::unique_ptr<::zmq::socket_t> socket;
   } socket_thread_space;
 
   /**
@@ -178,10 +167,10 @@ private:
    */
   typedef struct socket_data_s
   {
-    scpp::unordered_map<scpp::string, socket_thread_space> subscribers;
-    scpp::unordered_map<scpp::string, socket_thread_space> servers;
-    scpp::unordered_map<scpp::string, socket_thread_space> periodic_clients;
-    scpp::unordered_map<scpp::string, socket_thread_space> periodic_publishers;
+    std::unordered_map<std::string, socket_thread_space> subscribers;
+    std::unordered_map<std::string, socket_thread_space> servers;
+    std::unordered_map<std::string, socket_thread_space> periodic_clients;
+    std::unordered_map<std::string, socket_thread_space> periodic_publishers;
   } socket_data;
 
   /**
@@ -190,7 +179,7 @@ private:
   typedef struct
   {
     unsigned int supported_threads;
-    scpp::string control_node_name;
+    std::string control_node_name;
   } control_meta_data;
 
 private:
@@ -204,8 +193,8 @@ private:
   ::zmq::context_t context;
 
   // Unique per control client
-  scpp::unique_ptr<::zmq::socket_t> this_publisher;
-  scpp::unique_ptr<::zmq::socket_t> this_client;
+  std::unique_ptr<::zmq::socket_t> this_publisher;
+  std::unique_ptr<::zmq::socket_t> this_client;
 
   // Helper Functions
 private:
@@ -214,10 +203,10 @@ private:
   // Creates and inserts socket into map
   inline socket_thread_space& create_socket(int type,
                                             T& map,
-                                            const scpp::string identifier)
+                                            const std::string identifier)
   {
     socket_thread_space socket_thread;
-    map.emplace(identifier, scpp::move(socket_thread));
+    map.emplace(identifier, std::move(socket_thread));
     map[identifier].socket = std::make_unique<::zmq::socket_t>(context, type);
     return map[identifier];
   }

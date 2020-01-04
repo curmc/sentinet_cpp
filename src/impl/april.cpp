@@ -8,12 +8,14 @@
 
 using namespace scpp::curmt;
 
-int main() {
+int
+main()
+{
   AprilDetector det(0, true, "tag36h11", true);
   det.sync_start();
 
-  while(true) {
-    if(!det.loop())
+  while (true) {
+    if (!det.loop())
       break;
   }
   return 0;

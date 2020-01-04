@@ -5,7 +5,6 @@
  */
 
 #include "scpp/core/messages/pipe/ProxyInterface.hpp"
-#include <iostream>
 
 namespace scpp {
 namespace core {

@@ -9,9 +9,8 @@
 #define NETWORKPATTERNS_HPP
 
 // Local includes
-#include "scpp/core/types.h"
 #include "scpp/control/zhelpers.hpp"
-#include "scpp/core/utils/logging.hpp"
+#include "scpp/common.h"
 
 namespace scpp {
 namespace net {
@@ -21,12 +20,12 @@ class Publisher_Context
 protected:
   typedef struct thread_properties
   {
-    scpp::string sock_addr;
-    scpp::future<void> exit_signal;
-    scpp::unique_ptr<::zmq::socket_t> socket;
-    scpp::string topic;
-    scpp::function<scpp::string(void)> data;
-    scpp::time::microseconds period;
+    std::string sock_addr;
+    std::future<void> exit_signal;
+    std::unique_ptr<::zmq::socket_t> socket;
+    std::string topic;
+    std::function<std::string(void)> data;
+    std::chrono::microseconds period;
   } thread_properties;
 
   static void periodic_publish_thread(thread_properties& properties);
@@ -37,30 +36,30 @@ public:
   Publisher_Context() {}
   ~Publisher_Context() {}
 
-  inline void set_sock_addr(const scpp::string& sock_addr)
+  inline void set_sock_addr(const std::string& sock_addr)
   {
     properties.sock_addr = sock_addr;
   }
 
-  inline void set_exit_signal(scpp::future<void> exit_signal)
+  inline void set_exit_signal(std::future<void> exit_signal)
   {
-    properties.exit_signal = scpp::move(exit_signal);
+    properties.exit_signal = std::move(exit_signal);
   }
 
-  inline void set_socket(scpp::unique_ptr<::zmq::socket_t> socket)
+  inline void set_socket(std::unique_ptr<::zmq::socket_t> socket)
   {
-    properties.socket = scpp::move(socket);
+    properties.socket = std::move(socket);
   }
 
-  inline void set_topic(const scpp::string& topic) { properties.topic = topic; }
+  inline void set_topic(const std::string& topic) { properties.topic = topic; }
 
   inline void set_data_request_callback(
-    scpp::function<scpp::string(void)> callback)
+    std::function<std::string(void)> callback)
   {
     properties.data = callback;
   }
 
-  inline void set_period(const scpp::time::microseconds period)
+  inline void set_period(const std::chrono::microseconds period)
   {
     properties.period = period;
   }
@@ -73,41 +72,50 @@ class Server_Context
 protected:
   typedef struct thread_properties
   {
-    scpp::string sock_addr;
-    scpp::future<void> exit_signal;
-    scpp::unique_ptr<::zmq::socket_t> socket;
-    scpp::function<scpp::string(scpp::string&)> callback;
+    std::string sock_addr;
+    std::future<void> exit_signal;
+    std::unique_ptr<::zmq::socket_t> socket;
+    std::function<std::string(std::string&)> callback;
   } thread_properties;
 
+  bool bound;
+
   static void server_thread(thread_properties& properties);
+  static void server_thread_bound(thread_properties& properties);
 
   thread_properties properties;
 
 public:
-  Server_Context() {}
+  Server_Context(bool bound_ = false) { bound = bound_; }
   ~Server_Context() {}
 
-  inline void set_exit_signal(scpp::future<void> exit_signal)
+  inline void set_exit_signal(std::future<void> exit_signal)
   {
-    properties.exit_signal = scpp::move(exit_signal);
+    properties.exit_signal = std::move(exit_signal);
   }
 
-  inline void set_socket(scpp::unique_ptr<::zmq::socket_t> socket)
+  inline void set_socket(std::unique_ptr<::zmq::socket_t> socket)
   {
-    properties.socket = scpp::move(socket);
+    properties.socket = std::move(socket);
   }
 
-  inline void set_address(const scpp::string& address)
+  inline void set_address(const std::string& address)
   {
     properties.sock_addr = address;
   }
 
-  inline void set_callback(scpp::function<scpp::string(scpp::string&)> callback)
+  inline void set_callback(std::function<std::string(std::string&)> callback)
   {
     properties.callback = callback;
   }
 
-  inline void enter_thread() { server_thread(properties); }
+  inline void enter_thread()
+  {
+    if (bound)
+      server_thread_bound(properties);
+    else
+      server_thread(properties);
+  }
 };
 
 class Subscriber_Context
@@ -115,11 +123,11 @@ class Subscriber_Context
 protected:
   typedef struct thread_properties
   {
-    scpp::string topic;
-    scpp::string address;
-    scpp::future<void> exit_signal;
-    scpp::unique_ptr<::zmq::socket_t> socket;
-    scpp::function<void(scpp::string&)> callback;
+    std::string topic;
+    std::string address;
+    std::future<void> exit_signal;
+    std::unique_ptr<::zmq::socket_t> socket;
+    std::function<void(std::string&)> callback;
   } thread_properties;
 
   static void subscription_thread(thread_properties& properties);
@@ -130,24 +138,24 @@ public:
   Subscriber_Context() {}
   ~Subscriber_Context() {}
 
-  inline void set_exit_signal(scpp::future<void> exit_signal)
+  inline void set_exit_signal(std::future<void> exit_signal)
   {
-    properties.exit_signal = scpp::move(exit_signal);
+    properties.exit_signal = std::move(exit_signal);
   }
 
-  inline void set_sock_addr(const scpp::string& address)
+  inline void set_sock_addr(const std::string& address)
   {
     properties.address = address;
   }
 
-  inline void set_topic(const scpp::string& topic) { properties.topic = topic; }
+  inline void set_topic(const std::string& topic) { properties.topic = topic; }
 
-  inline void set_socket(scpp::unique_ptr<::zmq::socket_t> socket)
+  inline void set_socket(std::unique_ptr<::zmq::socket_t> socket)
   {
-    properties.socket = scpp::move(socket);
+    properties.socket = std::move(socket);
   }
 
-  inline void set_callback(scpp::function<void(scpp::string&)> callback)
+  inline void set_callback(std::function<void(std::string&)> callback)
   {
     properties.callback = callback;
   }
@@ -160,12 +168,12 @@ class Requester_Context
 protected:
   typedef struct thread_properties
   {
-    scpp::future<void> exit_signal;
-    scpp::unique_ptr<::zmq::socket_t> socket;
-    scpp::string server;
-    scpp::function<scpp::string(void)> get_data;
-    scpp::function<void(scpp::string&)> callback;
-    scpp::time::microseconds period;
+    std::future<void> exit_signal;
+    std::unique_ptr<::zmq::socket_t> socket;
+    std::string server;
+    std::function<std::string(void)> get_data;
+    std::function<void(std::string&)> callback;
+    std::chrono::microseconds period;
   } thread_properties;
 
   static void requester_thread(thread_properties& properties);
@@ -176,32 +184,32 @@ public:
   Requester_Context() {}
   ~Requester_Context() {}
 
-  inline void set_exit_signal(scpp::future<void> exit_signal)
+  inline void set_exit_signal(std::future<void> exit_signal)
   {
-    properties.exit_signal = scpp::move(exit_signal);
+    properties.exit_signal = std::move(exit_signal);
   }
 
-  inline void set_socket(scpp::unique_ptr<::zmq::socket_t> socket)
+  inline void set_socket(std::unique_ptr<::zmq::socket_t> socket)
   {
-    properties.socket = scpp::move(socket);
+    properties.socket = std::move(socket);
   }
 
-  inline void set_data_request(scpp::function<scpp::string(void)> callback)
+  inline void set_data_request(std::function<std::string(void)> callback)
   {
     properties.get_data = callback;
   }
 
-  inline void set_callback(scpp::function<void(scpp::string&)> callback)
+  inline void set_callback(std::function<void(std::string&)> callback)
   {
     properties.callback = callback;
   }
 
-  inline void set_period(const scpp::time::microseconds period)
+  inline void set_period(const std::chrono::microseconds period)
   {
     properties.period = period;
   }
 
-  inline void set_server(const scpp::string& address)
+  inline void set_server(const std::string& address)
   {
     properties.server = address;
   }

@@ -6,7 +6,6 @@
 
 // Local Includes
 #include "scpp/control/NetworkPatterns.hpp"
-#include <mutex>
 
 static std::mutex mutex_lock;
 
@@ -145,14 +144,52 @@ Requester_Context::requester_thread(thread_properties& properties)
 }
 
 void
-Server_Context::server_thread(thread_properties& properties)
+Server_Context::server_thread_bound(thread_properties& properties)
 {
   // Set up the socket
   auto socket = std::move(properties.socket);
   LOG_INFO("Server started on %s", properties.sock_addr.c_str());
 
   // socket->connect(properties.sock_addr);
-  socket->connect("tcp://localhost:5580");
+  socket->bind(properties.sock_addr);
+
+  auto exit_signal = std::move(properties.exit_signal);
+
+  auto callback = properties.callback;
+
+  // Create a zmq poller to check on the socket
+  ::zmq::pollitem_t item[1] = {
+    { static_cast<void*>(*socket.get()), 0, ZMQ_POLLIN, 0 }
+  };
+
+  LOG_INFO("Server thread attached to address %s has begun",
+           properties.sock_addr.c_str());
+
+  std::string preallocated_request_string;
+  std::string preallocated_server_string;
+
+  while (exit_signal.wait_for(std::chrono::milliseconds(0)) ==
+         std::future_status::timeout) {
+    ::zmq::poll(&item[0], 1, 100);
+    if (item[0].revents & ZMQ_POLLIN) {
+      preallocated_request_string = s_recv(*socket.get());
+      std::lock_guard<std::mutex> guard(mutex_lock);
+      preallocated_server_string = callback(preallocated_request_string);
+      s_send(*socket, preallocated_server_string);
+    }
+  }
+
+  LOG_INFO("Server thread at address %s has ended",
+           properties.sock_addr.c_str());
+}
+void
+Server_Context::server_thread(thread_properties& properties)
+{
+  // Set up the socket
+  auto socket = std::move(properties.socket);
+  LOG_INFO("Server started on %s", properties.sock_addr.c_str());
+
+  socket->connect(properties.sock_addr);
 
   auto exit_signal = std::move(properties.exit_signal);
 

@@ -25,14 +25,23 @@ extern "C"
 
   typedef struct
   {
-    int8_t lin;
-    int8_t ang;
+    float lin;
+    float ang;
   } cmd_vel_message;
+
+  typedef struct
+  {
+    float v;
+    float w;
+    float w_err;
+    float dt;
+  } state_resp;
 
   typedef struct
   {
     int fd;
     cmd_vel_message msg;
+    state_resp resp_msg;
     uint8_t buffer[BUFFER_SIZE];
   } teensy_device;
 
@@ -53,13 +62,23 @@ extern "C"
                             uint8_t until,
                             size_t buf_max,
                             int timeout);
+
   int serialport_flush(int fd);
 
   int new_teensy_device(teensy_device* device, const char* serialport);
+
   int teensy_cleanup(teensy_device* device);
+
   int send_teensy_status(teensy_device* device, int lin, int ang);
-  size_t send_drive(teensy_device* device, int lin, int ang);
-  size_t send_float_drive(teensy_device* device, float lin, float ang);
+
+  size_t send_drive(teensy_device* device, float lin_accel, float ang_accel);
+
+  size_t read_teensy_response(teensy_device* device,
+                              float* omega,
+                              float* velocity,
+                              float* w_err,
+                              float* dt);
+
   int stop_robot(teensy_device* device);
 
 #ifdef __cplusplus

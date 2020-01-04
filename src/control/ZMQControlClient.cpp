@@ -11,7 +11,7 @@ ZMQControlClient::ZMQControlClient(int context_)
   this_client = nullptr;
 
   // Name the node
-  meta.control_node_name = utils::defaults::DEFAULT_ZMQ_CONTROL_NAME;
+  meta.control_node_name = addr::zmq_control_name;
 
   // For meta information, store the number of threadsd possible
   meta.supported_threads = std::thread::hardware_concurrency();
@@ -234,6 +234,31 @@ ZMQControlClient::serve(const std::string address,
   auto&& futureObj = val.exit_signal.get_future();
 
   auto serv_context = std::make_unique<Server_Context>();
+
+  serv_context->set_address(address);
+  serv_context->set_exit_signal(std::move(futureObj));
+  serv_context->set_socket(std::move(val.socket));
+  serv_context->set_callback(callback);
+
+  val.thread = std::make_unique<std::thread>(&ZMQControlClient::server_thread,
+                                             std::move(serv_context));
+  return true;
+}
+
+bool
+ZMQControlClient::bind_server(const std::string address,
+                              std::function<std::string(std::string&)> callback)
+{
+  auto&& found = thread_space.servers.find(address);
+  if (found != thread_space.servers.end()) {
+    std::cout << "Already have a server there bud" << std::endl;
+    return false;
+  }
+
+  auto&& val = create_socket(ZMQ_REP, thread_space.servers, address);
+  auto&& futureObj = val.exit_signal.get_future();
+
+  auto serv_context = std::make_unique<Server_Context>(true);
 
   serv_context->set_address(address);
   serv_context->set_exit_signal(std::move(futureObj));

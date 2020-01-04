@@ -8,12 +8,11 @@
 
 #define APRIL_POS_ESTIMATOR_H
 
-#include <iostream>
 #include "opencv2/opencv.hpp"
-#include "scpp/core/utils/logging.hpp"
 #include "scpp/controllers/apriltags/Localizer.hpp"
 
-extern "C" {
+extern "C"
+{
 #include <apriltag/apriltag.h>
 #include <apriltag/tag36h11.h>
 #include <apriltag/tag25h9.h>
@@ -32,54 +31,57 @@ using namespace cv;
 namespace scpp {
 namespace curmt {
 
-class AprilDetector : public scpp::curmt::Localizer {
-  public:
-    AprilDetector() = delete;
+class AprilDetector : public scpp::curmt::Localizer
+{
+public:
+  AprilDetector() = delete;
 
-    /**
-     * @brief Default Constructor
-     *
-     * @param threads Asynchronous (0 means synchronous, anything above is concurrent)
-     * @param show_stream_ if true, shows the camera stream (imshow)
-     * @param tag_type The april tag type
-     */
-    AprilDetector(const int threads = 0, bool show_stream_ = false, const std::string& tag_type = DEFAULT_TAG, bool verbose = true);
+  /**
+   * @brief Default Constructor
+   *
+   * @param threads Asynchronous (0 means synchronous, anything above is
+   * concurrent)
+   * @param show_stream_ if true, shows the camera stream (imshow)
+   * @param tag_type The april tag type
+   */
+  AprilDetector(const int threads = 0,
+                bool show_stream_ = false,
+                const std::string& tag_type = DEFAULT_TAG,
+                bool verbose = true);
 
-    // DEFAULT Destructor
-    ~AprilDetector();
+  // DEFAULT Destructor
+  ~AprilDetector();
 
-    bool sync_start();
-    bool async_start();
-    bool loop();
+  bool sync_start();
+  bool async_start();
+  bool loop();
 
-  private:
-    void destroy_video();
+private:
+  void destroy_video();
 
-    void destroy_tag();
-    bool initialize_tag(const std::string& type);
+  void destroy_tag();
+  bool initialize_tag(const std::string& type);
 
-    struct {
-      VideoCapture cap;
-      Mat frame;
-      Mat gray;
-      bool show_stream;
-    } video;
+  struct
+  {
+    VideoCapture cap;
+    Mat frame;
+    Mat gray;
+    bool show_stream;
+  } video;
 
-    struct {
-      int type;
-      apriltag_family_t *tf;
-      apriltag_detector_t *td;
-      zarray_t *detections;
-    } tag = {0, nullptr, nullptr, nullptr};
+  struct
+  {
+    int type;
+    apriltag_family_t* tf;
+    apriltag_detector_t* td;
+    zarray_t* detections;
+  } tag = { 0, nullptr, nullptr, nullptr };
 
-    const int multithreaded;
-}; 
-
+  const int multithreaded;
+};
 
 }
 }
-
-
 
 #endif /* end of include guard APRIL_POS_ESTIMATOR_H */
-

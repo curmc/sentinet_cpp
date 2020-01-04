@@ -5,25 +5,17 @@
  */
 
 #include "scpp/kernel/KermitNetworkInterface.hpp"
-#include <mutex>
 
 static std::mutex guard;
+
+using namespace addr::kernel;
 
 namespace scpp {
 namespace curmt {
 KermitNetworkInterface::KermitNetworkInterface(bool verbose, bool debug)
-  : kermit()
+  : RMTControlClient(to_bind_addr(ADDRESS))
 {
-
-  // Initialize topics
-  kermit.drive_topic = drive_topic;
-  kermit.cmd_topic = cmd_topic;
-  kermit.real_map_topic = real_map_topic;
-
-  // Verbosity and debug mode
-  kermit.verbose = verbose;
-  kermit.debug = debug;
-
+  kermit = { .verbose = verbose, .debug = debug };
   running = true;
 }
 
@@ -35,9 +27,7 @@ KermitNetworkInterface::~KermitNetworkInterface()
 bool
 KermitNetworkInterface::kermit_quit()
 {
-  // NO MUTEX LOCK
-  // Causes a lock because both this
-  // and read is locked
+  // NO Mutex lock here
   running = false;
   if (async_sender) {
     async_sender->join();
@@ -49,45 +39,46 @@ KermitNetworkInterface::kermit_quit()
 bool
 KermitNetworkInterface::init_comms()
 {
-  // Create a new set of params
-
-  // Set the addresses of proxies
-  kermit.drive_addr = drive_addr;
-  kermit.cmd_addr = cmd_addr;
-  kermit.real_map_addr = real_map_addr;
+  scpp::subscribe_params cmd_vel;
+  scpp::publish_params localizer;
 
   // The command velocity params for listening (a subscriber)
-  params.cmd_vel_p.socket_backend = drive_addr;
-  params.cmd_vel_p.topic = kermit.drive_topic;
-  params.cmd_vel_p.callback =
+  cmd_vel.sock_addr = to_conn_addr(addr::kernel::CMD_VEL);
+  cmd_vel.topic = addr::cmd_vel_topic;
+  cmd_vel.callback =
     std::bind(&KermitNetworkInterface::drive_message_subscribe_callback,
               this,
               std::placeholders::_1);
 
-  // The real time map params (a publisher)
-  params.real_map_p.broker_frontend = real_map_addr;
-  params.real_map_p.topic = kermit.real_map_topic;
-  params.real_map_p.period = std::chrono::seconds(1); // TODO
-  params.real_map_p.get_data =
-    std::bind(&KermitNetworkInterface::map_message_get_data, this);
+  localizer.sock_addr = to_conn_addr(addr::kernel::LOCALIZER);
+  std::cout << localizer.sock_addr << std::endl;
+  std::cout << addr::kernel::LOCALIZER << std::endl;
+  localizer.period = std::chrono::seconds(1);
+  localizer.topic = addr::localizer_topic;
+  localizer.get_data =
+    std::bind(&KermitNetworkInterface::localizer_cmd_get_data, this);
 
-  // The command relay (a server)
-  params.command_p.address = cmd_addr;
-  params.command_p.callback =
-    std::bind(&KermitNetworkInterface::cmd_message_callback, this, std::placeholders::_1);
-
+  spin(cmd_vel);
+  spin(localizer);
+  LOG_INFO("Kernel: (Localizer) (cmd_vel) (%s) (%s)",
+           localizer.sock_addr.c_str(),
+           cmd_vel.sock_addr.c_str());
   return true;
 }
 
 bool
 KermitNetworkInterface::init_teensy_peripheral(const std::string& port)
 {
-  new_teensy_device(&teensy.dev, port.c_str());
 
   if (!kermit.debug) {
+    new_teensy_device(&teensy.dev, port.c_str());
     async_sender = std::make_unique<std::thread>([this](void) -> bool {
       while (running) {
+        // Need mutexes on these babies
         send_drive(&teensy.dev, teensy.lin, teensy.ang);
+        read_teensy_response(
+          &teensy.dev, &teensy.w, &teensy.v, &teensy.w_err, &teensy.dt);
+        printf("%f %f %f %f\n", teensy.w, teensy.v, teensy.w_err, teensy.dt);
         delay(100);
       }
       return true;
@@ -106,18 +97,11 @@ KermitNetworkInterface::print_state()
 }
 
 bool
-KermitNetworkInterface::initialize_control_client()
+KermitNetworkInterface::kermit_start(
+  const std::chrono::microseconds serial_period,
+  const std::chrono::seconds time_alive)
 {
-  spin(params.cmd_vel_p);
-  spin(params.real_map_p);
-  spin(params.command_p);
-  return true;
-}
 
-bool
-KermitNetworkInterface::kermit_start(const std::chrono::microseconds serial_period,
-                    const std::chrono::seconds time_alive)
-{
   using namespace std::chrono;
 
   std::atomic<bool> infinite(false);
@@ -129,7 +113,9 @@ KermitNetworkInterface::kermit_start(const std::chrono::microseconds serial_peri
     infinite = true;
   }
 
-  initialize_control_client();
+  if (!init_comms())
+    return false;
+
   steady_clock::time_point time_now = steady_clock::now();
 
   int i = 0;
@@ -144,11 +130,25 @@ KermitNetworkInterface::kermit_start(const std::chrono::microseconds serial_peri
   return true;
 }
 
-
-void KermitNetworkInterface::update_teensy_message(int16_t lin, int16_t ang) {
+void
+KermitNetworkInterface::update_teensy_message(float lin, float ang)
+{
   std::lock_guard<std::mutex> lock(guard);
   teensy.lin = lin;
   teensy.ang = ang;
+}
+
+void
+KermitNetworkInterface::get_teensy_measured_vals(float* v,
+                                                 float* w,
+                                                 float* w_err,
+                                                 float* dt)
+{
+  std::lock_guard<std::mutex> lock(guard);
+  *v = teensy.v;
+  *w = teensy.w;
+  *w_err = teensy.w_err;
+  *dt = teensy.dt;
 }
 
 }

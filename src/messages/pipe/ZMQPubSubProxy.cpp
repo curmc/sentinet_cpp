@@ -6,11 +6,6 @@
 
 #include "scpp/messages/pipe/ZMQPubSubProxy.hpp"
 
-extern "C"
-{
-#include "scpp/messages/data_message.h"
-}
-
 namespace scpp {
 namespace proxies {
 

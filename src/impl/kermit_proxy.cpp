@@ -5,6 +5,7 @@
  */
 
 #include "scpp/core/messages/pipe/PipeInterface.hpp"
+#include "scpp/messages/pipe/Simple_Localizer.hpp"
 #include <csignal>
 
 static std::unique_ptr<scpp::core::PipeInterface> proxies;
@@ -17,7 +18,6 @@ signalHandler(int signum)
   exit(0);
 }
 
-
 int
 main(int argc, char* argv[])
 {
@@ -26,8 +26,7 @@ main(int argc, char* argv[])
   signal(SIGQUIT, signalHandler);
 
   int cmdvel = 0;
-  int camera = 0;
-  int cmd = 0;
+  int localizer = 0;
   int timer = 0;
   long time_period = 0;
 
@@ -40,12 +39,9 @@ main(int argc, char* argv[])
            "Options:\n\n"
            "    --help          Show this help menu\n\n"
 
-           "    --cmd_vel       Start a new publisher proxy on cmd_vel "
-           "topic\n\n"
+           "    --cmd_vel       Start a new publisher proxy\n\n"
 
-           "    --camera          Start a new camera proxy on topic camera\n\n"
-
-           "    --command       Start a new command proxy\n\n"
+           "    --localizer     Start a new localizer proxy \n\n"
 
            "    --time          Specify the time period in seconds to run\n"
            "                    -1 for infinite (ctrl+C to exit)\n"
@@ -57,11 +53,8 @@ main(int argc, char* argv[])
     if (!strcmp(argv[i], "--cmd_vel") && !cmdvel) {
       cmdvel = 1;
     }
-    if (!strcmp(argv[i], "--camera") && !camera) {
-      camera = 1;
-    }
-    if (!strcmp(argv[i], "--command") && !cmd) {
-      cmd = 1;
+    if (!strcmp(argv[i], "--localizer") && !localizer) {
+      localizer = 1;
     }
     if ((!strcmp(argv[i], "--time") || !strcmp(argv[i], "-t")) && !timer) {
       timer = 1;
@@ -79,17 +72,22 @@ main(int argc, char* argv[])
   proxies = std::make_unique<scpp::core::PipeInterface>();
 
   if (cmdvel) {
-    proxies->create_pub_sub_endpoint("cmd_vel", CMD_VEL, CMD_VEL_F);
+    std::string kernel_frontend = to_bind_addr(addr::cmd_vel::FRONT_ADDRESS);
+    std::string control_backend = to_bind_addr(addr::cmd_vel::BACK_ADDRESS);
+    std::string topic = addr::cmd_vel_topic;
+    proxies->create_pub_sub_endpoint(topic, kernel_frontend, control_backend);
   }
 
-  if (camera) {
-    proxies->create_pub_sub_endpoint("camera", CAMERA_ADDR_F, CAMERA_ADDR);
-  }
+  if (localizer) {
+    // The localizer filter
+    auto filter = std::make_unique<scpp::filters::Simple_Localizer>();
 
-  if (cmd) {
-    proxies->create_req_rep_endpoint("command_kernel", COMMAND_ADDR, COMMAND_ADDR_F);
-    proxies->create_req_rep_endpoint("command_localizer", COMMAND_ADDR, COMMAND_ADDR_F);
-    proxies->create_req_rep_endpoint("command_tracker", COMMAND_ADDR, COMMAND_ADDR_F);
+    std::string frontend = to_bind_addr(addr::localizer::FRONT_ADDRESS);
+    std::string backend = to_bind_addr(addr::localizer::BACK_ADDRESS);
+    std::string topic = addr::localizer_topic;
+
+    proxies->create_pub_sub_endpoint(topic, frontend, backend);
+    proxies->set_filter(topic, std::move(filter));
   }
 
   if (time_period == -1) {

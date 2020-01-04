@@ -8,7 +8,11 @@
 
 #define COMMON_H
 
-
+#include <unordered_map>
+#include <map>
+#include <mutex>
+#include <functional>
+#include <future>
 #include <memory>
 #include <chrono>
 #include <string>
@@ -16,42 +20,56 @@
 #include <algorithm>
 #include <vector>
 #include <thread>
+#include <iostream>
 
 #include <cstdio>
 #include <cstdarg>
 #include <cstring>
-
+#include <cmath>
 
 ////////////////////////// ADDRESS STUFF ///////////////
 namespace addr {
-const std::string camera_topic = "camera";
-const std::string cmd_vel_topic = "cmd_vel";
+const std::string cmd_vel_topic = "curmt://cmd_vel";
+const std::string localizer_topic = "curmt://state_localizer";
+
+const std::string zmq_control_name = "ZMQControlClient";
+const std::string command_kernel = "command_kernel";
+
+/*
+ * Proxies
+ */
+// LOCALIZER ADDRESSES
+namespace localizer {
+const int FRONT_ADDRESS = 5452;
+const int BACK_ADDRESS = 5454;
+}
+// LOCALIZER ADDRESSES
+namespace cmd_vel {
+const int FRONT_ADDRESS = 5470;
+const int BACK_ADDRESS = 5472;
+}
 
 // KERNEL ADDRESSES
 namespace kernel {
-const int CAMERA = 5568;
-const int CMD_VEL = 5570;
-const int CONTROL_KERNEL = 5572;
-const int KERNEL_LOCALIZER = 5574;
-}
+const int ADDRESS = 5450;
 
-// LOCALIZER ADDRESSES
-namespace localizer {
-const int KERNEL_LOCALIZER = 5576;
-const int LOCALIZER_CONTROL = 5578;
+const int LOCALIZER = addr::localizer::FRONT_ADDRESS;
+const int CMD_VEL = addr::cmd_vel::BACK_ADDRESS;
 }
 
 // CONTROLLER ADDRESSES
 namespace controller {
-const int LOCALIZER_CONTROL = 5580;
-const int CONTROL_KERNEL = 5582;
+const int ADDRESS = 5456;
+
+const int LOCALIZER = addr::localizer::BACK_ADDRESS;
+const int CMD_VEL = addr::cmd_vel::FRONT_ADDRESS;
 }
 }
 
-std::string to_bind_addr(const int port);
-std::string to_conn_addr(const int port);
-
-
+std::string
+to_bind_addr(const int port);
+std::string
+to_conn_addr(const int port);
 
 //////////////////// LOGGING /////////////////////
 #define LOG_VERSION "0.1.0"
@@ -73,7 +91,6 @@ enum
 #define LOG_WARN(...) log_log(LLOG_WARN, __FILE__, __LINE__, __VA_ARGS__)
 #define LOG_ERROR(...) log_log(LLOG_ERROR, __FILE__, __LINE__, __VA_ARGS__)
 #define LLOG_FATAL(...) log_log(LLOG_FATAL, __FILE__, __LINE__, __VA_ARGS__)
-
 
 static void
 log_log(int level, const char* file, int line, const char* fmt, ...);

@@ -26,35 +26,29 @@
 
 #define CONTROLINTERFACE_HPP
 
-// C++ includes
-#include <chrono>
-#include <functional>
-#include <string>
-
-// Local Includes
-#include "scpp/core/utils/logging.hpp"
+#include "scpp/common.h"
 
 namespace scpp {
 typedef struct serve_params
 {
   serve_params()
   {
-    address = "null";
+    sock_addr = "null";
     callback = [](std::string& val) -> std::string { return val; };
   }
 
   serve_params(const std::string& address_,
                std::function<std::string(std::string&)> callback_)
-    : address(address_)
+    : sock_addr(address_)
     , callback(callback_)
   {}
 
   serve_params(const serve_params& params)
-    : address(params.address)
+    : sock_addr(params.sock_addr)
     , callback(params.callback)
   {}
 
-  std::string address;
+  std::string sock_addr;
   std::function<std::string(std::string&)> callback;
 } serve_params;
 
@@ -65,7 +59,7 @@ typedef struct publish_params
 {
   publish_params()
   {
-    broker_frontend = "null";
+    sock_addr = "null";
     topic = "";
     get_data = [](void) -> std::string { return "No Publisher Data"; };
     period = std::chrono::microseconds(100);
@@ -73,20 +67,20 @@ typedef struct publish_params
 
   publish_params(const std::string& broker, const std::string& topic_)
   {
-    broker_frontend = broker;
+    sock_addr = broker;
     topic = topic_;
     get_data = [](void) -> std::string { return "No Publisher Data"; };
     period = std::chrono::microseconds(100);
   }
 
   publish_params(const publish_params& pub)
-    : broker_frontend(pub.broker_frontend)
+    : sock_addr(pub.sock_addr)
     , topic(pub.topic)
     , get_data(pub.get_data)
     , period(pub.period)
   {}
 
-  std::string broker_frontend;
+  std::string sock_addr;
   std::string topic;
   std::function<std::string(void)> get_data;
   std::chrono::microseconds period;
@@ -96,14 +90,14 @@ typedef struct subscribe_params
 {
   subscribe_params()
   {
-    socket_backend = "null";
+    sock_addr = "null";
     topic = "";
     callback = [this](std::string& val) -> void {
       LOG_DEBUG("Recieved %s on topic %s", val.c_str(), topic.c_str());
     };
   }
   subscribe_params(const std::string& sock_backend_, const std::string& topic_)
-    : socket_backend(sock_backend_)
+    : sock_addr(sock_backend_)
     , topic(topic_)
   {
     callback = [this](std::string& val) -> void {
@@ -111,55 +105,53 @@ typedef struct subscribe_params
     };
   }
   subscribe_params(const subscribe_params& params)
-    : socket_backend(params.socket_backend)
+    : sock_addr(params.sock_addr)
     , topic(params.topic)
     , callback(params.callback)
   {}
-  std::string socket_backend;
+  std::string sock_addr;
   std::string topic;
   std::function<void(std::string&)> callback;
 } subscribe_params;
 
-typedef struct request_params
-{
-  request_params()
-  {
-    id = "REQUESTER";
-    destination = "null";
-    get_data_to_request = [](void) -> std::string { return "null"; };
-    callback = [this](std::string& ret) -> void {
-      LOG_DEBUG("Requester %s recieved: %s", id.c_str(), ret.c_str());
-    };
-    period = std::chrono::microseconds(100);
-  }
-
-  request_params(const std::string& id_,
-                 const std::string& destination_,
-                 const std::chrono::microseconds period_)
-    : id(id_)
-    , destination(destination_)
-    , period(period_)
-  {
-    get_data_to_request = [](void) -> std::string { return "null"; };
-    callback = [this](std::string& ret) -> void {
-      LOG_DEBUG("Requester %s recieved: %s", id.c_str(), ret.c_str());
-    };
-  }
-
-  request_params(const request_params& params)
-    : id(params.id)
-    , destination(params.destination)
-    , get_data_to_request(params.get_data_to_request)
-    , callback(params.callback)
-  {}
-
-  std::string id;
-  std::string destination;
-  std::function<std::string(void)> get_data_to_request;
-  std::function<void(std::string&)> callback;
-  std::chrono::microseconds period;
-} request_params;
-
+// typedef struct request_params
+// {
+//   request_params()
+//   {
+//     id = "REQUESTER";
+//     sock_addr = "null";
+//     get_data_to_request = [](void) -> std::string { return "null"; };
+//     callback = [this](std::string& ret) -> void {
+//       LOG_DEBUG("Requester %s recieved: %s", id.c_str(), ret.c_str());
+//     };
+//     period = std::chrono::microseconds(100);
+//   }
+//
+//   request_params(const std::string& id_,
+//                  const std::string& sock_addr_,
+//                  const std::chrono::microseconds period_)
+//     : id(id_)
+//     , sock_addr(sock_addr_)
+//     , period(period_)
+//   {
+//     get_data_to_request = [](void) -> std::string { return "null"; };
+//     callback = [this](std::string& ret) -> void {
+//       LOG_DEBUG("Requester recieved: %s", ret.c_str());
+//     };
+//   }
+//
+//   request_params(const request_params& params)
+//       sock_addr(params.sock_addr)
+//     , get_data_to_request(params.get_data_to_request)
+//     , callback(params.callback)
+//   {}
+//
+//   std::string sock_addr;
+//   std::function<std::string(void)> get_data_to_request;
+//   std::function<void(std::string&)> callback;
+//   std::chrono::microseconds period;
+// } request_params;
+//
 namespace core {
 /**
  * @brief Control Client interface is the communication client in the Control
@@ -224,19 +216,19 @@ public:
   /**
    * @brief Initialize the publisher that this CC can use
    *
-   * @param broker_frontend The back end socket
+   * @param sock_addr The back end socket
    *
    * @return  Status
    */
-  virtual bool initialize_publisher(const std::string& broker_frontend)
+  virtual bool initialize_publisher(const std::string& sock_addr)
   {
-    return broker_frontend == "default";
+    return sock_addr == "default";
   }
 
   /**
    * @brief Initialize the client that this CC can use
    *
-   * @param broker_frontend The back end socket
+   * @param sock_addr The back end socket
    *
    * @return  Status
    */
@@ -273,7 +265,7 @@ public:
    *
    * @return       [status of the publish]
    */
-  virtual bool publish(const std::string broker_frontend,
+  virtual bool publish(const std::string sock_addr,
                        const std::string topic,
                        std::function<std::string(void)> get_data_to_publish,
                        const std::chrono::microseconds period) = 0;
@@ -281,7 +273,7 @@ public:
   inline bool publish(::scpp::publish_params& params)
   {
     return publish(
-      params.broker_frontend, params.topic, params.get_data, params.period);
+      params.sock_addr, params.topic, params.get_data, params.period);
   }
 
   inline bool spin(::scpp::publish_params& params) { return publish(params); }
@@ -292,19 +284,19 @@ public:
   /**
    * Requests a string from an endpoint
    *
-   * @param  destination [Destination address of the server]
+   * @param  sock_addr [sock_addr address of the server]
    * @param  message     [Message to send in request (can be just a blank
    * string)]
    *
    * @return             [The response from the server]
    */
-  virtual std::string request(const std::string destination,
+  virtual std::string request(const std::string sock_addr,
                               const std::string message) = 0;
 
   /**
    * @brief Make A request at a regular period
    *
-   * @param  destination              [Destination of server]
+   * @param  sock_addr              [sock_addr of server]
    * @param  get_data_to_request [Address of the data that we will send] //TODO
    *
    * Probably a better way to do thisw
@@ -313,27 +305,28 @@ public:
    * @return                          [Status of request, returns 1 is ends
    * badly]
    */
-  virtual bool request(const std::string destination,
+  virtual bool request(const std::string sock_addr,
                        const std::string id,
                        std::function<std::string(void)> get_data_to_request,
                        std::function<void(std::string&)> callback,
                        const std::chrono::microseconds period) = 0;
 
-  inline bool request(::scpp::request_params& params)
-  {
-    return request(params.destination,
-                   params.id,
-                   params.get_data_to_request,
-                   params.callback,
-                   params.period);
-  }
-
-  inline bool spin(::scpp::request_params& params) { return request(params); }
+  // inline bool request(::scpp::request_params& params)
+  // {
+  //   return request(params.sock_addr,
+  //                  params.id,
+  //                  params.get_data_to_request,
+  //                  params.callback,
+  //                  params.period);
+  // }
+  //
+  // inline bool spin(::scpp::request_params& params) { return request(params);
+  // }
 
   /**
    * @brief Cancel a periodic_requester
    *
-   * @param The destination of the requester / requesters
+   * @param The sock_addr of the requester / requesters
    *
    * @return The
    */
@@ -362,7 +355,7 @@ public:
 
   inline bool subscribe(::scpp::subscribe_params& params)
   {
-    return subscribe(params.socket_backend, params.topic, params.callback);
+    return subscribe(params.sock_addr, params.topic, params.callback);
   }
 
   inline bool spin(::scpp::subscribe_params& params)
@@ -389,7 +382,7 @@ public:
 
   inline bool serve(::scpp::serve_params& params)
   {
-    return serve(params.address, params.callback);
+    return serve(params.sock_addr, params.callback);
   }
 
   inline bool spin(::scpp::serve_params& params) { return serve(params); }

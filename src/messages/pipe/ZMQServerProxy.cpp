@@ -5,11 +5,6 @@
  */
 
 #include "scpp/messages/pipe/ZMQServerProxy.hpp"
-extern "C"
-{
-#include "scpp/messages/ping_message.h"
-#include "scpp/messages/data_message.h"
-}
 
 namespace scpp {
 namespace proxies {
@@ -64,7 +59,6 @@ ZMQServerProxy::__spin__()
       size_t more_size = sizeof(more);
       frontend_sock->recv(&message);
       std::cout << "Traffic:" << std::endl;
-      print_message_raw((BYTE*)message.data(), PING_HEADER_SIZE);
       frontend_sock->getsockopt(ZMQ_RCVMORE, &more, &more_size);
       backend_sock->send(message, more ? ZMQ_SNDMORE : 0);
       if (!more)

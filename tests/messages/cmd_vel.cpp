@@ -19,14 +19,11 @@ TEST(RMTMessageTest, CmdVel) {
   cvel_recv.lin = 6.123152342;
   cvel_recv.ang = 8.012372139;
 
-  EXPECT_EQ(-1, cmd_vel_to_wire(nullptr));
   EXPECT_EQ(1, cmd_vel_to_wire(&cvel_recv));
   
   message = (uint8_t*)cvel_recv.buff.data;
 
   // EXPECT_EQ(-1, cmd_vel_from_wire(&cvel_send, "test string")); // TODO CHECSUM
-  EXPECT_EQ(-1, cmd_vel_from_wire(&cvel_send, nullptr));
-  EXPECT_EQ(-1, cmd_vel_from_wire(nullptr, nullptr));
   EXPECT_EQ(1, cmd_vel_from_wire(&cvel_send, message));
   EXPECT_FLOAT_EQ(cvel_recv.lin, cvel_send.lin);
   EXPECT_FLOAT_EQ(cvel_recv.ang, cvel_send.ang);

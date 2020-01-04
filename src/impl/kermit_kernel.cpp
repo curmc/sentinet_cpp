@@ -13,14 +13,8 @@ static std::unique_ptr<scpp::curmt::KermitKernel> a;
 void
 signalHandler(int signum)
 {
-  if (a)
-    a->kermit_quit();
-  std::cout << "Killed" << std::endl;
   exit(0);
 }
-
-char ipaddr[20] = "192.168.0.2";
-char interface[20] = "eth0";
 
 int
 main(int argc, char* argv[])
@@ -31,7 +25,6 @@ main(int argc, char* argv[])
   bool debug = true;
   bool verbose = false;
   int i = 0;
-  int port = 80;
 
   while (i < argc) {
     if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help") || argc == 1) {
@@ -72,47 +65,13 @@ main(int argc, char* argv[])
     if (!strcmp(argv[i], "--verbose")) {
       verbose = true;
     }
-    if (!strcmp(argv[i], "--ip")) {
-      if (++i < argc) {
-        size_t len = strlen(argv[i]);
-        memset(ipaddr, 0, 20);
-        strncpy(ipaddr, argv[i], len > 20 ? 20 : len);
-        continue;
-      }
-      std::cout << "Error please specify an ipaddr" << std::endl;
-      return 1;
-    }
-    if (!strcmp(argv[i], "--port")) {
-      if (++i < argc) {
-        port = atoi(argv[i]);
-        continue;
-      }
-      std::cout << "Error please specify a port number" << std::endl;
-      return 1;
-    }
-    if (!strcmp(argv[i], "--interface")) {
-      if (++i < argc) {
-        size_t len = strlen(argv[i]);
-        memset(interface, 0, 20);
-        strncpy(interface, argv[i], len > 20 ? 20 : len);
-        continue;
-      }
-      std::cout << "Error please specify a port number" << std::endl;
-      return 1;
-    }
     i++;
   }
 
   a = std::make_unique<scpp::curmt::KermitKernel>(verbose, debug);
+  a->set_serial_attributes("/dev/ttyACM0", std::chrono::milliseconds(100));
+  a->set_alive_time(std::chrono::seconds(0));
+  a->start();
 
-  a->init_comms();
-  std::cout << sizeof(scpp::curmt::KermitKernel) << std::endl;
-  if (!debug) {
-    a->init_teensy_peripheral("/dev/ttyACM0");
-  }
-
-  a->kermit_start(std::chrono::milliseconds(10), std::chrono::seconds(0));
-
-  a->kermit_quit();
   return 0;
 }

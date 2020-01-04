@@ -8,19 +8,13 @@
 
 #define PROXYINTERFACE_HPP
 
-// C++ Includes
-#include <string>
-#include <future>
-#include <map>
-#include <vector>
-
 #define CLEAN_STOP 0
 #define KILL 1
 #define START 2
 #define PAUSE 3
 
 // Local Includes
-#include "scpp/core/utils/logging.hpp"
+#include "scpp/common.h"
 #include "scpp/core/messages/pipe/FilterInterface.hpp"
 
 namespace scpp {

@@ -6,10 +6,6 @@
 
 #include "scpp/core/messages/pipe/PipeInterface.hpp"
 
-#include <memory>
-#include <future>
-#include <string>
-
 namespace scpp {
 namespace core {
 
@@ -46,8 +42,6 @@ PipeInterface::create_pub_sub_endpoint(const std::string& id,
 
   proxy.proxy = std::make_unique<scpp::proxies::ZMQPubSubProxy>(
     id, proxy.exit_signal.get_future(), frontend, backend, 1);
-
-  std::cout << frontend << "\n" << backend << std::endl;
 
   proxies.proxies[id] = std::move(proxy);
   proxies.proxies[id].t_space =
@@ -154,7 +148,7 @@ PipeInterface::set_filter(const std::string id,
 {
   auto found = proxies.proxies.find(id);
 
-  if (found != proxies.proxies.end()) {
+  if (found == proxies.proxies.end()) {
     LOG_ERROR("Invalid proxy filter change request on proxy %c", id.c_str());
     return false;
   }
