@@ -9,7 +9,7 @@
 #define APRIL_POS_ESTIMATOR_H
 
 #include "opencv2/opencv.hpp"
-#include "scpp/controllers/apriltags/Localizer.hpp"
+#include "scpp/localizer/PosLocalizer.hpp"
 
 extern "C"
 {
@@ -31,7 +31,7 @@ using namespace cv;
 namespace scpp {
 namespace curmt {
 
-class AprilDetector : public scpp::curmt::Localizer
+class AprilDetector : public scpp::curmt::PosLocalizer
 {
 public:
   AprilDetector() = delete;

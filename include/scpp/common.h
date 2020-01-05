@@ -57,6 +57,12 @@ const int LOCALIZER = addr::localizer::FRONT_ADDRESS;
 const int CMD_VEL = addr::cmd_vel::BACK_ADDRESS;
 }
 
+namespace camera {
+const int ADDRESS = 5458;
+
+const int LOCALIZER = addr::localizer::FRONT_ADDRESS;
+}
+
 // CONTROLLER ADDRESSES
 namespace controller {
 const int ADDRESS = 5456;

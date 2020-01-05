@@ -33,7 +33,6 @@ create_buffer(data_buffer* buff)
   buff->protocol_version = PROTOCOL_VERSION;
   buff->opcode = DATA_PACKET;
   buff->byte_length = DATA_HEADER_SIZE;
-  printf("%ld\n", DATA_HEADER_SIZE);
   to_wire(buff);
 }
 

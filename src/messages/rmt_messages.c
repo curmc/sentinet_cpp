@@ -292,9 +292,6 @@ int
 sensor_msg_from_wire(sensor_msg* msg, const uint8_t* data)
 {
   int* id = (int*)(data + msg->indexes[0]);
-  printf("%ld\n", msg->indexes[0]);
-
-  printf("%d\n", *id);
 
   if (*id == CAMERA_MESSAGE)
     msg->type = CAMERA_MESSAGE;

@@ -15,8 +15,11 @@ KermitKernel::KermitKernel(bool verbose, bool debug)
   : KermitNetworkInterface(verbose, debug)
 {
   // Initialize messages
+  memset(&message.cvel_buffer, 0, sizeof(message.cvel_buffer));
+  memset(&message.teensy_buffer, 0, sizeof(message.teensy_buffer));
   message.cvel_buffer = create_cmd_vel();
   message.teensy_buffer = create_teensy_sensor_array();
+
 
   // Set the robot to not receving data at first
   receiving_cvels = false;
@@ -38,6 +41,11 @@ void
 KermitKernel::drive_message_subscribe_callback(std::string& message_)
 {
 
+  for(size_t i = 0; i < message_.size(); ++i){
+    printf("%x ", message_[i]);
+  }
+  printf("\n");
+
   // Interpret the incomming message from the string
   cmd_vel_from_wire(&message.cvel_buffer,
                     reinterpret_cast<const uint8_t*>(message_.c_str()));
@@ -49,9 +57,11 @@ KermitKernel::drive_message_subscribe_callback(std::string& message_)
   // If we aren't accepting cmd_vels
   // drop the message
   if (!receiving_cvels) {
+    printf("%f %f\n", linear, angular);
     update_teensy_message(0, 0);
     return;
   }
+  printf("here %f %f\n", linear, angular);
 
   // Otherwise, recieve the message and send it to the teensy
   update_teensy_message(linear, angular);

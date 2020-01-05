@@ -11,7 +11,7 @@ add_subdirectory("${PROJECT_SOURCE_DIR}/core")
 add_subdirectory("${PROJECT_SOURCE_DIR}/messages")
 add_subdirectory("${PROJECT_SOURCE_DIR}/control")
 add_subdirectory("${PROJECT_SOURCE_DIR}/kernel")
-# add_subdirectory("${PROJECT_SOURCE_DIR}/apriltag")
+add_subdirectory("${PROJECT_SOURCE_DIR}/localizer")
 # add_subdirectory("${PROJECT_SOURCE_DIR}/controllers")
 
 target_link_libraries(sentinet zmq pthread smessages ${OpenCV_LIBS} apriltag)

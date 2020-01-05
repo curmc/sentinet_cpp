@@ -13,6 +13,7 @@ static std::unique_ptr<scpp::curmt::KermitKernel> a;
 void
 signalHandler(int signum)
 {
+  a.reset();
   exit(0);
 }
 
