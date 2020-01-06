@@ -45,7 +45,8 @@ private:
   std::string get_pos(void);
 
 private:
-  struct {
+  struct
+  {
     float x;
     float y;
     float theta;

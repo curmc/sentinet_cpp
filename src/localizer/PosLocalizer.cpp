@@ -19,28 +19,31 @@ PosLocalizer::PosLocalizer(bool verbose)
   p.sock_addr = to_conn_addr(addr::camera::LOCALIZER);
   p.period = std::chrono::seconds(1);
   p.topic = addr::localizer_topic;
-  p.get_data = 
-    std::bind(&scpp::curmt::PosLocalizer::get_pos, this);
-  
+  p.get_data = std::bind(&scpp::curmt::PosLocalizer::get_pos, this);
 
   spin(p);
 }
 
-void PosLocalizer::set_pos(float x, float y, float theta) {
+void
+PosLocalizer::set_pos(float x, float y, float theta)
+{
   std::lock_guard<std::mutex> lock(guard);
   pos.x = x;
   pos.y = y;
   pos.theta = theta;
 
-
   return;
 }
 
-void PosLocalizer::print_state() {
+void
+PosLocalizer::print_state()
+{
   printf("(x, y, theta) (%f %f %f)\n", pos.x, pos.y, pos.theta);
 }
 
-std::string PosLocalizer::get_pos(void){
+std::string
+PosLocalizer::get_pos(void)
+{
   std::lock_guard<std::mutex> lock(guard);
   pos.msg.x = pos.x;
   pos.msg.y = pos.y;
@@ -52,7 +55,6 @@ std::string PosLocalizer::get_pos(void){
   char const* msg = reinterpret_cast<char const*>(pos.msg.msg.buff.data);
   return std::string(msg, size);
 }
-
 
 }
 }

@@ -60,7 +60,7 @@ ZMQPubSubProxy::__spin__()
       for (auto i = 0U; i < filters.size(); ++i)
         filters[i]->convert(req);
       std::cout << "Traffic: \n";
-      for(size_t i = 0; i < req.size(); ++i){
+      for (size_t i = 0; i < req.size(); ++i) {
         printf("%x ", req[i]);
       }
       printf("\n");

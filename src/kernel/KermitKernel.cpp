@@ -20,7 +20,6 @@ KermitKernel::KermitKernel(bool verbose, bool debug)
   message.cvel_buffer = create_cmd_vel();
   message.teensy_buffer = create_teensy_sensor_array();
 
-
   // Set the robot to not receving data at first
   receiving_cvels = false;
 
@@ -41,7 +40,7 @@ void
 KermitKernel::drive_message_subscribe_callback(std::string& message_)
 {
 
-  for(size_t i = 0; i < message_.size(); ++i){
+  for (size_t i = 0; i < message_.size(); ++i) {
     printf("%x ", message_[i]);
   }
   printf("\n");
