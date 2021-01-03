@@ -46,8 +46,9 @@ Creates a new instance of a proxy listening on the command and cmd_vel topics, t
 
 Both can be quit with a simple Ctrl+C
 
-Both of these should theoretically be run at the same time. Without proxy, other forms will not be able to pass messages to the kernele
+Note that nothing will happen unless you have a controller (or multiple). I wrote a very quick controller in sentinet_py (https://github.com:curmc/sentinet_py). Just run `python3 main.py` in sentinet_py and it sends two floats to linear command line. 
 
+This is a basic demo - more documentation will come for numerical transformations using pipes - async settings etc.
 
 
 
