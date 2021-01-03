@@ -50,6 +50,9 @@ Note that nothing will happen unless you have a controller (or multiple). I wrot
 
 This is a basic demo - more documentation will come for numerical transformations using pipes - async settings etc.
 
+Here's a quick demo:
+
+![demo](./sentinet.gif)
 
 
 
